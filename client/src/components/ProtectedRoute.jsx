@@ -19,7 +19,7 @@ const ProtectedRoute = ({ requiredRole }) => {
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
+  if (requiredRole && user?.role !== requiredRole && !(requiredRole === 'CUSTOMER' && user?.role === 'ADMIN')) {
     // If a CUSTOMER tries to view the ADMIN link, kick them to dashboard
     return <Navigate to="/dashboard" replace />;
   }

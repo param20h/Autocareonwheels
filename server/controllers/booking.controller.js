@@ -46,3 +46,18 @@ exports.getMyBookings = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
+
+exports.cancelBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await prisma.booking.findUnique({ where: { id: parseInt(id) } });
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+    if (booking.user_id !== req.user.id) return res.status(403).json({ success: false, message: 'Not your booking' });
+    if (booking.status !== 'PENDING') return res.status(400).json({ success: false, message: 'Only pending bookings can be cancelled' });
+    const updated = await prisma.booking.update({ where: { id: parseInt(id) }, data: { status: 'CANCELLED' } });
+    res.status(200).json({ success: true, data: updated });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error cancelling booking' });
+  }
+};

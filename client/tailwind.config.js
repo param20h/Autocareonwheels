@@ -7,8 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#1A3557", // Dark navy blue
-        accent: "#2563A8",  // Medium blue
+        primary: "#1C1C1C", // Carbon Black
+        accent: "#C0392B",  // Race Red
+        silver: "#C8C8C8",  // Chrome Silver
         background: "#F5F7FA", // Light gray
         success: "#16a34a",
         warning: "#d97706",

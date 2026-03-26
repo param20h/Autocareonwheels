@@ -122,3 +122,32 @@ exports.getMe = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to retrieve user profile' });
   }
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    const user = await prisma.user.update({
+      where: { id: req.user.id },
+      data: { name, phone },
+      select: { id: true, name: true, email: true, phone: true, role: true, avatar_url: true }
+    });
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update profile' });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user.password) return res.status(400).json({ success: false, message: 'Google account — no password to change' });
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+    const hashed = await bcrypt.hash(newPassword, 12);
+    await prisma.user.update({ where: { id: req.user.id }, data: { password: hashed } });
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to change password' });
+  }
+};
