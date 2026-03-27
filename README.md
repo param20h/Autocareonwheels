@@ -17,6 +17,6 @@ Please follow the guides in `docs/` or refer to the `project_overview_and_deploy
 # Install dependencies in the root
 npm install
 
-# Start development servers
+# Start development 
 npm run dev
 ```
