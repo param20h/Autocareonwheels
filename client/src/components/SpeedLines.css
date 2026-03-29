@@ -1,0 +1,34 @@
+.speed-lines-container {
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  top: -25%;
+  left: -25%;
+  transform: rotate(-12deg) skewX(-15deg);
+  perspective: 1000px;
+}
+
+.speed-line {
+  position: absolute;
+  left: -20%;
+  width: 180px;
+  height: var(--height);
+  top: var(--top);
+  background: linear-gradient(90deg, transparent, var(--color), transparent);
+  opacity: var(--opacity);
+  animation: speedStreak var(--duration) linear infinite;
+  animation-delay: var(--delay);
+  box-shadow: 0 0 12px var(--color);
+  border-radius: 100%;
+}
+
+@keyframes speedStreak {
+  0% {
+    left: -20%;
+    transform: scaleX(1);
+  }
+  100% {
+    left: 120%;
+    transform: scaleX(4);
+  }
+}

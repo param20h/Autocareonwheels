@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Mail, Lock, Loader2, User, Phone, Car } from 'lucide-react';
+import MechanicBackground from '../../components/MechanicBackground';
+import BorderGlow from '../../components/BorderGlow';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import useAuth from '../../store/useAuth';
@@ -53,7 +55,7 @@ const AuthCard = () => {
           phone: formData.phone
         });
         // Transition back to login smoothly
-        setIsLogin(true); 
+        setIsLogin(true);
       }
     } catch (error) {
       alert(error.response?.data?.message || 'Authentication failed');
@@ -88,7 +90,8 @@ const AuthCard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans overflow-hidden">
+      <MechanicBackground />
 
       {/* Header Info */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md transform transition-transform duration-700 ease-out z-10">
@@ -112,10 +115,22 @@ const AuthCard = () => {
 
       {/* Main Form Container with height animation mechanism */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div
-          className="bg-white shadow sm:rounded-card relative overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
-          style={{ height: `${formHeight}px` }}
+        <BorderGlow
+          edgeSensitivity={35}
+          glowColor="0 80 60"
+          backgroundColor="#ffffff"
+          borderRadius={24}
+          glowRadius={64}
+          glowIntensity={1.5}
+          coneSpread={30}
+          animated
+          loop
+          colors={['#c0392b', '#e74c3c', '#ff6b6b']}
         >
+          <div
+            className="bg-white rounded-[24px] relative overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] w-full"
+            style={{ height: `${formHeight}px` }}
+          >
 
           {/* ==================================== */}
           {/* LOGIN FORM (Left Panel)              */}
@@ -272,9 +287,9 @@ const AuthCard = () => {
                 </GoogleOAuthProvider>
               </div>
             </div>
+            </div>
           </div>
-
-        </div>
+        </BorderGlow>
       </div>
 
       {/* Background Decorative Blobs */}

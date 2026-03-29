@@ -4,6 +4,8 @@ import { Wrench, Droplets, Settings, CheckCircle, Shield, Clock, Star, MapPin, P
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BorderGlow from '../../components/BorderGlow';
+import MechanicBackground from '../../components/MechanicBackground';
+import TestimonialsCard from '../../components/ui/testimonials-card';
 import api from '../../api/axios';
 
 const Home = () => {
@@ -27,77 +29,80 @@ const Home = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-40 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row items-center">
-        <div className="lg:w-1/2 space-y-8 z-10">
-          <div className="inline-flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-full font-semibold text-sm border border-gray-800 shadow-xl">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
-            </span>
-            <span>Premium Service Available</span>
+      <div className="relative w-full overflow-hidden bg-background">
+        <MechanicBackground />
+        <section className="relative z-10 pt-40 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row items-center">
+          <div className="lg:w-1/2 space-y-8">
+            <div className="inline-flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-full font-semibold text-sm border border-gray-800 shadow-xl">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
+              </span>
+              <span>Premium Service Available</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-extrabold text-primary leading-[1.1] tracking-tight drop-shadow-sm">
+              Precision Care <br /> For Your Car.
+            </h1>
+            <p className="text-lg md:text-xl text-primary max-w-lg leading-relaxed font-medium">
+              Experience the mechanical atelier. Reliable, affordable, and expert services delivered straight to your driveway or at our luxury workshop.
+            </p>
+            <div className="pt-4 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+              <BorderGlow
+                edgeSensitivity={20}
+                glowColor="0 80 60"
+                backgroundColor="#c0392b"
+                borderRadius={12}
+                glowRadius={40}
+                glowIntensity={2.2}
+                coneSpread={35}
+                animated
+                loop
+                colors={['#c0392b', '#e74c3c', '#ff6b6b']}
+              >
+                <Link to="/book" className="block bg-accent text-white px-8 py-4 rounded-card font-bold hover:bg-red-700 transition-all text-lg text-center border border-accent">
+                  Book a Service
+                </Link>
+              </BorderGlow>
+              <BorderGlow
+                edgeSensitivity={20}
+                glowColor="0 0 80"
+                backgroundColor="#f5f5f5"
+                borderRadius={12}
+                glowRadius={40}
+                glowIntensity={1.8}
+                coneSpread={35}
+                animated
+                loop
+                colors={['#94a3b8', '#cbd5e1', '#e2e8f0']}
+              >
+                <a href="#services" className="block px-8 py-4 rounded-card font-bold text-primary bg-background border border-gray-300 hover:border-primary hover:text-white hover:bg-primary transition-all text-lg text-center shadow-sm">
+                  Explore Options
+                </a>
+              </BorderGlow>
+            </div>
           </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-primary leading-[1.1] tracking-tight drop-shadow-sm">
-            Precision Care <br /> For Your Car.
-          </h1>
-          <p className="text-lg md:text-xl text-primary max-w-lg leading-relaxed font-medium">
-            Experience the mechanical atelier. Reliable, affordable, and expert services delivered straight to your driveway or at our luxury workshop.
-          </p>
-          <div className="pt-4 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            <BorderGlow
-              edgeSensitivity={20}
-              glowColor="0 80 60"
-              backgroundColor="#c0392b"
-              borderRadius={12}
-              glowRadius={40}
-              glowIntensity={2.2}
-              coneSpread={35}
-              animated
-              loop
-              colors={['#c0392b', '#e74c3c', '#ff6b6b']}
-            >
-              <Link to="/book" className="block bg-accent text-white px-8 py-4 rounded-card font-bold hover:bg-red-700 transition-all text-lg text-center border border-accent">
-                Book a Service
-              </Link>
-            </BorderGlow>
-            <BorderGlow
-              edgeSensitivity={20}
-              glowColor="0 0 80"
-              backgroundColor="#f5f5f5"
-              borderRadius={12}
-              glowRadius={40}
-              glowIntensity={1.8}
-              coneSpread={35}
-              animated
-              loop
-              colors={['#94a3b8', '#cbd5e1', '#e2e8f0']}
-            >
-              <a href="#services" className="block px-8 py-4 rounded-card font-bold text-primary bg-background border border-gray-300 hover:border-primary hover:text-white hover:bg-primary transition-all text-lg text-center shadow-sm">
-                Explore Options
-              </a>
-            </BorderGlow>
-          </div>
-        </div>
 
-        <div className="lg:w-1/2 mt-16 lg:mt-0 relative w-full">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-accent/20 to-primary/5 rounded-full blur-3xl -z-10"></div>
-          <div className="relative">
-            <img
-              src="https://github.com/param20h/datasets/blob/main/home.png?raw=true"
-              alt="Pristine Car Engine"
-              className="rounded-2xl shadow-2xl object-cover h-[400px] md:h-[600px] w-full transform -rotate-2 hover:rotate-0 transition-transform duration-500 border-4 border-white"
-            />
-            <div className="absolute -bottom-6 -left-6 bg-primary p-6 rounded-2xl shadow-xl flex items-center space-x-4 border border-gray-800">
-              <div className="bg-accent/20 p-3 rounded-full">
-                <Shield className="h-8 w-8 text-accent" />
-              </div>
-              <div>
-                <p className="text-sm text-silver font-medium">Certified Mechanics</p>
-                <p className="font-bold text-white text-xl">100% Guaranteed</p>
+          <div className="lg:w-1/2 mt-16 lg:mt-0 relative w-full">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-accent/20 to-primary/5 rounded-full blur-3xl -z-10"></div>
+            <div className="relative">
+              <img
+                src="https://github.com/param20h/datasets/blob/main/home.png?raw=true"
+                alt="Pristine Car Engine"
+                className="rounded-2xl shadow-2xl object-cover h-[400px] md:h-[600px] w-full transform -rotate-2 hover:rotate-0 transition-transform duration-500 border-4 border-white"
+              />
+              <div className="absolute -bottom-6 -left-6 bg-primary p-6 rounded-2xl shadow-xl flex items-center space-x-4 border border-gray-800">
+                <div className="bg-accent/20 p-3 rounded-full">
+                  <Shield className="h-8 w-8 text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm text-silver font-medium">Certified Mechanics</p>
+                  <p className="font-bold text-white text-xl">100% Guaranteed</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Services Grid — Dynamic from DB */}
       <section id="services" className="py-24 bg-white">
@@ -200,45 +205,36 @@ const Home = () => {
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">Thousands of happy vehicle owners trust AutoCare for their maintenance needs.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: 'Rahul Sharma', role: 'BMW 3 Series Owner', text: "Absolutely incredible service! The mechanic arrived on time, was extremely professional, and my car has never run smoother. I've recommended AutoCare to everyone I know.", stars: 5 },
-              { name: 'Priya Patel', role: 'Honda City Owner', text: "The convenience of at-home service is a game changer. No more wasting weekends at the workshop. The team was thorough and transparent with pricing. Will definitely use again!", stars: 5 },
-              { name: 'Vikram Singh', role: 'Toyota Fortuner Owner', text: "I was skeptical at first, but the quality exceeded my expectations. The diagnostic report was very detailed and the oil change was done in under 40 minutes. Premium service at fair prices.", stars: 4 }
-            ].map((review, idx) => (
-              <BorderGlow
-                key={idx}
-                edgeSensitivity={33}
-                glowColor="45 80 65"
-                backgroundColor="#ffffff"
-                borderRadius={16}
-                glowRadius={48}
-                glowIntensity={1.8}
-                coneSpread={28}
-                animated
-                colors={['#c0392b', '#e74c3c', '#fbbf24']}
-              >
-                <div className="p-8 relative">
-                  <div className="absolute top-6 right-6 text-6xl font-black text-primary/5 leading-none">"</div>
-                  <div className="flex items-center mb-4">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} size={18} className={`${i < review.stars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
-                    ))}
-                  </div>
-                  <p className="text-gray-600 leading-relaxed mb-6 italic">"{review.text}"</p>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-11 h-11 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm">
-                      {review.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-bold text-primary text-sm">{review.name}</p>
-                      <p className="text-xs text-gray-500">{review.role}</p>
-                    </div>
-                  </div>
-                </div>
-              </BorderGlow>
-            ))}
-          </div>
+          <TestimonialsCard 
+            items={[
+              { 
+                id: 1, 
+                title: 'Rahul Sharma', 
+                role: 'BMW 3 Series Owner', 
+                description: "Absolutely incredible service! The mechanic arrived on time, was extremely professional, and my car has never run smoother. I've recommended AutoCare to everyone I know.", 
+                stars: 5,
+                image: 'https://i.pravatar.cc/250?img=11'
+              },
+              { 
+                id: 2, 
+                title: 'Priya Patel', 
+                role: 'Honda City Owner', 
+                description: "The convenience of at-home service is a game changer. No more wasting weekends at the workshop. The team was thorough and transparent with pricing. Will definitely use again!", 
+                stars: 5,
+                image: 'https://i.pravatar.cc/250?img=5'
+              },
+              { 
+                id: 3, 
+                title: 'Vikram Singh', 
+                role: 'Toyota Fortuner Owner', 
+                description: "I was skeptical at first, but the quality exceeded my expectations. The diagnostic report was very detailed and the oil change was done in under 40 minutes. Premium service at fair prices.", 
+                stars: 4,
+                image: 'https://i.pravatar.cc/250?img=12'
+              }
+            ]} 
+            autoPlay={true}
+            autoPlayInterval={4000}
+          />
         </div>
       </section>
 
