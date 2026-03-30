@@ -1,6 +1,18 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const allowedBookingStatus = ['PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
+
+const toPositiveInt = (value) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+};
+
+const toNumber = (value) => {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
 // ============ BOOKINGS ============
 exports.getAllBookings = async (req, res) => {
   try {
@@ -19,9 +31,30 @@ exports.updateBookingStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status, mechanic_id } = req.body;
+    const bookingId = toPositiveInt(id);
+
+    if (!bookingId) {
+      return res.status(400).json({ success: false, message: 'Invalid booking id' });
+    }
+    if (!allowedBookingStatus.includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid booking status' });
+    }
+
+    let parsedMechanicId;
+    if (mechanic_id !== undefined && mechanic_id !== null && mechanic_id !== '') {
+      parsedMechanicId = toPositiveInt(mechanic_id);
+      if (!parsedMechanicId) {
+        return res.status(400).json({ success: false, message: 'Invalid mechanic id' });
+      }
+      const mechanic = await prisma.mechanic.findUnique({ where: { id: parsedMechanicId } });
+      if (!mechanic) {
+        return res.status(404).json({ success: false, message: 'Mechanic not found' });
+      }
+    }
+
     const booking = await prisma.booking.update({
-      where: { id: parseInt(id) },
-      data: { status, mechanic_id: mechanic_id ? parseInt(mechanic_id) : undefined },
+      where: { id: bookingId },
+      data: { status, mechanic_id: parsedMechanicId !== undefined ? parsedMechanicId : undefined },
       include: { user: true, service: true }
     });
     res.status(200).json({ success: true, data: booking });
@@ -35,10 +68,18 @@ exports.updateBookingStatus = async (req, res) => {
 exports.createService = async (req, res) => {
   try {
     const { name, description, price, duration_mins, category_id, image_url } = req.body;
-    let category = await prisma.category.findFirst({ where: { id: category_id ? parseInt(category_id) : 1 } });
+    const parsedPrice = toNumber(price);
+    const parsedDuration = toPositiveInt(duration_mins);
+    const parsedCategoryId = category_id ? toPositiveInt(category_id) : 1;
+
+    if (!name || !description || parsedPrice === null || parsedPrice <= 0 || !parsedDuration) {
+      return res.status(400).json({ success: false, message: 'Invalid service payload' });
+    }
+
+    let category = await prisma.category.findFirst({ where: { id: parsedCategoryId } });
     if (!category) category = await prisma.category.create({ data: { name: 'General Maintenance', display_order: 1 } });
     const service = await prisma.service.create({
-      data: { name, description, price: parseFloat(price), duration_mins: parseInt(duration_mins), image_url, category_id: category.id }
+      data: { name, description, price: parsedPrice, duration_mins: parsedDuration, image_url, category_id: category.id }
     });
     res.status(201).json({ success: true, data: service });
   } catch (error) {
@@ -51,9 +92,23 @@ exports.updateService = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, price, duration_mins, is_active } = req.body;
+    const serviceId = toPositiveInt(id);
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'Invalid service id' });
+    }
+
+    const parsedPrice = price !== undefined ? toNumber(price) : undefined;
+    const parsedDuration = duration_mins !== undefined ? toPositiveInt(duration_mins) : undefined;
+    if (price !== undefined && (parsedPrice === null || parsedPrice <= 0)) {
+      return res.status(400).json({ success: false, message: 'Invalid service price' });
+    }
+    if (duration_mins !== undefined && !parsedDuration) {
+      return res.status(400).json({ success: false, message: 'Invalid service duration' });
+    }
+
     const service = await prisma.service.update({
-      where: { id: parseInt(id) },
-      data: { name, description, price: price ? parseFloat(price) : undefined, duration_mins: duration_mins ? parseInt(duration_mins) : undefined, is_active }
+      where: { id: serviceId },
+      data: { name, description, price: parsedPrice, duration_mins: parsedDuration, is_active }
     });
     res.status(200).json({ success: true, data: service });
   } catch (error) {
@@ -64,8 +119,12 @@ exports.updateService = async (req, res) => {
 
 exports.deleteService = async (req, res) => {
   try {
-    await prisma.addon.deleteMany({ where: { service_id: parseInt(req.params.id) } });
-    await prisma.service.delete({ where: { id: parseInt(req.params.id) } });
+    const serviceId = toPositiveInt(req.params.id);
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'Invalid service id' });
+    }
+    await prisma.addon.deleteMany({ where: { service_id: serviceId } });
+    await prisma.service.delete({ where: { id: serviceId } });
     res.status(200).json({ success: true, message: 'Service deleted' });
   } catch (error) {
     console.error(error);
@@ -77,8 +136,19 @@ exports.deleteService = async (req, res) => {
 exports.createAddon = async (req, res) => {
   try {
     const { service_id, name, price } = req.body;
+    const serviceId = toPositiveInt(service_id);
+    const parsedPrice = toNumber(price);
+    if (!serviceId || !name || parsedPrice === null || parsedPrice <= 0) {
+      return res.status(400).json({ success: false, message: 'Invalid add-on payload' });
+    }
+
+    const service = await prisma.service.findUnique({ where: { id: serviceId } });
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+
     const addon = await prisma.addon.create({
-      data: { name, price: parseFloat(price), service_id: parseInt(service_id) }
+      data: { name, price: parsedPrice, service_id: serviceId }
     });
     res.status(201).json({ success: true, data: addon });
   } catch (error) {
@@ -89,7 +159,11 @@ exports.createAddon = async (req, res) => {
 
 exports.deleteAddon = async (req, res) => {
   try {
-    await prisma.addon.delete({ where: { id: parseInt(req.params.id) } });
+    const addonId = toPositiveInt(req.params.id);
+    if (!addonId) {
+      return res.status(400).json({ success: false, message: 'Invalid add-on id' });
+    }
+    await prisma.addon.delete({ where: { id: addonId } });
     res.status(200).json({ success: true, message: 'Add-on deleted' });
   } catch (error) {
     console.error(error);
@@ -110,6 +184,9 @@ exports.getAllMechanics = async (req, res) => {
 exports.createMechanic = async (req, res) => {
   try {
     const { name, phone, email } = req.body;
+    if (!name || !phone || !email) {
+      return res.status(400).json({ success: false, message: 'Name, phone, and email are required' });
+    }
     const mechanic = await prisma.mechanic.create({ data: { name, phone, email } });
     res.status(201).json({ success: true, data: mechanic });
   } catch (error) {
@@ -119,7 +196,11 @@ exports.createMechanic = async (req, res) => {
 
 exports.deleteMechanic = async (req, res) => {
   try {
-    await prisma.mechanic.delete({ where: { id: parseInt(req.params.id) } });
+    const mechanicId = toPositiveInt(req.params.id);
+    if (!mechanicId) {
+      return res.status(400).json({ success: false, message: 'Invalid mechanic id' });
+    }
+    await prisma.mechanic.delete({ where: { id: mechanicId } });
     res.status(200).json({ success: true, message: 'Mechanic removed' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error removing mechanic' });

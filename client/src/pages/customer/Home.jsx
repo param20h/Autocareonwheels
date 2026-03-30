@@ -132,6 +132,7 @@ const Home = () => {
                   glowIntensity={2.0}
                   coneSpread={28}
                   animated
+                  loop
                   colors={['#c0392b', '#e74c3c', '#ff6b6b']}
                 >
                   <Link to={service.id ? `/services/${service.id}` : '/book'} className="p-8 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden block">
@@ -183,6 +184,7 @@ const Home = () => {
                   glowIntensity={2.0}
                   coneSpread={28}
                   animated
+                  loop
                   colors={['#c0392b', '#e74c3c', '#ff6b6b']}
                 >
                   <div className="p-6">
@@ -290,13 +292,13 @@ const Home = () => {
             </div>
 
             <BorderGlow
-              edgeSensitivity={35}
+              edgeSensitivity={50}
               glowColor="180 10 50"
               backgroundColor="#111111"
-              borderRadius={24}
-              glowRadius={64}
-              glowIntensity={1.2}
-              coneSpread={30}
+              borderRadius={49}
+              glowRadius={78}
+              glowIntensity={2.2}
+              coneSpread={50}
               animated
               loop
               colors={['#1f2937', '#374151', '#4b5563']}

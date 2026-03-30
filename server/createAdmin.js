@@ -1,21 +1,35 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('admin123', 12);
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  const name = process.env.ADMIN_NAME || 'Super Admin';
+  const phone = process.env.ADMIN_PHONE || '0000000000';
+
+  if (!email || !password) {
+    throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD are required');
+  }
+
+  if (password.length < 8) {
+    throw new Error('ADMIN_PASSWORD must be at least 8 characters long');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 12);
   await prisma.user.upsert({
-    where: { email: 'admin@autocare.com' },
+    where: { email },
     update: { role: 'ADMIN', password: hashedPassword },
     create: { 
-      name: 'Super Admin', 
-      email: 'admin@autocare.com', 
+      name,
+      email,
       password: hashedPassword, 
       role: 'ADMIN',
-      phone: '0000000000'
+      phone
     }
   });
-  console.log('Admin account created successfully: admin@autocare.com / admin123');
+  console.log(`Admin account ensured for ${email}`);
 }
 
 main()
