@@ -64,6 +64,26 @@ exports.updateBookingStatus = async (req, res) => {
   }
 };
 
+exports.deleteBooking = async (req, res) => {
+  try {
+    const bookingId = toPositiveInt(req.params.id);
+    if (!bookingId) {
+      return res.status(400).json({ success: false, message: 'Invalid booking id' });
+    }
+
+    const existing = await prisma.booking.findUnique({ where: { id: bookingId } });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+
+    await prisma.booking.delete({ where: { id: bookingId } });
+    return res.status(200).json({ success: true, message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Error deleting booking' });
+  }
+};
+
 // ============ SERVICES ============
 exports.createService = async (req, res) => {
   try {

@@ -20,3 +20,33 @@ npm install
 # Start development 
 npm run dev
 ```
+
+## Environment Setup
+
+1. Copy `.env.example` to `.env`.
+2. Fill all required values before running the server.
+
+Required for auth and server startup:
+- `DATABASE_URL`
+- `JWT_SECRET`
+
+Required for admin bootstrap script:
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+
+Optional admin bootstrap fields:
+- `ADMIN_NAME`
+- `ADMIN_PHONE`
+
+Optional integrations:
+- SMTP email: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`
+- Cloudinary upload: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- Push notifications: `FCM_SERVER_KEY`
+
+## Admin Bootstrap
+
+Run this once after database setup to ensure an admin account exists:
+
+```bash
+npm run admin:create --workspace=server
+```

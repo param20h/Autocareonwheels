@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles } from 'lucide-react';
+import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../store/useAuth';
@@ -52,6 +52,17 @@ const AdminDashboard = () => {
       setBookings(bookings.map(b => b.id === id ? { ...b, status: newStatus } : b));
       setToast({ show: true, message: `Booking #${id} → ${newStatus}`, type: 'success' });
     } catch { setToast({ show: true, message: 'Failed to update', type: 'error' }); }
+  };
+
+  const handleDeleteBooking = async (id) => {
+    if (!confirm('Delete this booking permanently?')) return;
+    try {
+      await api.delete(`/admin/bookings/${id}`);
+      setBookings((prev) => prev.filter((b) => b.id !== id));
+      setToast({ show: true, message: `Booking #${id} deleted`, type: 'success' });
+    } catch {
+      setToast({ show: true, message: 'Failed to delete booking', type: 'error' });
+    }
   };
 
   const handleAddSubmit = async () => {
@@ -113,9 +124,14 @@ const AdminDashboard = () => {
             <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">Secure Operations</p>
           </div>
         </div>
-        <button onClick={handleLogout} className="flex items-center text-gray-700 hover:text-primary transition-colors font-bold text-sm bg-white/80 hover:bg-white px-4 py-2 rounded-btn border border-gray-200">
-          <LogOut size={16} className="mr-2" /> End Shift
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate('/')} className="flex items-center text-gray-700 hover:text-primary transition-colors font-bold text-sm bg-white/80 hover:bg-white px-4 py-2 rounded-btn border border-gray-200">
+            <Home size={16} className="mr-2" /> Home
+          </button>
+          <button onClick={handleLogout} className="flex items-center text-gray-700 hover:text-primary transition-colors font-bold text-sm bg-white/80 hover:bg-white px-4 py-2 rounded-btn border border-gray-200">
+            <LogOut size={16} className="mr-2" /> End Shift
+          </button>
+        </div>
       </nav>
 
       <main className="max-w-7xl mx-auto p-6 mt-4 relative z-10">
@@ -185,7 +201,7 @@ const AdminDashboard = () => {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="text-xs uppercase tracking-wider text-gray-500 font-bold border-b border-gray-100">
-                      <th className="p-4 pl-6">ID</th><th className="p-4">Client</th><th className="p-4">Service</th><th className="p-4">Date</th><th className="p-4">Status</th>
+                      <th className="p-4 pl-6">ID</th><th className="p-4">Client</th><th className="p-4">Service</th><th className="p-4">Date</th><th className="p-4">Status</th><th className="p-4 text-right pr-6">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -206,6 +222,14 @@ const AdminDashboard = () => {
                             className={`text-xs font-bold px-3 py-1.5 rounded-full cursor-pointer outline-none border ${getStatusColor(b.status)}`}>
                             <option>PENDING</option><option>CONFIRMED</option><option>IN_PROGRESS</option><option>COMPLETED</option><option>CANCELLED</option>
                           </select>
+                        </td>
+                        <td className="p-4 pr-6 text-right">
+                          <button
+                            onClick={() => handleDeleteBooking(b.id)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full transition-colors"
+                          >
+                            <Trash2 size={13} /> Delete
+                          </button>
                         </td>
                       </tr>
                     ))}

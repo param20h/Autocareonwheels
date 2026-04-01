@@ -15,7 +15,11 @@ const Navbar = () => {
     setMobileOpen(false);
   };
 
-  const getDashboardPath = () => user?.role === 'ADMIN' ? '/admin' : '/dashboard';
+  const getDashboardPath = () => {
+    if (user?.role === 'ADMIN') return '/admin';
+    if (user?.role === 'WORKER') return '/worker';
+    return '/dashboard';
+  };
 
   return (
     <nav className="fixed w-full z-50 bg-primary/95 backdrop-blur-lg border-b border-gray-800">
@@ -36,10 +40,12 @@ const Navbar = () => {
                       <LayoutDashboard size={15} />
                       <span>Dashboard</span>
                     </Link>
-                    <Link to="/profile" className="flex items-center gap-1.5 text-neutral-400 hover:text-white text-sm font-semibold transition-colors">
-                      <UserCircle size={15} />
-                      <span>{user?.name?.split(' ')[0]}</span>
-                    </Link>
+                    {user?.role !== 'WORKER' && (
+                      <Link to="/profile" className="flex items-center gap-1.5 text-neutral-400 hover:text-white text-sm font-semibold transition-colors">
+                        <UserCircle size={15} />
+                        <span>{user?.name?.split(' ')[0]}</span>
+                      </Link>
+                    )}
                     <button onClick={handleLogout} className="flex items-center gap-1.5 text-neutral-400 hover:text-red-400 text-sm font-semibold transition-colors">
                       <LogOut size={15} />
                       <span>Logout</span>
@@ -80,7 +86,9 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link to={getDashboardPath()} onClick={() => setMobileOpen(false)} className="block text-white font-bold">Dashboard</Link>
-                <Link to="/profile" onClick={() => setMobileOpen(false)} className="block text-white font-bold">My Profile</Link>
+                {user?.role !== 'WORKER' && (
+                  <Link to="/profile" onClick={() => setMobileOpen(false)} className="block text-white font-bold">My Profile</Link>
+                )}
                 <button onClick={handleLogout} className="block text-accent font-bold mt-2">Logout</button>
               </>
             ) : (

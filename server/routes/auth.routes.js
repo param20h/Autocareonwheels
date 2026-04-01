@@ -10,6 +10,7 @@ const registerValidation = [
 	body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
 	body('phone').optional({ values: 'falsy' }).isLength({ min: 8, max: 20 }).withMessage('Phone must be 8-20 characters'),
 	body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+	body('role').optional().isIn(['CUSTOMER', 'WORKER']).withMessage('Role must be CUSTOMER or WORKER'),
 	validateRequest,
 ];
 

@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "admin:create": "node createAdmin.js"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

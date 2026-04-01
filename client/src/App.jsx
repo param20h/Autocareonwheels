@@ -7,6 +7,7 @@ import Dashboard from './pages/customer/Dashboard';
 import Profile from './pages/customer/Profile';
 import ServiceDetail from './pages/customer/ServiceDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import WorkerDashboard from './pages/worker/WorkerDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
 import PrivacyPolicy from './pages/legal/PrivacyPolicy';
@@ -36,6 +37,11 @@ function App() {
         {/* Protected Admin Routes */}
         <Route element={<ProtectedRoute requiredRole="ADMIN" />}>
           <Route path="/admin" element={<AdminDashboard />} />
+        </Route>
+
+        {/* Protected Worker Routes */}
+        <Route element={<ProtectedRoute requiredRole="WORKER" />}>
+          <Route path="/worker" element={<WorkerDashboard />} />
         </Route>
 
         {/* Auth Routes */}

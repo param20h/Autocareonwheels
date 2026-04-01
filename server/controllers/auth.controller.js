@@ -17,7 +17,10 @@ const generateToken = (userId, role) => {
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, role } = req.body;
+    const requestedRole = typeof role === 'string' ? role.toUpperCase() : 'CUSTOMER';
+    const allowedRoles = ['CUSTOMER', 'WORKER'];
+    const safeRole = allowedRoles.includes(requestedRole) ? requestedRole : 'CUSTOMER';
     
     // Check if user exists
     const existingUser = await prisma.user.findFirst({
@@ -29,7 +32,7 @@ exports.register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await prisma.user.create({
-        data: { name, email, phone, password: hashedPassword }
+      data: { name, email, phone, password: hashedPassword, role: safeRole }
     });
 
     const token = generateToken(user.id, user.role);

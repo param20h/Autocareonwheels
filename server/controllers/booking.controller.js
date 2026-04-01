@@ -87,3 +87,33 @@ exports.cancelBooking = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error cancelling booking' });
   }
 };
+
+exports.deleteMyBooking = async (req, res) => {
+  try {
+    const bookingId = Number.parseInt(req.params.id, 10);
+    if (!Number.isInteger(bookingId) || bookingId <= 0) {
+      return res.status(400).json({ success: false, message: 'Invalid booking id' });
+    }
+
+    const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
+    if (!booking) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+    if (booking.user_id !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Not your booking' });
+    }
+
+    if (!['PENDING', 'CANCELLED', 'COMPLETED'].includes(booking.status)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Only pending, cancelled, or completed bookings can be deleted',
+      });
+    }
+
+    await prisma.booking.delete({ where: { id: bookingId } });
+    return res.status(200).json({ success: true, message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Error deleting booking' });
+  }
+};

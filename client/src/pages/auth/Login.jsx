@@ -12,7 +12,13 @@ const AuthCard = () => {
   const { loginAction } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '', role: 'CUSTOMER' });
+
+  const getDefaultRouteByRole = (role) => {
+    if (role === 'ADMIN') return '/admin';
+    if (role === 'WORKER') return '/worker';
+    return '/dashboard';
+  };
 
   // Refs to measure dynamic height of each form
   const loginRef = useRef(null);
@@ -42,17 +48,14 @@ const AuthCard = () => {
           password: formData.password
         });
         loginAction(data.data.user, data.data.token);
-        if (data.data.user.role === 'ADMIN') {
-          navigate('/admin');
-        } else {
-          navigate('/dashboard');
-        }
+        navigate(getDefaultRouteByRole(data.data.user.role));
       } else {
         await api.post('/auth/register', {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          phone: formData.phone
+          phone: formData.phone,
+          role: formData.role,
         });
         // Transition back to login smoothly
         setIsLogin(true);
@@ -72,11 +75,7 @@ const AuthCard = () => {
         token: credentialResponse.credential
       });
       loginAction(data.data.user, data.data.token);
-      if (data.data.user.role === 'ADMIN') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      navigate(getDefaultRouteByRole(data.data.user.role));
     } catch (error) {
       alert(error.response?.data?.message || 'Google Auth failed');
       console.error(error);
@@ -262,6 +261,19 @@ const AuthCard = () => {
                     placeholder="••••••••"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Account Type</label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="mt-1 block w-full sm:text-sm border-gray-300 rounded-input py-2.5 border transition-colors outline-none bg-white focus:ring-primary focus:border-primary px-3"
+                >
+                  <option value="CUSTOMER">Customer</option>
+                  <option value="WORKER">Worker</option>
+                </select>
               </div>
 
               <div className="pt-2">

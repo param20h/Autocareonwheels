@@ -1,6 +1,6 @@
 const express = require('express');
 const { 
-  getAllBookings, updateBookingStatus, 
+  getAllBookings, updateBookingStatus, deleteBooking,
   createService, updateService, deleteService,
   createAddon, deleteAddon,
   getAllMechanics, createMechanic, deleteMechanic,
@@ -15,6 +15,7 @@ router.use(authorizeRole('ADMIN'));
 // Bookings
 router.get('/bookings', getAllBookings);
 router.put('/bookings/:id', updateBookingStatus);
+router.delete('/bookings/:id', deleteBooking);
 
 // Services
 router.post('/services', createService);

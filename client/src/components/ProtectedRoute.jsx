@@ -7,6 +7,12 @@ const ProtectedRoute = ({ requiredRole }) => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
+  const getDefaultRouteByRole = (role) => {
+    if (role === 'ADMIN') return '/admin';
+    if (role === 'WORKER') return '/worker';
+    return '/dashboard';
+  };
+
   if (isLoading) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-background">
@@ -20,8 +26,7 @@ const ProtectedRoute = ({ requiredRole }) => {
   }
 
   if (requiredRole && user?.role !== requiredRole && !(requiredRole === 'CUSTOMER' && user?.role === 'ADMIN')) {
-    // If a CUSTOMER tries to view the ADMIN link, kick them to dashboard
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={getDefaultRouteByRole(user?.role)} replace />;
   }
 
   return <Outlet />;
