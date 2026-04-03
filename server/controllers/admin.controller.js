@@ -17,7 +17,12 @@ const toNumber = (value) => {
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await prisma.booking.findMany({
-      include: { user: { select: { name: true, phone: true, email: true } }, service: true, mechanic: true },
+      include: {
+        user: { select: { name: true, phone: true, email: true } },
+        service: true,
+        mechanic: true,
+        invoices: { orderBy: { created_at: 'desc' }, take: 1 },
+      },
       orderBy: { id: 'desc' }
     });
     res.status(200).json({ success: true, count: bookings.length, data: bookings });

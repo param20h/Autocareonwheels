@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Car, MapPin, Clock, XCircle, Sparkles } from 'lucide-react';
+import { Calendar, Car, MapPin, Clock, XCircle, Sparkles, Download, FilePlus2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../store/useAuth';
 import api from '../../api/axios';
+import bookingService from '../../services/booking.service';
 import Navbar from '../../components/Navbar';
 import Toast from '../../components/Toast';
 
@@ -47,6 +48,32 @@ const CustomerDashboard = () => {
       setToast({ show: true, message: 'Booking deleted successfully', type: 'success' });
     } catch (error) {
       setToast({ show: true, message: error.response?.data?.message || 'Failed to delete booking', type: 'error' });
+    }
+  };
+
+  const handleCreateInvoice = async (bookingId) => {
+    try {
+      await bookingService.createInvoice(bookingId);
+      setToast({ show: true, message: 'Invoice created successfully', type: 'success' });
+    } catch (error) {
+      setToast({ show: true, message: error.response?.data?.message || 'Failed to create invoice', type: 'error' });
+    }
+  };
+
+  const handleDownloadInvoice = async (bookingId) => {
+    try {
+      const response = await bookingService.downloadInvoice(bookingId);
+      const fileBlob = new Blob([response.data], { type: 'application/pdf' });
+      const fileUrl = window.URL.createObjectURL(fileBlob);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = `booking-${bookingId}-invoice.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(fileUrl);
+    } catch (error) {
+      setToast({ show: true, message: error.response?.data?.message || 'Failed to download invoice', type: 'error' });
     }
   };
 
@@ -141,6 +168,18 @@ const CustomerDashboard = () => {
                       Delete
                     </button>
                   )}
+                  <button
+                    onClick={() => handleCreateInvoice(booking.id)}
+                    className="mt-3 px-4 py-2 text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-btn transition-colors border border-slate-300 shadow-sm inline-flex items-center gap-1.5"
+                  >
+                    <FilePlus2 size={14} /> Make Invoice
+                  </button>
+                  <button
+                    onClick={() => handleDownloadInvoice(booking.id)}
+                    className="mt-3 px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-btn transition-colors border border-primary shadow-sm inline-flex items-center gap-1.5"
+                  >
+                    <Download size={14} /> Download
+                  </button>
                 </div>
               </motion.div>
             ))}

@@ -1,5 +1,14 @@
 const { PrismaClient } = require('@prisma/client');
+const { buildInvoicePayload, buildInvoicePdfBuffer } = require('../utils/generateInvoice');
 const prisma = new PrismaClient();
+
+const STAFF_ROLES = ['ADMIN', 'WORKER'];
+
+const canAccessBooking = (user, booking) => {
+  if (!user || !booking) return false;
+  if (STAFF_ROLES.includes(user.role)) return true;
+  return booking.user_id === user.id;
+};
 
 // @desc    Create new booking
 // @route   POST /api/v1/bookings
@@ -115,5 +124,113 @@ exports.deleteMyBooking = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Error deleting booking' });
+  }
+};
+
+// @desc    Get bookings for admin/worker staff dashboard
+// @route   GET /api/v1/bookings/staff
+// @access  Private (ADMIN/WORKER)
+exports.getStaffBookings = async (req, res) => {
+  try {
+    if (!STAFF_ROLES.includes(req.user.role)) {
+      return res.status(403).json({ success: false, message: 'Access restricted to ADMIN or WORKER roles.' });
+    }
+
+    const bookings = await prisma.booking.findMany({
+      include: {
+        user: { select: { id: true, name: true, email: true, phone: true } },
+        service: true,
+        mechanic: true,
+        invoices: { orderBy: { created_at: 'desc' }, take: 1 },
+      },
+      orderBy: { id: 'desc' },
+    });
+
+    return res.status(200).json({ success: true, count: bookings.length, data: bookings });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Error fetching staff bookings' });
+  }
+};
+
+// @desc    Create or fetch invoice for a booking
+// @route   POST /api/v1/bookings/:id/invoice
+// @access  Private
+exports.createOrGetInvoice = async (req, res) => {
+  try {
+    const bookingId = Number.parseInt(req.params.id, 10);
+    if (!Number.isInteger(bookingId) || bookingId <= 0) {
+      return res.status(400).json({ success: false, message: 'Invalid booking id' });
+    }
+
+    const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
+    if (!booking) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+    if (!canAccessBooking(req.user, booking)) {
+      return res.status(403).json({ success: false, message: 'Not authorized to access this booking invoice' });
+    }
+
+    let invoice = await prisma.invoice.findFirst({
+      where: { booking_id: bookingId },
+      orderBy: { created_at: 'desc' },
+    });
+
+    if (!invoice) {
+      const payload = buildInvoicePayload({ bookingId, amount: booking.total_price });
+      invoice = await prisma.invoice.create({ data: payload });
+    }
+
+    return res.status(200).json({ success: true, data: invoice });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Error creating invoice' });
+  }
+};
+
+// @desc    Download booking invoice as PDF
+// @route   GET /api/v1/bookings/:id/invoice/download
+// @access  Private
+exports.downloadInvoice = async (req, res) => {
+  try {
+    const bookingId = Number.parseInt(req.params.id, 10);
+    if (!Number.isInteger(bookingId) || bookingId <= 0) {
+      return res.status(400).json({ success: false, message: 'Invalid booking id' });
+    }
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        user: { select: { name: true, email: true, phone: true } },
+        service: { select: { name: true } },
+      },
+    });
+
+    if (!booking) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+    if (!canAccessBooking(req.user, booking)) {
+      return res.status(403).json({ success: false, message: 'Not authorized to access this booking invoice' });
+    }
+
+    let invoice = await prisma.invoice.findFirst({
+      where: { booking_id: bookingId },
+      orderBy: { created_at: 'desc' },
+    });
+
+    if (!invoice) {
+      const payload = buildInvoicePayload({ bookingId, amount: booking.total_price });
+      invoice = await prisma.invoice.create({ data: payload });
+    }
+
+    const pdfBuffer = await buildInvoicePdfBuffer(invoice, booking);
+    const fileName = `${invoice.invoice_number}.pdf`;
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    return res.status(200).send(pdfBuffer);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Error downloading invoice' });
   }
 };

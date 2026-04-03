@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles, Home } from 'lucide-react';
+import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles, Home, Download, FilePlus2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../store/useAuth';
 import api from '../../api/axios';
+import bookingService from '../../services/booking.service';
 import Toast from '../../components/Toast';
 
 const AdminDashboard = () => {
@@ -62,6 +63,32 @@ const AdminDashboard = () => {
       setToast({ show: true, message: `Booking #${id} deleted`, type: 'success' });
     } catch {
       setToast({ show: true, message: 'Failed to delete booking', type: 'error' });
+    }
+  };
+
+  const handleCreateInvoice = async (id) => {
+    try {
+      await bookingService.createInvoice(id);
+      setToast({ show: true, message: `Invoice ready for booking #${id}`, type: 'success' });
+    } catch (error) {
+      setToast({ show: true, message: error.response?.data?.message || 'Failed to create invoice', type: 'error' });
+    }
+  };
+
+  const handleDownloadInvoice = async (id) => {
+    try {
+      const response = await bookingService.downloadInvoice(id);
+      const fileBlob = new Blob([response.data], { type: 'application/pdf' });
+      const fileUrl = window.URL.createObjectURL(fileBlob);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = `booking-${id}-invoice.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(fileUrl);
+    } catch (error) {
+      setToast({ show: true, message: error.response?.data?.message || 'Failed to download invoice', type: 'error' });
     }
   };
 
@@ -224,12 +251,26 @@ const AdminDashboard = () => {
                           </select>
                         </td>
                         <td className="p-4 pr-6 text-right">
-                          <button
-                            onClick={() => handleDeleteBooking(b.id)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full transition-colors"
-                          >
-                            <Trash2 size={13} /> Delete
-                          </button>
+                          <div className="inline-flex items-center gap-2">
+                            <button
+                              onClick={() => handleCreateInvoice(b.id)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-full transition-colors"
+                            >
+                              <FilePlus2 size={13} /> Make
+                            </button>
+                            <button
+                              onClick={() => handleDownloadInvoice(b.id)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-700 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-full transition-colors"
+                            >
+                              <Download size={13} /> Download
+                            </button>
+                            <button
+                              onClick={() => handleDeleteBooking(b.id)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full transition-colors"
+                            >
+                              <Trash2 size={13} /> Delete
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
