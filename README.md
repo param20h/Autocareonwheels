@@ -28,7 +28,7 @@ npm run dev
 
 Required for auth and server startup:
 - `DATABASE_URL`
-- `JWT_SECRET`
+- `JWT_SECRET` 
 
 Required for admin bootstrap script:
 - `ADMIN_EMAIL`
