@@ -82,7 +82,7 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-primary mb-3">10. Contact</h2>
             <p>For any questions regarding these Terms of Service, please reach out to us at:</p>
-            <p className="mt-2 font-semibold text-primary">support@autocare.com · +91 98765 43210</p>
+            <p className="mt-2 font-semibold text-primary">info@autocareonwheels.com.au · 0427563913</p>
             <p className="text-sm text-gray-400 mt-1">123 AutoCare Lane, Mechanical District, Auto City – 560001</p>
           </section>
         </div>

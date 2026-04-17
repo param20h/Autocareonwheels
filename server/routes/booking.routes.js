@@ -11,9 +11,8 @@ const {
 const { protect } = require('../middlewares/auth.middleware');
 const router = express.Router();
 
-router.use(protect);
-
 router.post('/', createBooking);
+router.use(protect);
 router.get('/my', getMyBookings);
 router.get('/staff', getStaffBookings);
 router.put('/:id/cancel', cancelBooking);

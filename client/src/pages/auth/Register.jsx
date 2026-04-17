@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Mail, Lock, Loader2, Car, User, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -16,18 +15,6 @@ const Register = () => {
     setLoading(true);
     // Mock API call
     setTimeout(() => { setLoading(false); alert('Registration successful! (mock)'); }, 1000);
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true);
-    try {
-      console.log('Google Auth Token:', credentialResponse.credential);
-      alert('Google Signup Successful (mock)');
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -128,29 +115,6 @@ const Register = () => {
               </button>
             </div>
           </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or sign up with</span>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center w-full flex justify-center">
-              <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-client-id-here.apps.googleusercontent.com'}>
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => console.log('Signup Failed')}
-                  theme="outline"
-                  shape="pill"
-                  width="100%"
-                />
-              </GoogleOAuthProvider>
-            </div>
-          </div>
         </div>
       </div>
     </div>

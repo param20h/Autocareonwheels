@@ -17,7 +17,6 @@ const Navbar = () => {
 
   const getDashboardPath = () => {
     if (user?.role === 'ADMIN') return '/admin';
-    if (user?.role === 'WORKER') return '/worker';
     return '/dashboard';
   };
 
@@ -40,12 +39,10 @@ const Navbar = () => {
                       <LayoutDashboard size={15} />
                       <span>Dashboard</span>
                     </Link>
-                    {user?.role !== 'WORKER' && (
-                      <Link to="/profile" className="flex items-center gap-1.5 text-neutral-400 hover:text-white text-sm font-semibold transition-colors">
-                        <UserCircle size={15} />
-                        <span>{user?.name?.split(' ')[0]}</span>
-                      </Link>
-                    )}
+                    <Link to="/profile" className="flex items-center gap-1.5 text-neutral-400 hover:text-white text-sm font-semibold transition-colors">
+                      <UserCircle size={15} />
+                      <span>{user?.name?.split(' ')[0]}</span>
+                    </Link>
                     <button onClick={handleLogout} className="flex items-center gap-1.5 text-neutral-400 hover:text-red-400 text-sm font-semibold transition-colors">
                       <LogOut size={15} />
                       <span>Logout</span>
@@ -53,9 +50,6 @@ const Navbar = () => {
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    <Link to="/auth/login" className="text-neutral-400 hover:text-white text-sm font-semibold transition-colors px-2">
-                      Log in
-                    </Link>
                     <Link to="/book" className="bg-accent text-white text-sm font-bold px-4 py-1.5 rounded-full hover:bg-red-700 transition-all border border-red-700 shadow-sm">
                       Book Now
                     </Link>
@@ -86,14 +80,11 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link to={getDashboardPath()} onClick={() => setMobileOpen(false)} className="block text-white font-bold">Dashboard</Link>
-                {user?.role !== 'WORKER' && (
-                  <Link to="/profile" onClick={() => setMobileOpen(false)} className="block text-white font-bold">My Profile</Link>
-                )}
+                <Link to="/profile" onClick={() => setMobileOpen(false)} className="block text-white font-bold">My Profile</Link>
                 <button onClick={handleLogout} className="block text-accent font-bold mt-2">Logout</button>
               </>
             ) : (
               <>
-                <Link to="/auth/login" onClick={() => setMobileOpen(false)} className="block text-white font-bold">Log in</Link>
                 <Link to="/book" onClick={() => setMobileOpen(false)} className="block w-full text-center bg-accent text-white px-6 py-3 rounded-btn font-bold">Book Now</Link>
               </>
             )}

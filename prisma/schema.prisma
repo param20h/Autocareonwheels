@@ -6,22 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
-}
-
-enum Role {
-  CUSTOMER
-  ADMIN
-  WORKER
-}
-
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
 }
 
 model User {
@@ -30,7 +16,7 @@ model User {
   email      String    @unique
   phone      String?   @unique
   password   String?
-  role       Role      @default(CUSTOMER)
+  role       String    @default("CUSTOMER")
   google_id  String?   @unique
   avatar_url String?
   created_at DateTime  @default(now())
@@ -115,7 +101,7 @@ model Booking {
   city        String
   date        DateTime @db.Date
   time_slot   String
-  status      BookingStatus @default(PENDING)
+  status      String   @default("PENDING")
   notes       String?  @db.Text
   total_price Decimal  @db.Decimal(10, 2)
 
@@ -136,7 +122,7 @@ model BookingAddon {
   price      Decimal  @db.Decimal(10, 2)
 
   booking    Booking  @relation(fields: [booking_id], references: [id], onDelete: Cascade)
-  addon      Addon    @relation(fields: [addon_id], references: [id])
+  addon      Addon    @relation(fields: [addon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("booking_addons")
 }

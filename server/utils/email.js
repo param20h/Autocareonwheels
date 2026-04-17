@@ -18,7 +18,7 @@ const createTransporter = () => {
 	});
 };
 
-const sendEmail = async ({ to, subject, html, text }) => {
+const sendEmail = async ({ to, subject, html, text, attachments }) => {
 	const transporter = createTransporter();
 	if (!transporter) {
 		throw new Error('SMTP is not configured');
@@ -31,6 +31,7 @@ const sendEmail = async ({ to, subject, html, text }) => {
 		subject,
 		html,
 		text,
+		attachments,
 	});
 };
 

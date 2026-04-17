@@ -7,7 +7,6 @@ import Dashboard from './pages/customer/Dashboard';
 import Profile from './pages/customer/Profile';
 import ServiceDetail from './pages/customer/ServiceDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
-import WorkerDashboard from './pages/worker/WorkerDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
 import PrivacyPolicy from './pages/legal/PrivacyPolicy';
@@ -26,10 +25,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services/:id" element={<ServiceDetail />} />
+        <Route path="/book" element={<Booking />} />
         
         {/* Protected Customer Routes */}
         <Route element={<ProtectedRoute requiredRole="CUSTOMER" />}>
-          <Route path="/book" element={<Booking />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
@@ -37,11 +36,6 @@ function App() {
         {/* Protected Admin Routes */}
         <Route element={<ProtectedRoute requiredRole="ADMIN" />}>
           <Route path="/admin" element={<AdminDashboard />} />
-        </Route>
-
-        {/* Protected Worker Routes */}
-        <Route element={<ProtectedRoute requiredRole="WORKER" />}>
-          <Route path="/worker" element={<WorkerDashboard />} />
         </Route>
 
         {/* Auth Routes */}

@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Mail, Lock, Loader2, User, Phone, Car } from 'lucide-react';
 import MechanicBackground from '../../components/MechanicBackground';
 import BorderGlow from '../../components/BorderGlow';
@@ -16,7 +15,6 @@ const AuthCard = () => {
 
   const getDefaultRouteByRole = (role) => {
     if (role === 'ADMIN') return '/admin';
-    if (role === 'WORKER') return '/worker';
     return '/dashboard';
   };
 
@@ -62,22 +60,6 @@ const AuthCard = () => {
       }
     } catch (error) {
       alert(error.response?.data?.message || 'Authentication failed');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true);
-    try {
-      const { data } = await api.post('/auth/google', {
-        token: credentialResponse.credential
-      });
-      loginAction(data.data.user, data.data.token);
-      navigate(getDefaultRouteByRole(data.data.user.role));
-    } catch (error) {
-      alert(error.response?.data?.message || 'Google Auth failed');
       console.error(error);
     } finally {
       setLoading(false);
@@ -178,20 +160,6 @@ const AuthCard = () => {
               </div>
             </form>
 
-            <div className="mt-8">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-300" /></div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500 font-medium">Or continue with</span>
-                </div>
-              </div>
-              <div className="mt-6 text-center w-full flex justify-center hover:shadow-md rounded-full transition-shadow">
-                <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-client-id-here.apps.googleusercontent.com'}>
-                  <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => console.log('Login Failed')} theme="outline" shape="pill" width="100%" />
-                </GoogleOAuthProvider>
-              </div>
-            </div>
-
             <div className="mt-6 flex justify-center">
               <Link to="/" className="text-sm font-semibold text-gray-400 hover:text-primary transition-colors">Return to Home</Link>
             </div>
@@ -272,7 +240,6 @@ const AuthCard = () => {
                   className="mt-1 block w-full sm:text-sm border-gray-300 rounded-input py-2.5 border transition-colors outline-none bg-white focus:ring-primary focus:border-primary px-3"
                 >
                   <option value="CUSTOMER">Customer</option>
-                  <option value="WORKER">Worker</option>
                 </select>
               </div>
 
@@ -286,19 +253,6 @@ const AuthCard = () => {
               </div>
             </form>
 
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-300" /></div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500 font-medium">Or register instantly</span>
-                </div>
-              </div>
-              <div className="mt-6 text-center w-full flex justify-center hover:shadow-md rounded-full transition-shadow">
-                <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-client-id-here.apps.googleusercontent.com'}>
-                  <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => console.log('Signup Failed')} theme="outline" shape="pill" width="100%" />
-                </GoogleOAuthProvider>
-              </div>
-            </div>
             </div>
           </div>
         </BorderGlow>

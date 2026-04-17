@@ -62,13 +62,13 @@ const PrivacyPolicy = () => {
 
           <section>
             <h2 className="text-xl font-bold text-primary mb-3">6. Cookies & Tracking</h2>
-            <p>We use essential cookies and local storage to maintain your authentication session and preferences. We do not use third-party advertising trackers. Google OAuth integration is subject to Google's own privacy policy.</p>
+            <p>We use essential cookies and local storage to maintain your authentication session and preferences. We do not use third-party advertising trackers.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold text-primary mb-3">7. Contact Us</h2>
             <p>If you have questions about this Privacy Policy, please contact us at:</p>
-            <p className="mt-2 font-semibold text-primary">support@autocare.com · +91 98765 43210</p>
+            <p className="mt-2 font-semibold text-primary">info@autocareonwheels.com.au · 0427563913</p>
             <p className="text-sm text-gray-400 mt-1">123 AutoCare Lane, Mechanical District, Auto City – 560001</p>
           </section>
         </div>

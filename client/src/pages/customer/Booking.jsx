@@ -1,43 +1,96 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CheckCircle2, Clock, MapPin, Wrench, Loader2, Plus, Check } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import Toast from '../../components/Toast';
+import useAuth from '../../store/useAuth';
+import userService from '../../services/user.service';
+
+const AUSTRALIA_CITIES = [
+  'Sydney',
+  'Melbourne',
+  'Brisbane',
+  'Perth',
+  'Adelaide',
+  'Gold Coast',
+  'Canberra',
+  'Newcastle',
+  'Wollongong',
+  'Logan City',
+  'Geelong',
+  'Hobart',
+  'Townsville',
+  'Cairns',
+  'Darwin',
+  'Toowoomba',
+  'Ballarat',
+  'Bendigo',
+  'Albury',
+  'Launceston',
+];
+
+const AUSTRALIA_STATES = [
+  'New South Wales (NSW)',
+  'Victoria (VIC)',
+  'Queensland (QLD)',
+  'Western Australia (WA)',
+  'South Australia (SA)',
+  'Tasmania (TAS)',
+  'Australian Capital Territory (ACT)',
+  'Northern Territory (NT)',
+];
 
 const Booking = () => {
   const navigate = useNavigate();
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    address: '',
+    city: '',
+    state: '',
+    pincode: '',
+    guestName: '',
+    guestEmail: '',
+    guestPhone: '',
+    vehicleNumber: '',
+    vehicleModel: '',
     service: null,
     selectedAddons: [],
     date: '',
     timeSlot: '',
-    address: '',
-    city: ''
   });
   
   const [services, setServices] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
   const [loadingServices, setLoadingServices] = useState(true);
+  const [lookingUpVehicle, setLookingUpVehicle] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
-  const TOTAL_STEPS = 5;
+  const TOTAL_STEPS = 6;
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchInitialData = async () => {
       try {
-        const { data } = await api.get('/services');
-        setServices(data.data);
+        const [{ data: servicesData }] = await Promise.all([
+          api.get('/services'),
+        ]);
+        setServices(servicesData.data);
+
+        if (isAuthenticated) {
+          const { data: vehiclesData } = await userService.getVehicles();
+          setVehicles(vehiclesData?.data || []);
+        }
       } catch (error) {
-        console.error("Failed to fetch services", error);
+        console.error('Failed to load booking data', error);
       } finally {
         setLoadingServices(false);
       }
     };
-    fetchServices();
-  }, []);
+    fetchInitialData();
+  }, [isAuthenticated]);
 
   const nextStep = () => setStep(prev => Math.min(prev + 1, TOTAL_STEPS));
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
@@ -57,6 +110,38 @@ const Booking = () => {
     return base + addonsTotal;
   };
 
+  const handleVehicleLookup = () => {
+    const regNumber = formData.vehicleNumber.trim().toUpperCase();
+    if (!regNumber) {
+      setToast({ show: true, message: 'Enter a vehicle number first', type: 'error' });
+      return;
+    }
+
+    setLookingUpVehicle(true);
+    try {
+      if (isAuthenticated) {
+        const match = vehicles.find((v) => (v.reg_number || '').toUpperCase() === regNumber);
+        if (!match) {
+          setToast({ show: true, message: 'Vehicle not found in your saved vehicles. Enter model manually.', type: 'error' });
+          return;
+        }
+        const modelLabel = [match.make, match.model].filter(Boolean).join(' ').trim();
+        setFormData((prev) => ({ ...prev, vehicleNumber: regNumber, vehicleModel: modelLabel || prev.vehicleModel }));
+        setToast({ show: true, message: 'Vehicle found and prefilled', type: 'success' });
+        return;
+      }
+
+      if (!formData.vehicleModel.trim()) {
+        setToast({ show: true, message: 'Enter vehicle model after number lookup', type: 'error' });
+        return;
+      }
+      setFormData((prev) => ({ ...prev, vehicleNumber: regNumber }));
+      setToast({ show: true, message: 'Vehicle details captured', type: 'success' });
+    } finally {
+      setLookingUpVehicle(false);
+    }
+  };
+
   const handleBookingSubmit = async () => {
     setSubmitting(true);
     try {
@@ -64,13 +149,20 @@ const Booking = () => {
         service_id: formData.service.id,
         address: formData.address,
         city: formData.city || 'Local',
+        state: formData.state,
+        pincode: formData.pincode,
         date: formData.date,
         time_slot: formData.timeSlot,
         total_price: getTotalPrice(),
+        guest_name: formData.guestName,
+        guest_email: formData.guestEmail,
+        guest_phone: formData.guestPhone,
+        vehicle_number: formData.vehicleNumber,
+        vehicle_model: formData.vehicleModel,
         addons: formData.selectedAddons.map(a => ({ id: a.id, price: parseFloat(a.price) }))
       });
       setToast({ show: true, message: 'Booking confirmed! Redirecting...', type: 'success' });
-      setTimeout(() => navigate('/dashboard'), 1500);
+      setTimeout(() => navigate(isAuthenticated ? '/dashboard' : '/'), 1500);
     } catch (error) {
       setToast({ show: true, message: error.response?.data?.message || 'Booking failed', type: 'error' });
     } finally {
@@ -79,14 +171,20 @@ const Booking = () => {
   };
 
   const canProceed = () => {
-    if (step === 1) return !!formData.service;
-    if (step === 2) return true; // addons are optional
-    if (step === 3) return formData.date && formData.timeSlot;
-    if (step === 4) return !!formData.address;
+    if (step === 1) {
+      const hasAddress = !!formData.address;
+      const hasLocationMeta = !!formData.city && !!formData.state && /^\d{4}$/.test(formData.pincode);
+      if (isAuthenticated) return hasAddress && hasLocationMeta;
+      return hasAddress && hasLocationMeta && !!formData.guestName && !!formData.guestEmail && !!formData.guestPhone;
+    }
+    if (step === 2) return !!formData.vehicleNumber && !!formData.vehicleModel;
+    if (step === 3) return !!formData.service;
+    if (step === 4) return true;
+    if (step === 5) return formData.date && formData.timeSlot;
     return true;
   };
 
-  const stepLabels = ['Service', 'Add-ons', 'Schedule', 'Location', 'Confirm'];
+  const stepLabels = ['Location', 'Vehicle', 'Service', 'Estimate', 'Schedule', 'Confirm'];
 
   return (
     <div className="min-h-screen bg-background font-sans flex flex-col">
@@ -120,12 +218,150 @@ const Booking = () => {
           })}
         </div>
 
-        {/* Step 1: Services */}
+        {/* Step 1: Location */}
         {step === 1 && (
           <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Select a Service</h2>
-            <p className="text-gray-500 mb-8">Choose the primary maintenance package for your vehicle.</p>
-            
+            <h2 className="text-3xl font-extrabold text-primary mb-2">Service Location</h2>
+            <p className="text-gray-500 mb-8">Enter where our mechanic should arrive.</p>
+
+            <div className="space-y-5">
+              {!isAuthenticated && (
+                <>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Your Name</label>
+                    <input
+                      type="text"
+                      value={formData.guestName}
+                      onChange={(e) => setFormData({...formData, guestName: e.target.value})}
+                      className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                    <input
+                      type="email"
+                      value={formData.guestEmail}
+                      onChange={(e) => setFormData({...formData, guestEmail: e.target.value})}
+                      className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Phone</label>
+                    <input
+                      type="tel"
+                      value={formData.guestPhone}
+                      onChange={(e) => setFormData({...formData, guestPhone: e.target.value})}
+                      className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                      placeholder="+91 9876543210"
+                    />
+                  </div>
+                </>
+              )}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Address</label>
+                <div className="relative">
+                  <div className="absolute top-3 left-3 text-gray-400"><MapPin size={20} /></div>
+                  <textarea rows="3" value={formData.address}
+                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                    className="w-full border border-gray-300 rounded-input pl-10 pr-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none resize-none"
+                    placeholder="123 Mechanics Blvd, Apt 4B..." />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
+                <select
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-white"
+                >
+                  <option value="">Select a city</option>
+                  {AUSTRALIA_CITIES.map((city) => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">State</label>
+                <select
+                  value={formData.state}
+                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                  className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none bg-white"
+                >
+                  <option value="">Select a state</option>
+                  {AUSTRALIA_STATES.map((state) => (
+                    <option key={state} value={state}>{state}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Postcode</label>
+                <input
+                  type="text"
+                  value={formData.pincode}
+                  onChange={(e) => setFormData({ ...formData, pincode: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                  className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                  placeholder="2000"
+                />
+                <p className="text-xs text-gray-500 mt-1">Use a 4-digit Australian postcode.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Vehicle Lookup */}
+        {step === 2 && (
+          <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h2 className="text-3xl font-extrabold text-primary mb-2">Lookup Vehicle</h2>
+            <p className="text-gray-500 mb-8">Enter vehicle number and confirm model details.</p>
+
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Vehicle Number</label>
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={formData.vehicleNumber}
+                    onChange={(e) => setFormData({ ...formData, vehicleNumber: e.target.value.toUpperCase() })}
+                    className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                    placeholder="MH12AB1234"
+                  />
+                  <button
+                    onClick={handleVehicleLookup}
+                    type="button"
+                    disabled={lookingUpVehicle}
+                    className="px-5 py-3 rounded-btn bg-primary text-white font-bold hover:bg-accent transition-colors disabled:opacity-50 flex items-center"
+                  >
+                    {lookingUpVehicle ? <Loader2 className="animate-spin" size={18} /> : <Search size={18} />}
+                    <span className="ml-2">Lookup</span>
+                  </button>
+                </div>
+                {isAuthenticated && vehicles.length > 0 && (
+                  <p className="text-xs text-gray-500 mt-2">Saved vehicles found: {vehicles.length}. Lookup will prefill model when reg no matches.</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Vehicle Model</label>
+                <input
+                  type="text"
+                  value={formData.vehicleModel}
+                  onChange={(e) => setFormData({ ...formData, vehicleModel: e.target.value })}
+                  className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                  placeholder="Honda City / Hyundai i20 / Tata Nexon"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Services */}
+        {step === 3 && (
+          <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h2 className="text-3xl font-extrabold text-primary mb-2">Select Services</h2>
+            <p className="text-gray-500 mb-8">Choose the primary service package for your vehicle.</p>
+
             <div className="space-y-4">
               {loadingServices ? (
                 <div className="flex justify-center p-8"><Loader2 className="animate-spin text-accent" size={32} /></div>
@@ -139,7 +375,7 @@ const Booking = () => {
                         <span className="font-bold text-primary text-lg">{service.name}</span>
                         <p className="text-sm text-gray-500 mt-1">{service.description?.substring(0, 80)}...</p>
                         {service.addons?.length > 0 && (
-                          <span className="text-xs text-accent font-semibold mt-1 inline-block">{service.addons.length} add-ons available</span>
+                          <span className="text-xs text-accent font-semibold mt-1 inline-block">{service.addons.length} optional add-ons in estimate</span>
                         )}
                       </div>
                       <div className="flex flex-col items-end space-y-2 ml-4 flex-shrink-0">
@@ -160,12 +396,12 @@ const Booking = () => {
           </div>
         )}
 
-        {/* Step 2: Add-ons */}
-        {step === 2 && (
+        {/* Step 4: Estimate */}
+        {step === 4 && (
           <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Enhance Your Service</h2>
-            <p className="text-gray-500 mb-2">Customize your <span className="font-bold text-primary">{formData.service?.name}</span> with optional add-ons.</p>
-            <p className="text-sm text-gray-400 mb-8">These are completely optional — skip if you don't need them.</p>
+            <h2 className="text-3xl font-extrabold text-primary mb-2">Estimate</h2>
+            <p className="text-gray-500 mb-2">Review base service and optionally add extras.</p>
+            <p className="text-sm text-gray-400 mb-8">This shows your estimated total before booking confirmation.</p>
 
             {formData.service?.addons?.length > 0 ? (
               <div className="space-y-3">
@@ -194,7 +430,7 @@ const Booking = () => {
               </div>
             ) : (
               <div className="text-center p-8 text-gray-400">
-                <p>No add-ons available for this service.</p>
+                <p>No add-ons available for this service. Base estimate is shown below.</p>
               </div>
             )}
 
@@ -213,8 +449,8 @@ const Booking = () => {
           </div>
         )}
 
-        {/* Step 3: Schedule */}
-        {step === 3 && (
+        {/* Step 5: Schedule */}
+        {step === 5 && (
           <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-extrabold text-primary mb-2">Pick a Date & Time</h2>
             <p className="text-gray-500 mb-8">When should our mechanics arrive?</p>
@@ -244,40 +480,22 @@ const Booking = () => {
           </div>
         )}
 
-        {/* Step 4: Location */}
-        {step === 4 && (
-          <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Service Location</h2>
-            <p className="text-gray-500 mb-8">Where should we dispatch our workshop van?</p>
-            
-            <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Home Address</label>
-                <div className="relative">
-                  <div className="absolute top-3 left-3 text-gray-400"><MapPin size={20} /></div>
-                  <textarea rows="3" value={formData.address}
-                    onChange={(e) => setFormData({...formData, address: e.target.value})}
-                    className="w-full border border-gray-300 rounded-input pl-10 pr-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none resize-none" 
-                    placeholder="123 Mechanics Blvd, Apt 4B..." />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
-                <input type="text" value={formData.city}
-                  onChange={(e) => setFormData({...formData, city: e.target.value})}
-                  className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" 
-                  placeholder="Auto City" />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 5: Confirm */}
-        {step === 5 && (
+        {/* Step 6: Confirm */}
+        {step === 6 && (
           <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-extrabold text-primary mb-6 text-center">Order Summary</h2>
             
             <div className="bg-background p-6 rounded-card space-y-4 mb-8">
+              <div className="flex justify-between border-b border-gray-200 pb-4">
+                <span className="text-gray-500 font-medium">Location</span>
+                <span className="font-bold text-primary max-w-xs text-right truncate">{formData.address}{formData.city ? `, ${formData.city}` : ''}{formData.state ? `, ${formData.state}` : ''}{formData.pincode ? `, ${formData.pincode}` : ''}</span>
+              </div>
+
+              <div className="flex justify-between border-b border-gray-200 pb-4">
+                <span className="text-gray-500 font-medium">Vehicle</span>
+                <span className="font-bold text-primary text-right">{formData.vehicleNumber}<br />{formData.vehicleModel}</span>
+              </div>
+
               <div className="flex justify-between border-b border-gray-200 pb-4">
                 <span className="text-gray-500 font-medium">Service Package</span>
                 <div className="text-right">
@@ -304,10 +522,6 @@ const Booking = () => {
                 <span className="text-gray-500 font-medium">Schedule</span>
                 <span className="font-bold text-primary text-right">{formData.date}<br/>{formData.timeSlot}</span>
               </div>
-              <div className="flex justify-between border-b border-gray-200 pb-4">
-                <span className="text-gray-500 font-medium">Location</span>
-                <span className="font-bold text-primary max-w-xs text-right truncate">{formData.address}{formData.city ? `, ${formData.city}` : ''}</span>
-              </div>
               <div className="flex justify-between pt-2">
                 <span className="text-lg font-bold text-primary">Total Amount Due</span>
                 <span className="text-2xl font-black text-accent">₹{getTotalPrice().toLocaleString()}</span>
@@ -330,7 +544,7 @@ const Booking = () => {
             disabled={!canProceed() || submitting}
             className="px-8 py-3 rounded-btn font-bold bg-primary text-white hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center">
             {submitting ? <Loader2 className="animate-spin mr-2" size={20} /> : null}
-            {step === TOTAL_STEPS ? 'Confirm Booking' : step === 2 ? (formData.selectedAddons.length > 0 ? `Continue with ${formData.selectedAddons.length} add-on${formData.selectedAddons.length > 1 ? 's' : ''}` : 'Skip Add-ons') : 'Continue'}
+            {step === TOTAL_STEPS ? 'Confirm Booking' : step === 4 ? (formData.selectedAddons.length > 0 ? `Continue with ${formData.selectedAddons.length} add-on${formData.selectedAddons.length > 1 ? 's' : ''}` : 'Continue to Schedule') : 'Continue'}
           </button>
         </div>
 

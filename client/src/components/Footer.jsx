@@ -46,11 +46,11 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-white text-sm uppercase tracking-wider mb-5">Services</h4>
             <ul className="space-y-3 text-sm">
-              <li><span className="hover:text-accent transition-colors cursor-default">Premium Oil Change</span></li>
-              <li><span className="hover:text-accent transition-colors cursor-default">Engine Diagnostics</span></li>
-              <li><span className="hover:text-accent transition-colors cursor-default">Master Car Wash</span></li>
-              <li><span className="hover:text-accent transition-colors cursor-default">Brake Inspection</span></li>
-              <li><span className="hover:text-accent transition-colors cursor-default">AC Service & Repair</span></li>
+              <li><span className="hover:text-accent transition-colors cursor-default">Tyre Services</span></li>
+              <li><span className="hover:text-accent transition-colors cursor-default">Cooling System Services</span></li>
+              <li><span className="hover:text-accent transition-colors cursor-default">Basic Car AC Service</span></li>
+              <li><span className="hover:text-accent transition-colors cursor-default">Brakes Service</span></li>
+              <li><span className="hover:text-accent transition-colors cursor-default">Suspension & Steering Service</span></li>
             </ul>
           </div>
 
@@ -64,11 +64,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <Phone size={18} className="text-accent flex-shrink-0" />
-                <span>+91 98765 43210</span>
+                <span>0427563913</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail size={18} className="text-accent flex-shrink-0" />
-                <span>support@autocare.com</span>
+                <span>info@autocareonwheels.com.au</span>
               </li>
             </ul>
           </div>

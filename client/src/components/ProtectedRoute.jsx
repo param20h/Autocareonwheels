@@ -9,7 +9,6 @@ const ProtectedRoute = ({ requiredRole }) => {
 
   const getDefaultRouteByRole = (role) => {
     if (role === 'ADMIN') return '/admin';
-    if (role === 'WORKER') return '/worker';
     return '/dashboard';
   };
 

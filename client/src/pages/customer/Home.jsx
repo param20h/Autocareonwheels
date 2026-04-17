@@ -116,9 +116,9 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {(services.length > 0 ? services.slice(0, 6) : [
-              { id: 0, name: 'Premium Oil Change', description: 'Full synthetic fluid replacement, comprehensive filter change, and a 20-point health inspection.', price: '1499', addons: [] },
-              { id: 0, name: 'Engine Diagnostics', description: 'Advanced computer scanning, error code resolution, and mechanical performance tuning.', price: '2199', addons: [] },
-              { id: 0, name: 'Master Car Wash', description: 'Exterior foam detailing, interior vacuuming, dashboard polishing, and tire dressing.', price: '899', addons: [] }
+              { id: 0, name: 'Tyre Services', description: 'Tyre fitting, on-site puncture repair, wheel balancing, and emergency replacement assistance.', price: '149', addons: [] },
+              { id: 0, name: 'Cooling System Services', description: 'Radiator checks, coolant flush, leak detection, and overheating diagnostics.', price: '189', addons: [] },
+              { id: 0, name: 'Basic Car AC Service', description: 'AC inspection, refrigerant checks, cleaning, and performance diagnostics.', price: '159', addons: [] }
             ]).map((service, idx) => {
               const Icon = serviceIcons[idx % serviceIcons.length];
               return (
@@ -263,7 +263,7 @@ const Home = () => {
                   </div>
                   <div className="group-hover:translate-x-1 transition-transform">
                     <p className="font-bold text-primary text-sm">Call Us</p>
-                    <p className="text-gray-500 text-sm group-hover:text-gray-800 transition-colors">+91 98765 43210</p>
+                    <p className="text-gray-500 text-sm group-hover:text-gray-800 transition-colors">0427563913</p>
                   </div>
                 </div>
                 <div className="group flex items-center space-x-4 cursor-pointer">
@@ -272,7 +272,7 @@ const Home = () => {
                   </div>
                   <div className="group-hover:translate-x-1 transition-transform">
                     <p className="font-bold text-primary text-sm">Email Us</p>
-                    <p className="text-gray-500 text-sm group-hover:text-gray-800 transition-colors">support@autocare.com</p>
+                    <p className="text-gray-500 text-sm group-hover:text-gray-800 transition-colors">info@autocareonwheels.com.au</p>
                   </div>
                 </div>
               </div>
@@ -311,7 +311,7 @@ const Home = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Contact Number</label>
-                    <input type="tel" required placeholder="+91 98765 43210" className="w-full bg-[#1c1c1c] text-sm text-gray-200 border border-[#2a2a2a] rounded-lg p-3 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition-all outline-none placeholder:text-gray-600" />
+                    <input type="tel" required placeholder="0427563913" className="w-full bg-[#1c1c1c] text-sm text-gray-200 border border-[#2a2a2a] rounded-lg p-3 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition-all outline-none placeholder:text-gray-600" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Car Model</label>
