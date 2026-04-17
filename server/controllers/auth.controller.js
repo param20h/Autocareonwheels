@@ -13,39 +13,6 @@ const generateToken = (userId, role) => {
   });
 };
 
-exports.register = async (req, res) => {
-  try {
-    const { name, email, phone, password, role } = req.body;
-    const requestedRole = typeof role === 'string' ? role.toUpperCase() : 'CUSTOMER';
-    const allowedRoles = ['CUSTOMER'];
-    const safeRole = allowedRoles.includes(requestedRole) ? requestedRole : 'CUSTOMER';
-    
-    // Check if user exists
-    const existingUser = await prisma.user.findFirst({
-        where: { OR: [{ email }, { phone }] }
-    });
-    if (existingUser) {
-        return res.status(400).json({ success: false, message: 'User already exists with that email or phone' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const localGoogleId = `local-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-    const user = await prisma.user.create({
-      data: { name, email, phone, password: hashedPassword, google_id: localGoogleId, role: safeRole }
-    });
-
-    const token = generateToken(user.id, user.role);
-
-    res.status(201).json({
-        success: true,
-        message: 'Registration successful',
-        data: { token, user: { id: user.id, name: user.name, email: user.email, role: user.role } }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error', errors: [error.message] });
-  }
-};
-
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;

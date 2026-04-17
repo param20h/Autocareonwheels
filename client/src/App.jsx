@@ -39,7 +39,8 @@ function App() {
         </Route>
 
         {/* Auth Routes */}
-        <Route path="/auth/login" element={<AuthCard />} />
+        <Route path="/login" element={<AuthCard />} />
+        <Route path="/auth/login" element={<Navigate to="/login" replace />} />
 
         {/* Legal Pages */}
         <Route path="/privacy" element={<PrivacyPolicy />} />

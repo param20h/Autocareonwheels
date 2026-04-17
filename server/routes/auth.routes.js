@@ -1,18 +1,9 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { register, login, getMe, updateProfile, changePassword } = require('../controllers/auth.controller');
+const { login, getMe, updateProfile, changePassword } = require('../controllers/auth.controller');
 const { protect } = require('../middlewares/auth.middleware');
 const { validateRequest } = require('../middlewares/validate.middleware');
 const router = express.Router();
-
-const registerValidation = [
-	body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
-	body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
-	body('phone').optional({ values: 'falsy' }).isLength({ min: 8, max: 20 }).withMessage('Phone must be 8-20 characters'),
-	body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
-	body('role').optional().isIn(['CUSTOMER']).withMessage('Role must be CUSTOMER'),
-	validateRequest,
-];
 
 const loginValidation = [
 	body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
@@ -32,8 +23,6 @@ const changePasswordValidation = [
 	validateRequest,
 ];
 
-// Existing Auth
-router.post('/register', registerValidation, register);
 router.post('/login', loginValidation, login);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateProfileValidation, updateProfile);

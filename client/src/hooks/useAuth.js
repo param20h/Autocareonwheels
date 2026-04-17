@@ -11,12 +11,6 @@ const useAuth = () => {
 		return data.data;
 	}, [store]);
 
-	const register = useCallback(async (payload) => {
-		const { data } = await authService.register(payload);
-		store.loginAction(data.data.user, data.data.token);
-		return data.data;
-	}, [store]);
-
 	const logout = useCallback(() => {
 		store.logoutAction();
 	}, [store]);
@@ -24,7 +18,6 @@ const useAuth = () => {
 	return {
 		...store,
 		login,
-		register,
 		logout,
 	};
 };

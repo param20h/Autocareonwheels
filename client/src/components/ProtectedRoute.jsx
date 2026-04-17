@@ -21,7 +21,7 @@ const ProtectedRoute = ({ requiredRole }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (requiredRole && user?.role !== requiredRole && !(requiredRole === 'CUSTOMER' && user?.role === 'ADMIN')) {

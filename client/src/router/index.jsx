@@ -2,6 +2,7 @@ export const publicRoutes = [
 	'/',
 	'/book',
 	'/services/:id',
+	'/login',
 	'/auth/login',
 	'/privacy',
 	'/terms',
