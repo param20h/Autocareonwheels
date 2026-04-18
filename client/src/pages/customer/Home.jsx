@@ -116,9 +116,12 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {(services.length > 0 ? services : [
-              { id: 0, name: 'Tyre Services', description: 'Tyre fitting, on-site puncture repair, wheel balancing, and emergency replacement assistance.', price: '149', addons: [] },
-              { id: 0, name: 'Cooling System Services', description: 'Radiator checks, coolant flush, leak detection, and overheating diagnostics.', price: '189', addons: [] },
-              { id: 0, name: 'Basic Car AC Service', description: 'AC inspection, refrigerant checks, cleaning, and performance diagnostics.', price: '159', addons: [] }
+              { id: 0, name: 'Tyre Services', description: 'Tyre fitting, puncture repair, mobile fitting, emergency replacement, balancing, and tyre safety checks.', price: '149', addons: [] },
+              { id: 0, name: 'Cooling System Services', description: 'Complete cooling system inspection, leak detection, replacement, and overheating diagnostics.', price: '189', addons: [] },
+              { id: 0, name: 'Basic Car AC Service', description: 'AC performance checks, refrigerant diagnostics, cleaning, and component inspection with optional advanced repair.', price: '159', addons: [] },
+              { id: 0, name: 'Brakes Service', description: 'Brake inspection, fluid service, and replacement of core brake components for safe stopping performance.', price: '179', addons: [] },
+              { id: 0, name: 'Suspension Service', description: 'Suspension inspection, cleaning, lubrication, and replacement of worn suspension components.', price: '169', addons: [] },
+              { id: 0, name: 'Steering Service', description: 'Steering system inspection, fluid service, and replacement of steering components where needed.', price: '169', addons: [] }
             ]).map((service, idx) => {
               const Icon = serviceIcons[idx % serviceIcons.length];
               return (
