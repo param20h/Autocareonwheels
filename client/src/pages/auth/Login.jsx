@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Mail, Lock, Loader2, Car } from 'lucide-react';
 import MechanicBackground from '../../components/MechanicBackground';
 import BorderGlow from '../../components/BorderGlow';
@@ -8,14 +8,15 @@ import useAuth from '../../store/useAuth';
 
 const AuthCard = () => {
   const navigate = useNavigate();
-  const { loginAction } = useAuth();
+  const { loginAction, isAuthenticated, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
 
-  const getDefaultRouteByRole = (role) => {
-    if (role === 'ADMIN') return '/admin';
-    return '/dashboard';
-  };
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'ADMIN') {
+      navigate('/admin', { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,8 +30,13 @@ const AuthCard = () => {
         email: formData.email,
         password: formData.password,
       });
+      if (data?.data?.user?.role !== 'ADMIN') {
+        alert('Only admin can login from this page.');
+        return;
+      }
+
       loginAction(data.data.user, data.data.token);
-      navigate(getDefaultRouteByRole(data.data.user.role));
+      navigate('/admin', { replace: true });
     } catch (error) {
       alert(error.response?.data?.message || 'Authentication failed');
       console.error(error);
@@ -48,9 +54,10 @@ const AuthCard = () => {
         <div className="flex justify-center flex-row items-center space-x-2 text-primary">
           <Car size={36} />
           <h2 className="text-center text-3xl font-extrabold text-primary">
-            AutoCare Login
+            Admin Login
           </h2>
         </div>
+        <p className="mt-2 text-center text-sm text-gray-500 font-medium">Use your admin credentials to access dashboard controls.</p>
       </div>
 
       {/* Main Form Container */}
