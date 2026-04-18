@@ -115,7 +115,7 @@ const Home = () => {
 
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {(services.length > 0 ? services.slice(0, 6) : [
+            {(services.length > 0 ? services : [
               { id: 0, name: 'Tyre Services', description: 'Tyre fitting, on-site puncture repair, wheel balancing, and emergency replacement assistance.', price: '149', addons: [] },
               { id: 0, name: 'Cooling System Services', description: 'Radiator checks, coolant flush, leak detection, and overheating diagnostics.', price: '189', addons: [] },
               { id: 0, name: 'Basic Car AC Service', description: 'AC inspection, refrigerant checks, cleaning, and performance diagnostics.', price: '159', addons: [] }
