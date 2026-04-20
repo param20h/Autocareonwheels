@@ -71,7 +71,7 @@ const ServiceDetail = () => {
             </div>
             <div className="text-right flex-shrink-0">
               <p className="text-xs text-gray-400 font-bold uppercase">Starting from</p>
-              <p className="text-4xl font-black text-accent">₹{parseFloat(service.price).toLocaleString()}</p>
+              <p className="text-4xl font-black text-accent">${parseFloat(service.price).toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ const ServiceDetail = () => {
                     </div>
                     <span className="font-semibold text-gray-700">{addon.name}</span>
                   </div>
-                  <span className="font-bold text-accent">+ ₹{parseFloat(addon.price).toLocaleString()}</span>
+                  <span className="font-bold text-accent">+ ${parseFloat(addon.price).toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -121,7 +121,7 @@ const ServiceDetail = () => {
         <div className="text-center">
           <button onClick={() => navigate('/book')}
             className="bg-primary text-white px-10 py-4 rounded-btn font-bold text-lg hover:bg-accent transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-            Book This Service — ₹{parseFloat(service.price).toLocaleString()}
+            Book This Service — ${parseFloat(service.price).toLocaleString()}
           </button>
         </div>
       </main>

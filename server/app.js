@@ -4,6 +4,9 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
+// Required behind reverse proxies (e.g., Hostinger) so rate limiting can read real client IPs.
+app.set('trust proxy', 1);
+
 const authRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,

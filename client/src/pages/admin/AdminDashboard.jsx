@@ -17,6 +17,7 @@ const AdminDashboard = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [notifyCustomer, setNotifyCustomer] = useState(true);
 
   // Modal state for adding services/mechanics
   const [showModal, setShowModal] = useState(false);
@@ -49,7 +50,7 @@ const AdminDashboard = () => {
 
   const updateBookingStatus = async (id, newStatus) => {
     try {
-      await api.put(`/admin/bookings/${id}`, { status: newStatus });
+      await api.put(`/admin/bookings/${id}`, { status: newStatus, notify_customer: notifyCustomer });
       setBookings(bookings.map(b => b.id === id ? { ...b, status: newStatus } : b));
       setToast({ show: true, message: `Booking #${id} → ${newStatus}`, type: 'success' });
     } catch { setToast({ show: true, message: 'Failed to update', type: 'error' }); }
@@ -169,7 +170,7 @@ const AdminDashboard = () => {
             { label: 'Total Jobs', val: bookings.length, icon: Calendar },
             { label: 'Pending', val: bookings.filter(b => b.status === 'PENDING').length, icon: Clock },
             { label: 'Completed', val: bookings.filter(b => b.status === 'COMPLETED').length, icon: CheckCircle },
-            { label: 'Revenue', val: `₹${bookings.reduce((s, b) => s + parseFloat(b.total_price || 0), 0).toLocaleString()}`, icon: CarFront }
+            { label: 'Revenue', val: `$${bookings.reduce((s, b) => s + parseFloat(b.total_price || 0), 0).toLocaleString()}`, icon: CarFront }
           ].map((stat, i) => (
             <motion.div
               key={i}
@@ -217,8 +218,14 @@ const AdminDashboard = () => {
           <div className="bg-white/70 backdrop-blur-md rounded-card shadow-sm border border-white/80 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 bg-white/70 flex items-center justify-between">
               <h2 className="text-lg font-extrabold text-primary">Global Job Board</h2>
-              <div className="flex items-center text-xs uppercase tracking-wider text-accent font-bold">
-                <Sparkles size={14} className="mr-1" /> live
+              <div className="flex items-center gap-4">
+                <label className="flex items-center space-x-2 text-sm font-bold text-gray-700 cursor-pointer">
+                  <input type="checkbox" checked={notifyCustomer} onChange={() => setNotifyCustomer(!notifyCustomer)} className="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent" />
+                  <span>Notify Customer on Update</span>
+                </label>
+                <div className="flex items-center text-xs uppercase tracking-wider text-accent font-bold">
+                  <Sparkles size={14} className="mr-1" /> live
+                </div>
               </div>
             </div>
             {loading ? <div className="flex justify-center py-16"><Loader2 className="animate-spin text-accent" size={32} /></div> : bookings.length === 0 ? (
@@ -241,7 +248,7 @@ const AdminDashboard = () => {
                         </td>
                         <td className="p-4">
                           <p className="font-bold text-sm text-gray-700">{b.service?.name}</p>
-                          <p className="text-xs font-black text-accent">₹{Number(b.total_price || 0).toLocaleString()}</p>
+                          <p className="text-xs font-black text-accent">${Number(b.total_price || 0).toLocaleString()}</p>
                         </td>
                         <td className="p-4 text-sm text-gray-600">{new Date(b.date).toLocaleDateString()}<br/><span className="text-xs text-gray-500">{b.time_slot}</span></td>
                         <td className="p-4">
@@ -300,7 +307,7 @@ const AdminDashboard = () => {
                       <p className="text-xs text-gray-500 max-w-md truncate">{s.description}</p>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <span className="text-lg font-black text-accent">₹{parseFloat(s.price).toLocaleString()}</span>
+                      <span className="text-lg font-black text-accent">${parseFloat(s.price).toLocaleString()}</span>
                       <span className="text-xs text-gray-400">{s.duration_mins} min</span>
                       <button onClick={() => handleDelete('services', s.id)} className="text-red-400 hover:text-red-600 transition-colors"><Trash2 size={16} /></button>
                     </div>
@@ -409,7 +416,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">Price (₹)</label>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Price ($)</label>
                       <input type="number" value={modalData.price || ''} onChange={e => setModalData({...modalData, price: e.target.value})} placeholder="1499"
                         className="w-full border border-gray-300 bg-white text-primary rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
                     </div>

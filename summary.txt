@@ -1,0 +1,93 @@
+Full Session Summary
+
+This session focused on stabilizing the AutoCare on Wheels app for Hostinger deployment, eliminating Prisma runtime failures, fixing frontend routing and login behavior, aligning the service catalog with seed data, and trimming customer-facing booking email content.
+
+1. Deployment and database stability work
+- The backend was progressively migrated away from Prisma runtime queries on Hostinger because Prisma schema/query engines were crashing or producing resource errors.
+- Bootstrap logic was rewritten to initialize schema and seed catalog data using direct MySQL SQL statements through mysql2.
+- The startup flow was adjusted so bootstrap runs in-process without spawning child processes.
+- The services endpoint was converted to direct MySQL queries and later hardened with retry logic for transient MySQL connection drops like ECONNRESET.
+- The MySQL utility was upgraded with keep-alive, larger connection limits, idle timeout tuning, pool reset support, and multi-attempt retry logic.
+- Express trust proxy was enabled in the API app so express-rate-limit works behind Hostinger’s reverse proxy and does not throw X-Forwarded-For validation errors.
+
+2. Catalog and service data alignment
+- The service catalog in bootstrap was expanded from 3 services to 6 services to match the intended seed set.
+- The API bootstrap seed now includes the full catalog:
+  - Tyre Services
+  - Cooling System Services
+  - Basic Car AC Service
+  - Brakes Service
+  - Suspension Service
+  - Steering Service
+- The add-on names and descriptions were aligned to the wording the user provided, including the detailed Tyre, Cooling, AC, Brakes, Suspension, and Steering service items.
+- Bootstrap logic was further changed so if the database contains only a partial catalog, it re-seeds the full catalog instead of skipping.
+- The frontend homepage fallback service list was updated to show all 6 services instead of only 3.
+
+3. Login and auth behavior
+- The frontend login page was changed to function as an admin login entry point at /login.
+- The homepage navigation does not advertise login; login remains reachable by direct URL only.
+- Successful login now routes admins to /admin.
+- Non-admin logins are blocked from the admin login page.
+- The login page was relabeled as Admin Login and given admin-focused helper text.
+- The backend auth controller was changed so the admin login can self-heal by creating or repairing the admin account from environment variables if the database row is missing or stale.
+- The admin seed credentials in .env remained:
+  - ADMIN_EMAIL=admin@autocare.com
+  - ADMIN_PASSWORD=Admin@12345
+
+4. SPA routing and Hostinger frontend behavior
+- A Hostinger-friendly .htaccess file was added under client/public so React Router paths like /login resolve to index.html instead of a Hostinger 404 page.
+- This fixed the issue where direct visits to /login could show a page_not_found asset or Hostinger error page.
+
+5. Booking flow and email content
+- The booking controller was migrated to MySQL queries and the customer booking email body was simplified.
+- The customer-facing booking email now only confirms the booking date and time and lists the selected services/add-ons.
+- Invoice details, totals, and price breakdowns were removed from the customer confirmation email as requested.
+- The business/admin notification email remains available for internal booking handling.
+- The text now focuses on confirmation plus selected services, with the admin dashboard remaining the place where follow-up communication can be sent.
+
+6. Navbar / profile visibility changes
+- The profile-related item was removed from the unauthenticated navbar flow so there is no profile UI when no user is logged in.
+- Authenticated users still see dashboard and logout actions.
+- Unauthenticated users only see the booking action.
+
+7. Validation and checks completed
+- Syntax checks passed for updated backend files including:
+  - backend-api/prisma/bootstrap.js
+  - backend-api/controllers/auth.controller.js
+  - backend-api/controllers/booking.controller.js
+  - backend-api/utils/mysql.js
+  - backend-api/controllers/service.controller.js
+- The frontend build passed after navbar and login changes.
+- Several git pushes were completed successfully during the session.
+
+8. Notable fixes in sequence
+- Fixed Prisma query-engine instability by replacing runtime Prisma usage with direct MySQL.
+- Fixed Hostinger reverse-proxy rate-limit validation with trust proxy.
+- Fixed partial catalog seeding so production service data now matches the intended full catalog.
+- Fixed login routing so admin login works via /login without appearing in the homepage nav.
+- Fixed customer booking email verbosity so it only confirms booking time/date and selected services.
+- Fixed the missing profile UI for unauthenticated users.
+
+9. Current expected behavior after deployment
+- Direct access to /login should open the admin login page.
+- Admin credentials should authenticate and redirect to /admin.
+- Homepage should not mention login.
+- /api/v1/services should return the full six-service catalog when reseeded.
+- Booking confirmation emails to customers should be short and confirmation-focused.
+- Hostinger should no longer throw the X-Forwarded-For rate-limit validation error.
+- MySQL connection resets should be retried automatically where possible.
+
+10. Files materially changed during the session
+- backend-api/prisma/bootstrap.js
+- backend-api/controllers/auth.controller.js
+- backend-api/controllers/booking.controller.js
+- backend-api/controllers/service.controller.js
+- backend-api/utils/mysql.js
+- backend-api/app.js
+- server/app.js
+- client/src/pages/auth/Login.jsx
+- client/src/components/Navbar.jsx
+- client/src/pages/customer/Home.jsx
+- client/public/.htaccess
+
+End of summary.

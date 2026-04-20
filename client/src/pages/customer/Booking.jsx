@@ -32,14 +32,11 @@ const AUSTRALIA_CITIES = [
 ];
 
 const AUSTRALIA_STATES = [
-  'New South Wales (NSW)',
-  'Victoria (VIC)',
-  'Queensland (QLD)',
-  'Western Australia (WA)',
-  'South Australia (SA)',
-  'Tasmania (TAS)',
+  'New South Wales',
+  'Queensland',
+  'South Australia',
+  'Tasmania',
   'Australian Capital Territory (ACT)',
-  'Northern Territory (NT)',
 ];
 
 const Booking = () => {
@@ -73,18 +70,34 @@ const Booking = () => {
 
   useEffect(() => {
     const fetchInitialData = async () => {
+      let fetchedServices = [];
       try {
-        const [{ data: servicesData }] = await Promise.all([
-          api.get('/services'),
-        ]);
-        setServices(servicesData.data);
+        const { data: servicesData } = await api.get('/services');
+        fetchedServices = servicesData?.data || [];
+      } catch (error) {
+        console.error('Failed to load services from API, using fallback', error);
+      }
+      
+      if (fetchedServices.length === 0) {
+        fetchedServices = [
+          { id: '1', name: 'Logbook Service', description: 'The convenient way to maintain your new car warranty.', price: 249, addons: [{id: 101, name: 'Air Filter Upgrade', price: 39}] },
+          { id: '2', name: 'Yearly Service', description: 'Extend the life of your vehicle without the hassle of a garage.', price: 189, addons: [{id: 102, name: 'Wiper Blade Replacement', price: 39}] },
+          { id: '3', name: 'Car Battery', description: 'Every AutoCare van stocks the highest quality battery brands.', price: 199, addons: [{id: 103, name: 'Terminal Check', price: 19}] },
+          { id: '4', name: 'Brakes', description: 'Quality brake repairs to keep you safe on the road.', price: 220, addons: [{id: 104, name: 'Brake Fluid Flush', price: 89}] },
+          { id: '5', name: 'Flat Tyre Service', description: 'Puncture repair and professional tyre fitment!', price: 110, addons: [{id: 105, name: 'Emergency Spare Fitting', price: 25}] },
+          { id: '6', name: 'Ultimate Service', description: 'Give your car the birthday it deserves. Our most comprehensive service.', price: 349, addons: [{id: 106, name: 'Fuel System Flush', price: 89}] }
+        ];
+      }
+      setServices(fetchedServices);
 
+      try {
+        // Only attempt to fetch vehicles if authenticated
         if (isAuthenticated) {
           const { data: vehiclesData } = await userService.getVehicles();
           setVehicles(vehiclesData?.data || []);
         }
       } catch (error) {
-        console.error('Failed to load booking data', error);
+        console.error('Failed to load vehicles data', error);
       } finally {
         setLoadingServices(false);
       }
@@ -379,7 +392,7 @@ const Booking = () => {
                         )}
                       </div>
                       <div className="flex flex-col items-end space-y-2 ml-4 flex-shrink-0">
-                        <span className="font-bold text-gray-700 text-lg">₹{parseFloat(service.price).toLocaleString()}</span>
+                        <span className="font-bold text-gray-700 text-lg">${parseFloat(service.price).toLocaleString()}</span>
                         <span className="text-xs text-gray-400">{service.duration_mins} min</span>
                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${formData.service?.id === service.id ? 'border-accent bg-accent text-white' : 'border-gray-300'}`}>
                           {formData.service?.id === service.id && <div className="w-2 h-2 bg-white rounded-full"></div>}
@@ -423,7 +436,7 @@ const Booking = () => {
                         </div>
                         <span className={`font-semibold ${isSelected ? 'text-primary' : 'text-gray-700'}`}>{addon.name}</span>
                       </div>
-                      <span className={`font-bold ${isSelected ? 'text-accent' : 'text-gray-500'}`}>+ ₹{parseFloat(addon.price).toLocaleString()}</span>
+                      <span className={`font-bold ${isSelected ? 'text-accent' : 'text-gray-500'}`}>+ ${parseFloat(addon.price).toLocaleString()}</span>
                     </button>
                   );
                 })}
@@ -438,12 +451,12 @@ const Booking = () => {
             <div className="mt-6 p-4 bg-background rounded-card border border-gray-100">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">Base: ₹{parseFloat(formData.service?.price).toLocaleString()}</p>
+                  <p className="text-sm text-gray-500 font-medium">Base: ${parseFloat(formData.service?.price).toLocaleString()}</p>
                   {formData.selectedAddons.length > 0 && (
-                    <p className="text-sm text-accent font-semibold">+ {formData.selectedAddons.length} add-on{formData.selectedAddons.length > 1 ? 's' : ''}: ₹{formData.selectedAddons.reduce((s, a) => s + parseFloat(a.price), 0).toLocaleString()}</p>
+                    <p className="text-sm text-accent font-semibold">+ {formData.selectedAddons.length} add-on{formData.selectedAddons.length > 1 ? 's' : ''}: ${formData.selectedAddons.reduce((s, a) => s + parseFloat(a.price), 0).toLocaleString()}</p>
                   )}
                 </div>
-                <p className="text-2xl font-black text-primary">₹{getTotalPrice().toLocaleString()}</p>
+                <p className="text-2xl font-black text-primary">${getTotalPrice().toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -466,7 +479,7 @@ const Booking = () => {
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">Select Time Slot</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {['09:00 AM - 11:00 AM', '11:00 AM - 01:00 PM', '02:00 PM - 04:00 PM', '04:00 PM - 06:00 PM'].map(slot => (
+                {['09:00 AM - 10:00 AM', '10:00 AM - 11:00 AM', '11:00 AM - 12:00 PM', '12:00 PM - 01:00 PM', '01:00 PM - 02:00 PM', '02:00 PM - 03:00 PM', '03:00 PM - 04:00 PM', '04:00 PM - 05:00 PM', '05:00 PM - 06:00 PM'].map(slot => (
                   <button key={slot}
                     onClick={() => setFormData({...formData, timeSlot: slot})}
                     className={`p-3 rounded-input text-sm font-semibold border transition-colors flex items-center justify-center ${
@@ -500,7 +513,7 @@ const Booking = () => {
                 <span className="text-gray-500 font-medium">Service Package</span>
                 <div className="text-right">
                   <span className="font-bold text-primary">{formData.service?.name}</span>
-                  <p className="text-sm text-gray-400">₹{parseFloat(formData.service?.price).toLocaleString()}</p>
+                  <p className="text-sm text-gray-400">${parseFloat(formData.service?.price).toLocaleString()}</p>
                 </div>
               </div>
 
@@ -511,7 +524,7 @@ const Booking = () => {
                     {formData.selectedAddons.map(addon => (
                       <div key={addon.id} className="flex justify-between text-sm">
                         <span className="text-gray-600 flex items-center"><Plus size={12} className="mr-1 text-accent" />{addon.name}</span>
-                        <span className="font-semibold text-gray-700">₹{parseFloat(addon.price).toLocaleString()}</span>
+                        <span className="font-semibold text-gray-700">${parseFloat(addon.price).toLocaleString()}</span>
                       </div>
                     ))}
                   </div>
@@ -524,7 +537,7 @@ const Booking = () => {
               </div>
               <div className="flex justify-between pt-2">
                 <span className="text-lg font-bold text-primary">Total Amount Due</span>
-                <span className="text-2xl font-black text-accent">₹{getTotalPrice().toLocaleString()}</span>
+                <span className="text-2xl font-black text-accent">${getTotalPrice().toLocaleString()}</span>
               </div>
             </div>
 

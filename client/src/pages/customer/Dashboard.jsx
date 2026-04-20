@@ -153,7 +153,7 @@ const CustomerDashboard = () => {
                 <div className="w-full md:w-auto p-4 bg-white/80 rounded-xl border border-slate-200/80 md:text-right flex flex-row md:flex-col justify-between items-center md:items-end">
                   <div>
                     <p className="text-xs text-slate-500 font-bold mb-1">Total Price</p>
-                    <p className="text-2xl font-black text-slate-900">₹{parseFloat(booking.total_price).toLocaleString()}</p>
+                    <p className="text-2xl font-black text-slate-900">${parseFloat(booking.total_price).toLocaleString()}</p>
                   </div>
                   {booking.status === 'PENDING' && (
                     <button onClick={() => handleCancel(booking.id)} className="mt-3 px-4 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-btn transition-colors flex items-center space-x-1.5 border border-red-700/30 shadow-sm">

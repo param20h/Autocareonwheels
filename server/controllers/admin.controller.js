@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { sendEmail } = require('../utils/email');
 const prisma = new PrismaClient();
 
 const allowedBookingStatus = ['PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
@@ -62,6 +63,38 @@ exports.updateBookingStatus = async (req, res) => {
       data: { status, mechanic_id: parsedMechanicId !== undefined ? parsedMechanicId : undefined },
       include: { user: true, service: true }
     });
+
+    // Send Status Update Email
+    const shouldSendEmails = String(process.env.SEND_BOOKING_EMAILS || 'false').toLowerCase() === 'true';
+    if (shouldSendEmails && booking.user && booking.user.email) {
+      let subject = '';
+      let text = '';
+      
+      if (status === 'CONFIRMED') {
+        subject = `Booking Confirmed #${booking.id}`;
+        text = `Hi ${booking.user.name || 'Customer'},\n\nYour booking #${booking.id} for ${booking.service.name} has been CONFIRMED.\n\nThank you for choosing AutoCare on Wheels.`;
+      } else if (status === 'COMPLETED') {
+        subject = `Booking Completed / Ready for Pickup #${booking.id}`;
+        text = `Hi ${booking.user.name || 'Customer'},\n\nYour vehicle service #${booking.id} for ${booking.service.name} is now COMPLETED and ready!\n\nThank you for choosing AutoCare on Wheels.`;
+      } else if (status === 'CANCELLED') {
+        subject = `Booking Cancelled #${booking.id}`;
+        text = `Hi ${booking.user.name || 'Customer'},\n\nYour booking #${booking.id} for ${booking.service.name} has been CANCELLED.\n\nIf you have any questions, please contact us.`;
+      }
+
+      if (subject && text) {
+        try {
+          await sendEmail({
+            to: booking.user.email,
+            subject,
+            text,
+            html: `<pre style="font-family: Arial, sans-serif; white-space: pre-wrap;">${text}</pre>`
+          });
+        } catch (mailError) {
+          console.error('Failed to send status update email:', mailError.message);
+        }
+      }
+    }
+
     res.status(200).json({ success: true, data: booking });
   } catch (error) {
     console.error(error);

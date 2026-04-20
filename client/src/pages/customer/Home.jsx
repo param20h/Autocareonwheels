@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Wrench, Droplets, Settings, CheckCircle, Shield, Clock, Star, MapPin, Phone, Mail, Send } from 'lucide-react';
+import { Wrench, Droplets, Settings, CheckCircle, Shield, Clock, Star, MapPin, Phone, Mail, Send, Truck, ShieldCheck } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BorderGlow from '../../components/BorderGlow';
@@ -86,11 +86,11 @@ const Home = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-accent/20 to-primary/5 rounded-full blur-3xl -z-10"></div>
             <div className="relative">
               <img
-                src="https://raw.githubusercontent.com/param20h/datasets/68487a1fc01ff1cf7f185eef721c864c23c18485/acow.svg"
-                alt="Pristine Car Engine"
-                className="rounded-2xl  object-cover h-[400px] md:h-[600px] w-full transform -rotate-2 hover:rotate-1 transition-transform duration-500  "
+                src="/van.png"
+                alt="AutoCare on Wheels Van"
+                className="rounded-2xl object-cover h-[400px] md:h-[600px] w-full transform -rotate-2 hover:rotate-1 transition-transform duration-500 "
               />
-              <div className="absolute -bottom-6 -left-6 bg-primary p-6 rounded-2xl shadow-xl flex items-center space-x-4 border border-gray-800 -rotate-2 hover:rotate-2 transition-transform duration-500">
+              <div className="absolute -bottom-1 -left-1 bg-primary p-6 rounded-2xl shadow-xl flex items-center space-x-4 border border-gray-800 -rotate-2 hover:rotate-2 transition-transform duration-500">
                 <div className="bg-accent/20 p-3 rounded-full">
                   <Shield className="h-8 w-8 text-accent" />
                 </div>
@@ -115,46 +115,37 @@ const Home = () => {
 
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {(services.length > 0 ? services : [
-              { id: 0, name: 'Tyre Services', description: 'Tyre fitting, puncture repair, mobile fitting, emergency replacement, balancing, and tyre safety checks.', price: '149', addons: [] },
-              { id: 0, name: 'Cooling System Services', description: 'Complete cooling system inspection, leak detection, replacement, and overheating diagnostics.', price: '189', addons: [] },
-              { id: 0, name: 'Basic Car AC Service', description: 'AC performance checks, refrigerant diagnostics, cleaning, and component inspection with optional advanced repair.', price: '159', addons: [] },
-              { id: 0, name: 'Brakes Service', description: 'Brake inspection, fluid service, and replacement of core brake components for safe stopping performance.', price: '179', addons: [] },
-              { id: 0, name: 'Suspension Service', description: 'Suspension inspection, cleaning, lubrication, and replacement of worn suspension components.', price: '169', addons: [] },
-              { id: 0, name: 'Steering Service', description: 'Steering system inspection, fluid service, and replacement of steering components where needed.', price: '169', addons: [] }
-            ]).map((service, idx) => {
-              const Icon = serviceIcons[idx % serviceIcons.length];
-              return (
-                <BorderGlow
-                  key={idx}
-                  edgeSensitivity={33}
-                  glowColor="0 80 60"
-                  backgroundColor="#1a1a1a"
-                  borderRadius={16}
-                  glowRadius={48}
-                  glowIntensity={2.0}
-                  coneSpread={28}
-                  animated
-                  loop
-                  colors={['#c0392b', '#e74c3c', '#ff6b6b']}
-                >
-                  <Link to={service.id ? `/services/${service.id}` : '/book'} className="p-8 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden block">
-                    {(service.popular || idx === 1) && (
-                      <div className="absolute top-0 right-0 bg-accent text-white text-xs font-bold px-3 py-1 rounded-tr-2xl rounded-bl-lg">POPULAR</div>
-                    )}
-                    <div className="bg-[#2A2A2A] w-14 h-14 rounded-full flex items-center justify-center shadow-sm mb-6 group-hover:bg-accent transition-colors border border-gray-700">
-                      <Icon className="h-7 w-7 text-silver group-hover:text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-3">{service.name}</h3>
-                    <p className="text-silver mb-4 leading-relaxed">{service.description}</p>
-                    {service.addons?.length > 0 && (
-                      <p className="text-xs text-accent font-bold mb-3">{service.addons.length} add-ons available</p>
-                    )}
-                    <div className="text-accent font-bold text-lg">Starts at ₹{parseFloat(service.price).toLocaleString()}</div>
-                  </Link>
-                </BorderGlow>
-              );
-            })}
+            {[
+              { title: 'Car Services', link: '/services/category/car-services', desc: 'Logbook servicing, yearly maintenance, inspections, and comprehensive diagnostic checks.', icon: Settings },
+              { title: 'Repairs', link: '/services/category/repairs', desc: 'Expert troubleshooting and repairs for brakes, batteries, alternators, and engine components.', icon: Wrench },
+              { title: 'Tyres', link: '/services/category/tyres', desc: 'Premium tyre supply, mobile fitting, puncture repairs, and wheel balancing at your door.', icon: CheckCircle }
+            ].map((category, idx) => (
+              <BorderGlow
+                key={idx}
+                edgeSensitivity={33}
+                glowColor="0 80 60"
+                backgroundColor="#1a1a1a"
+                borderRadius={16}
+                glowRadius={48}
+                glowIntensity={2.0}
+                coneSpread={28}
+                animated
+                loop
+                colors={['#c0392b', '#e74c3c', '#ff6b6b']}
+              >
+                <Link to={category.link} className="p-10 group hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden block text-center min-h-[320px] flex flex-col justify-center items-center">
+                  <div className="bg-[#2A2A2A] w-20 h-20 rounded-full flex items-center justify-center shadow-lg mb-6 group-hover:bg-accent transition-colors border border-gray-700 mx-auto">
+                    <category.icon className="h-10 w-10 text-silver group-hover:text-white" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-white mb-4 uppercase tracking-wide">{category.title}</h3>
+                  <p className="text-silver text-base leading-relaxed">{category.desc}</p>
+                  
+                  <div className="mt-8 text-accent font-bold text-sm uppercase tracking-wider group-hover:text-white transition-colors">
+                    Explore Services →
+                  </div>
+                </Link>
+              </BorderGlow>
+            ))}
           </div>
         </div>
       </section>
@@ -164,18 +155,18 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center gap-16">
             <div className="md:w-1/3">
-              <h2 className="text-3xl md:text-5xl font-extrabold mb-6">Effortless Process.</h2>
-              <p className="text-silver text-lg leading-relaxed mb-8">We have removed all friction from auto maintenance so you can focus on the drive.</p>
+              <h2 className="text-3xl md:text-5xl font-extrabold mb-6">How It Works.</h2>
+              <p className="text-silver text-lg leading-relaxed mb-8">It's easy to book a professional mobile mechanic that comes to you.</p>
               <Link to="/book" className="bg-accent text-white px-8 py-3 rounded-btn font-bold hover:bg-red-700 border border-accent transition shadow-lg inline-block">
                 Start Booking
               </Link>
             </div>
             <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
               {[
-                { num: '01', title: 'Select Service', desc: "Choose your car's needs from our curated catalog." },
-                { num: '02', title: 'Pick a Time', desc: 'Select a convenient 2-hour slot for our mechanics.' },
-                { num: '03', title: 'We Arrive', desc: 'Our fully-equipped van arrives at your doorstep.' },
-                { num: '04', title: 'Drive Happy', desc: 'Secure payment, instant invoice, and pure performance.' }
+                { num: '01', title: 'Tell us where you are', desc: "Type in your postcode and discover a qualified mobile mechanic near you now!" },
+                { num: '02', title: 'Tell us about your car', desc: 'We are able to work on a wide range of popular makes and models.' },
+                { num: '03', title: 'Select a service', desc: "Even if you don't know what's wrong, we'll come to you, inspect your vehicle and supply a quote upfront." },
+                { num: '04', title: 'Pick a time and place!', desc: 'Tell us where your car is and a mechanics will be with you soon.' }
               ].map((step) => (
                 <BorderGlow
                   key={step.num}
@@ -202,6 +193,39 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Why AutoCare */}
+      <section className="py-24 bg-gray-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-primary mb-4">Why book an AutoCare on Wheels mechanic?</h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">Discover why more Aussies are choosing us for professional car service and repairs.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center text-primary">
+            {[
+              { icon: Truck, title: 'Convenient onsite service', desc: 'Qualified mechanics that do the work at your location.' },
+              { icon: Clock, title: 'Same or next day appointments', desc: 'More vans on the road means we can get to your car faster!' },
+              { icon: Settings, title: 'Highest quality parts and brands', desc: 'We only use the best quality parts, oils and equipment.' },
+              { icon: ShieldCheck, title: '12 month / 20k km warranty', desc: 'We back all our work with a nationwide parts and labour warranty.' }
+            ].map((feature, idx) => (
+              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div className="mb-6 flex justify-center text-accent"><feature.icon size={56} strokeWidth={1.5} /></div>
+                <h4 className="text-xl font-bold mb-3">{feature.title}</h4>
+                <p className="text-gray-500">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-20 pt-16 border-t border-gray-200">
+             <h3 className="text-center text-sm font-bold text-gray-400 uppercase tracking-widest mb-10">Popular makes we proudly service</h3>
+             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 opacity-75">
+               {['Holden', 'Honda', 'Hyundai', 'Ford', 'Kia', 'BMW', 'Mazda', 'Toyota', 'Nissan', 'Subaru', 'Suzuki'].map(make => (
+                 <span key={make} className="text-xl sm:text-2xl font-bold text-gray-400 hover:text-accent transition-colors cursor-pointer">{make}</span>
+               ))}
+             </div>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section id="testimonials" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -210,33 +234,33 @@ const Home = () => {
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">Thousands of happy vehicle owners trust AutoCare for their maintenance needs.</p>
           </div>
 
-          <TestimonialsCard 
+          <TestimonialsCard
             items={[
-              { 
-                id: 1, 
-                title: 'Rahul Sharma', 
-                role: 'BMW 3 Series Owner', 
-                description: "Absolutely incredible service! The mechanic arrived on time, was extremely professional, and my car has never run smoother. I've recommended AutoCare to everyone I know.", 
+              {
+                id: 1,
+                title: 'Rahul Sharma',
+                role: 'BMW 3 Series Owner',
+                description: "Absolutely incredible service! The mechanic arrived on time, was extremely professional, and my car has never run smoother. I've recommended AutoCare to everyone I know.",
                 stars: 5,
                 image: 'https://i.pravatar.cc/250?img=11'
               },
-              { 
-                id: 2, 
-                title: 'Priya Patel', 
-                role: 'Honda City Owner', 
-                description: "The convenience of at-home service is a game changer. No more wasting weekends at the workshop. The team was thorough and transparent with pricing. Will definitely use again!", 
+              {
+                id: 2,
+                title: 'Priya Patel',
+                role: 'Honda City Owner',
+                description: "The convenience of at-home service is a game changer. No more wasting weekends at the workshop. The team was thorough and transparent with pricing. Will definitely use again!",
                 stars: 5,
                 image: 'https://i.pravatar.cc/250?img=5'
               },
-              { 
-                id: 3, 
-                title: 'Vikram Singh', 
-                role: 'Toyota Fortuner Owner', 
-                description: "I was skeptical at first, but the quality exceeded my expectations. The diagnostic report was very detailed and the oil change was done in under 40 minutes. Premium service at fair prices.", 
+              {
+                id: 3,
+                title: 'Vikram Singh',
+                role: 'Toyota Fortuner Owner',
+                description: "I was skeptical at first, but the quality exceeded my expectations. The diagnostic report was very detailed and the oil change was done in under 40 minutes. Premium service at fair prices.",
                 stars: 4,
                 image: 'https://i.pravatar.cc/250?img=12'
               }
-            ]} 
+            ]}
             autoPlay={true}
             autoPlayInterval={4000}
           />

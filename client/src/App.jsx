@@ -6,6 +6,7 @@ import AuthCard from './pages/auth/Login';
 import Dashboard from './pages/customer/Dashboard';
 import Profile from './pages/customer/Profile';
 import ServiceDetail from './pages/customer/ServiceDetail';
+import ServiceCategoryPage from './pages/customer/ServiceCategoryPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services/:id" element={<ServiceDetail />} />
+        <Route path="/services/category/:categoryName" element={<ServiceCategoryPage />} />
         <Route path="/book" element={<Booking />} />
         
         {/* Protected Customer Routes */}

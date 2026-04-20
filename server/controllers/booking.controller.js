@@ -145,14 +145,10 @@ const sendBookingEmails = async ({ booking, user, service, selectedAddons = [], 
   const customerText = [
     `Hi ${user.name || 'Customer'},`,
     '',
-    'Your booking has been confirmed.',
-    `Booking ID: ${booking.id}`,
-    `Service: ${service.name}`,
-    `Date: ${new Date(booking.date).toLocaleDateString()}`,
-    `Time Slot: ${booking.time_slot}`,
-    `Vehicle: ${vehicleText}`,
-    `Location: ${locationText}`,
-    `Total Estimate: ${formatCurrency(booking.total_price)}`,
+    'Your booking request has been successfully received.',
+    `Your Booking Reference ID is #${booking.id}.`,
+    '',
+    'Our mechanic network is reviewing your request and we will be in touch shortly to confirm your schedule.',
     '',
     'Thank you for choosing AutoCare on Wheels.',
   ].join('\n');
@@ -196,10 +192,10 @@ const sendBookingEmails = async ({ booking, user, service, selectedAddons = [], 
     }),
     sendEmail({
       to: user.email,
-      subject: `Booking Confirmation #${booking.id}`,
+      subject: `Booking Request Received #${booking.id}`,
       text: customerText,
-      html: `<pre>${customerText}</pre>`,
-      attachments: invoiceAttachment ? [invoiceAttachment] : undefined,
+      html: `<pre style="font-family: Arial, sans-serif; white-space: pre-wrap;">${customerText}</pre>`,
+      // No invoice attachment for the customer per rules
     }),
   ]);
 };
