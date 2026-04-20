@@ -1,8 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const { buildInvoicePayload, buildInvoicePdfBuffer } = require('../utils/generateInvoice');
 const { sendEmail } = require('../utils/email');
-const prisma = new PrismaClient();
+const prisma = require('../utils/prisma');
 
 const STAFF_ROLES = ['ADMIN'];
 

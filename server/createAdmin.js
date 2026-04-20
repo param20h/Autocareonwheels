@@ -1,7 +1,6 @@
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
-const { PrismaClient } = require('@prisma/client');
+require('dotenv').config();
 const bcrypt = require('bcrypt');
-const prisma = new PrismaClient();
+const prisma = require('./utils/prisma');
 
 async function main() {
   const email = process.env.ADMIN_EMAIL;
