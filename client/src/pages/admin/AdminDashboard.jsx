@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles, Home, Download, FilePlus2 } from 'lucide-react';
+import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles, Home, Download, FilePlus2, Package, MinusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../store/useAuth';
@@ -15,6 +15,7 @@ const AdminDashboard = () => {
   const [services, setServices] = useState([]);
   const [mechanics, setMechanics] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const [notifyCustomer, setNotifyCustomer] = useState(true);
@@ -23,6 +24,7 @@ const AdminDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
   const [modalData, setModalData] = useState({});
+  const [useItemData, setUseItemData] = useState(null);
 
   useEffect(() => { fetchData(); }, [activeTab]);
 
@@ -41,6 +43,9 @@ const AdminDashboard = () => {
       } else if (activeTab === 'customers') {
         const { data } = await api.get('/admin/customers');
         setCustomers(data.data);
+      } else if (activeTab === 'inventory') {
+        const { data } = await api.get('/inventory');
+        setInventory(data.data);
       }
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
@@ -101,6 +106,9 @@ const AdminDashboard = () => {
       } else if (modalType === 'mechanic') {
         await api.post('/admin/mechanics', modalData);
         setToast({ show: true, message: 'Mechanic added!', type: 'success' });
+      } else if (modalType === 'inventory') {
+        await api.post('/inventory', modalData);
+        setToast({ show: true, message: 'Part added to inventory!', type: 'success' });
       }
       setShowModal(false);
       setModalData({});
@@ -111,10 +119,25 @@ const AdminDashboard = () => {
   const handleDelete = async (type, id) => {
     if (!confirm('Are you sure?')) return;
     try {
-      await api.delete(`/admin/${type}/${id}`);
+      const endpoint = type === 'inventory' ? `/inventory/${id}` : `/admin/${type}/${id}`;
+      await api.delete(endpoint);
       setToast({ show: true, message: 'Deleted successfully', type: 'success' });
       fetchData();
     } catch { setToast({ show: true, message: 'Delete failed', type: 'error' }); }
+  };
+
+  const handleUseItem = async () => {
+    try {
+      await api.post(`/inventory/${useItemData.id}/use`, {
+        quantity: useItemData.quantity,
+        notes: useItemData.notes
+      });
+      setToast({ show: true, message: 'Stock updated successfully!', type: 'success' });
+      setUseItemData(null);
+      fetchData();
+    } catch (error) {
+      setToast({ show: true, message: error.response?.data?.message || 'Failed to update stock', type: 'error' });
+    }
   };
 
   const getStatusColor = (s) => {
@@ -133,6 +156,7 @@ const AdminDashboard = () => {
     { key: 'services', label: 'Services', icon: Wrench },
     { key: 'mechanics', label: 'Mechanics', icon: Settings },
     { key: 'customers', label: 'Customers', icon: Users },
+    { key: 'inventory', label: 'Inventory', icon: Package },
   ];
 
   return (
@@ -391,6 +415,64 @@ const AdminDashboard = () => {
             )}
           </div>
         )}
+        {/* Inventory Tab */}
+        {activeTab === 'inventory' && (
+          <div className="bg-white/70 backdrop-blur-md rounded-card shadow-sm border border-white/80 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 bg-white/70 flex justify-between items-center">
+              <h2 className="text-lg font-extrabold text-primary">Parts & Inventory</h2>
+              <button onClick={() => { setModalType('inventory'); setModalData({ name: '', part_number: '', stock_quantity: '0', min_stock_level: '5' }); setShowModal(true); }}
+                className="flex items-center space-x-1.5 bg-accent text-white px-4 py-2 rounded-btn font-bold text-sm hover:bg-accent/90 transition-colors">
+                <Plus size={16} /><span>Add Part</span>
+              </button>
+            </div>
+            {loading ? <div className="flex justify-center py-16"><Loader2 className="animate-spin text-accent" size={32} /></div> : inventory.length === 0 ? (
+              <div className="p-12 text-center text-gray-400">No inventory items added yet. Click "Add Part" to start tracking.</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="text-xs uppercase tracking-wider text-gray-500 font-bold border-b border-gray-100">
+                      <th className="p-4 pl-6">Part Name / Number</th><th className="p-4">Stock Level</th><th className="p-4 text-right pr-6">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {inventory.map(item => (
+                      <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
+                        <td className="p-4 pl-6">
+                          <p className="font-bold text-primary">{item.name}</p>
+                          <p className="text-xs text-gray-500">{item.part_number ? `Part #: ${item.part_number}` : 'No part number'}</p>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex flex-col">
+                            <span className={`text-lg font-black ${item.stock_quantity <= item.min_stock_level ? 'text-red-500' : 'text-green-600'}`}>
+                              {item.stock_quantity}
+                            </span>
+                            {item.stock_quantity <= item.min_stock_level && (
+                              <span className="text-[10px] text-red-500 font-bold uppercase tracking-wider">Low Stock</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-4 pr-6 text-right">
+                          <div className="inline-flex items-center gap-2">
+                            <button
+                              onClick={() => setUseItemData({ id: item.id, name: item.name, quantity: 1, notes: '' })}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-full transition-colors"
+                            >
+                              <MinusCircle size={13} /> Use Part
+                            </button>
+                            <button onClick={() => handleDelete('inventory', item.id)} className="text-red-400 hover:text-red-600 ml-2 transition-colors">
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
       </main>
 
       {/* Add Modal */}
@@ -442,8 +524,56 @@ const AdminDashboard = () => {
                   </div>
                 </>
               )}
+              {modalType === 'inventory' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Part Number (Optional)</label>
+                    <input value={modalData.part_number || ''} onChange={e => setModalData({...modalData, part_number: e.target.value})} placeholder="e.g. VAL-10W40"
+                      className="w-full border border-gray-300 bg-white text-primary rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Initial Stock</label>
+                      <input type="number" value={modalData.stock_quantity || ''} onChange={e => setModalData({...modalData, stock_quantity: e.target.value})} placeholder="10"
+                        className="w-full border border-gray-300 bg-white text-primary rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Low Stock Alert At</label>
+                      <input type="number" value={modalData.min_stock_level || ''} onChange={e => setModalData({...modalData, min_stock_level: e.target.value})} placeholder="5"
+                        className="w-full border border-gray-300 bg-white text-primary rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                    </div>
+                  </div>
+                </>
+              )}
               <button onClick={handleAddSubmit} className="w-full bg-primary text-white py-3 rounded-btn font-bold hover:bg-accent transition-all shadow-md flex items-center justify-center space-x-2">
                 <Save size={18} /><span>Save</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Use Part Modal */}
+      {useItemData && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setUseItemData(null)}>
+          <div className="bg-white/90 backdrop-blur-md border border-white rounded-card p-8 w-full max-w-md shadow-2xl text-primary" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-extrabold text-primary">Use Part: {useItemData.name}</h3>
+              <button onClick={() => setUseItemData(null)}><X size={20} className="text-gray-400 hover:text-gray-600" /></button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Quantity Used</label>
+                <input type="number" min="1" value={useItemData.quantity || 1} onChange={e => setUseItemData({...useItemData, quantity: e.target.value})}
+                  className="w-full border border-gray-300 bg-white text-primary rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Notes / Job Reference (Optional)</label>
+                <textarea value={useItemData.notes || ''} onChange={e => setUseItemData({...useItemData, notes: e.target.value})} rows="2" placeholder="e.g., Used for Booking #104"
+                  className="w-full border border-gray-300 bg-white text-primary rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none" />
+              </div>
+              <button onClick={handleUseItem} className="w-full bg-amber-500 text-white py-3 rounded-btn font-bold hover:bg-amber-600 transition-all shadow-md flex items-center justify-center space-x-2">
+                <MinusCircle size={18} /><span>Deduct Stock</span>
               </button>
             </div>
           </div>
