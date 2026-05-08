@@ -392,7 +392,6 @@ const Booking = () => {
                         )}
                       </div>
                       <div className="flex flex-col items-end space-y-2 ml-4 flex-shrink-0">
-                        <span className="font-bold text-gray-700 text-lg">${parseFloat(service.price).toLocaleString()}</span>
                         <span className="text-xs text-gray-400">{service.duration_mins} min</span>
                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${formData.service?.id === service.id ? 'border-accent bg-accent text-white' : 'border-gray-300'}`}>
                           {formData.service?.id === service.id && <div className="w-2 h-2 bg-white rounded-full"></div>}
@@ -412,9 +411,8 @@ const Booking = () => {
         {/* Step 4: Estimate */}
         {step === 4 && (
           <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Estimate</h2>
-            <p className="text-gray-500 mb-2">Review base service and optionally add extras.</p>
-            <p className="text-sm text-gray-400 mb-8">This shows your estimated total before booking confirmation.</p>
+            <h2 className="text-3xl font-extrabold text-primary mb-2">Add-ons</h2>
+            <p className="text-gray-500 mb-8">Select any optional extras you'd like added to your service.</p>
 
             {formData.service?.addons?.length > 0 ? (
               <div className="space-y-3">
@@ -436,7 +434,6 @@ const Booking = () => {
                         </div>
                         <span className={`font-semibold ${isSelected ? 'text-primary' : 'text-gray-700'}`}>{addon.name}</span>
                       </div>
-                      <span className={`font-bold ${isSelected ? 'text-accent' : 'text-gray-500'}`}>+ ${parseFloat(addon.price).toLocaleString()}</span>
                     </button>
                   );
                 })}
@@ -447,18 +444,13 @@ const Booking = () => {
               </div>
             )}
 
-            {/* Running Total */}
-            <div className="mt-6 p-4 bg-background rounded-card border border-gray-100">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-500 font-medium">Base: ${parseFloat(formData.service?.price).toLocaleString()}</p>
-                  {formData.selectedAddons.length > 0 && (
-                    <p className="text-sm text-accent font-semibold">+ {formData.selectedAddons.length} add-on{formData.selectedAddons.length > 1 ? 's' : ''}: ${formData.selectedAddons.reduce((s, a) => s + parseFloat(a.price), 0).toLocaleString()}</p>
-                  )}
-                </div>
-                <p className="text-2xl font-black text-primary">${getTotalPrice().toLocaleString()}</p>
+            {/* Selected add-ons summary */}
+            {formData.selectedAddons.length > 0 && (
+              <div className="mt-6 p-4 bg-background rounded-card border border-gray-100">
+                <p className="text-sm text-gray-500 font-medium">{formData.selectedAddons.length} add-on{formData.selectedAddons.length > 1 ? 's' : ''} selected: {formData.selectedAddons.map(a => a.name).join(', ')}</p>
+                <p className="text-xs text-gray-400 mt-1">Pricing will be provided in your offline invoice.</p>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -511,10 +503,7 @@ const Booking = () => {
 
               <div className="flex justify-between border-b border-gray-200 pb-4">
                 <span className="text-gray-500 font-medium">Service Package</span>
-                <div className="text-right">
-                  <span className="font-bold text-primary">{formData.service?.name}</span>
-                  <p className="text-sm text-gray-400">${parseFloat(formData.service?.price).toLocaleString()}</p>
-                </div>
+                <span className="font-bold text-primary text-right">{formData.service?.name}</span>
               </div>
 
               {formData.selectedAddons.length > 0 && (
@@ -522,9 +511,8 @@ const Booking = () => {
                   <span className="text-gray-500 font-medium block mb-2">Add-ons</span>
                   <div className="space-y-2 pl-4">
                     {formData.selectedAddons.map(addon => (
-                      <div key={addon.id} className="flex justify-between text-sm">
+                      <div key={addon.id} className="text-sm">
                         <span className="text-gray-600 flex items-center"><Plus size={12} className="mr-1 text-accent" />{addon.name}</span>
-                        <span className="font-semibold text-gray-700">${parseFloat(addon.price).toLocaleString()}</span>
                       </div>
                     ))}
                   </div>
@@ -535,13 +523,12 @@ const Booking = () => {
                 <span className="text-gray-500 font-medium">Schedule</span>
                 <span className="font-bold text-primary text-right">{formData.date}<br/>{formData.timeSlot}</span>
               </div>
-              <div className="flex justify-between pt-2">
-                <span className="text-lg font-bold text-primary">Total Amount Due</span>
-                <span className="text-2xl font-black text-accent">${getTotalPrice().toLocaleString()}</span>
+              <div className="pt-2 text-center">
+                <p className="text-sm text-gray-400">A detailed invoice will be provided by your mechanic after the service.</p>
               </div>
             </div>
 
-            <p className="text-center text-sm text-gray-400 mb-6">Payment will be collected securely upon service completion.</p>
+            <p className="text-center text-sm text-gray-400 mb-6">Our team will contact you to confirm your booking details.</p>
           </div>
         )}
 
