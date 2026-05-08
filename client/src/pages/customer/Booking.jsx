@@ -387,9 +387,6 @@ const Booking = () => {
                       <div>
                         <span className="font-bold text-primary text-lg">{service.name}</span>
                         <p className="text-sm text-gray-500 mt-1">{service.description?.substring(0, 80)}...</p>
-                        {service.addons?.length > 0 && (
-                          <span className="text-xs text-accent font-semibold mt-1 inline-block">{service.addons.length} optional add-ons in estimate</span>
-                        )}
                       </div>
                       <div className="flex flex-col items-end space-y-2 ml-4 flex-shrink-0">
                         <span className="text-xs text-gray-400">{service.duration_mins} min</span>
