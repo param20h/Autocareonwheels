@@ -32,60 +32,62 @@ const TyreSizeSearch = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-primary to-accent rounded-2xl p-8 mb-12 shadow-xl">
-      <h2 className="text-2xl font-extrabold text-white mb-2">Find Your Tyre Size</h2>
-      <p className="text-white/70 text-sm mb-6">Select your tyre dimensions to find the right fit for your vehicle</p>
+    <div className="bg-gradient-to-br from-primary to-accent rounded-xl sm:rounded-2xl p-5 sm:p-8 mb-10 sm:mb-12 shadow-xl">
+      <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-1.5">Find Your Tyre Size</h2>
+      <p className="text-white/70 text-xs sm:text-sm mb-5">Select your tyre dimensions to find the right fit for your vehicle</p>
 
-      <div className="bg-white/10 rounded-xl p-4 mb-6 text-center">
-        <p className="text-white font-mono text-2xl font-bold tracking-widest">
+      {/* Live size preview */}
+      <div className="bg-white/10 rounded-xl p-3 sm:p-4 mb-5 text-center">
+        <p className="text-white font-mono text-xl sm:text-2xl font-bold tracking-widest">
           <span className={`transition-colors ${width ? 'text-yellow-300' : 'text-white/40'}`}>{width || '205'}</span>
           <span className="text-white/50">/</span>
           <span className={`transition-colors ${profile ? 'text-green-300' : 'text-white/40'}`}>{profile || '55'}</span>
           <span className="text-white/50"> R</span>
           <span className={`transition-colors ${rim ? 'text-blue-300' : 'text-white/40'}`}>{rim || '16'}</span>
         </p>
-        <div className="flex justify-center gap-8 mt-2 text-xs">
+        <div className="flex justify-center gap-4 sm:gap-8 mt-2 text-xs">
           <span className="text-yellow-300/80">Width (mm)</span>
           <span className="text-green-300/80">Profile (%)</span>
           <span className="text-blue-300/80">Rim (inch)</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      {/* Dropdowns — 1 col on tiny phones, 3 col from sm up */}
+      <div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-3 mb-5">
         <div>
-          <label className="block text-white/80 text-xs font-bold mb-1.5 uppercase tracking-wide">Width</label>
+          <label className="block text-white/80 text-xs font-bold mb-1.5 uppercase tracking-wide">Width (mm)</label>
           <select value={width} onChange={e => setWidth(e.target.value)}
-            className="w-full bg-white/20 text-white border border-white/30 rounded-xl px-3 py-3 focus:outline-none focus:border-white font-bold text-center">
-            <option value="">--</option>
+            className="w-full bg-white/20 text-white border border-white/30 rounded-xl px-3 py-3.5 sm:py-3 focus:outline-none focus:border-white font-bold text-center text-base sm:text-sm">
+            <option value="">Select --</option>
             {TYRE_WIDTHS.map(w => <option key={w} value={w} className="text-black">{w}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-white/80 text-xs font-bold mb-1.5 uppercase tracking-wide">Profile</label>
+          <label className="block text-white/80 text-xs font-bold mb-1.5 uppercase tracking-wide">Profile (%)</label>
           <select value={profile} onChange={e => setProfile(e.target.value)}
-            className="w-full bg-white/20 text-white border border-white/30 rounded-xl px-3 py-3 focus:outline-none focus:border-white font-bold text-center">
-            <option value="">--</option>
+            className="w-full bg-white/20 text-white border border-white/30 rounded-xl px-3 py-3.5 sm:py-3 focus:outline-none focus:border-white font-bold text-center text-base sm:text-sm">
+            <option value="">Select --</option>
             {TYRE_PROFILES.map(p => <option key={p} value={p} className="text-black">{p}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-white/80 text-xs font-bold mb-1.5 uppercase tracking-wide">Rim Size</label>
+          <label className="block text-white/80 text-xs font-bold mb-1.5 uppercase tracking-wide">Rim (inch)</label>
           <select value={rim} onChange={e => setRim(e.target.value)}
-            className="w-full bg-white/20 text-white border border-white/30 rounded-xl px-3 py-3 focus:outline-none focus:border-white font-bold text-center">
-            <option value="">--</option>
+            className="w-full bg-white/20 text-white border border-white/30 rounded-xl px-3 py-3.5 sm:py-3 focus:outline-none focus:border-white font-bold text-center text-base sm:text-sm">
+            <option value="">Select --</option>
             {RIM_SIZES.map(r => <option key={r} value={r} className="text-black">R{r}</option>)}
           </select>
         </div>
       </div>
 
       <button onClick={handleSearch}
-        className={`w-full py-4 rounded-xl font-extrabold text-lg flex items-center justify-center gap-2 transition-all shadow-lg ${
+        className={`w-full py-4 rounded-xl font-extrabold text-base sm:text-lg flex items-center justify-center gap-2 transition-all shadow-lg ${
           width && profile && rim
-            ? 'bg-white text-primary hover:shadow-xl hover:-translate-y-0.5'
+            ? 'bg-white text-primary active:scale-95 hover:shadow-xl hover:-translate-y-0.5'
             : 'bg-white/20 text-white/50 cursor-not-allowed'
         }`}>
         <Search size={20} />
-        {width && profile && rim ? `Get a Quote for ${width}/${profile} R${rim}` : 'Select your tyre size above'}
+        {width && profile && rim ? `Get a Quote — ${width}/${profile} R${rim}` : 'Select all 3 dimensions above'}
       </button>
       <p className="text-white/50 text-xs text-center mt-3">Or call us directly for same-day fitment</p>
     </div>
@@ -93,35 +95,35 @@ const TyreSizeSearch = () => {
 };
 
 const TrustBadges = () => (
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-10 sm:mb-12">
     {[
       { icon: Truck, title: 'Mobile Fitment', desc: 'We come to you' },
       { icon: Star, title: 'Top Brands', desc: '30+ premium brands' },
       { icon: Shield, title: 'Warranty', desc: 'All tyres warranted' },
       { icon: Phone, title: 'Same Day', desc: 'Call for availability' },
     ].map(({ icon: Icon, title, desc }) => (
-      <div key={title} className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-5 text-center hover:border-accent transition-colors">
-        <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-3">
-          <Icon size={22} className="text-accent" />
+      <div key={title} className="bg-[#1a1a1a] border border-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 text-center hover:border-accent transition-colors">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+          <Icon size={20} className="text-accent" />
         </div>
-        <p className="font-bold text-white text-sm">{title}</p>
-        <p className="text-gray-500 text-xs mt-0.5">{desc}</p>
+        <p className="font-bold text-white text-xs sm:text-sm">{title}</p>
+        <p className="text-gray-500 text-xs mt-0.5 hidden sm:block">{desc}</p>
       </div>
     ))}
   </div>
 );
 
 const FlatTyreCTA = () => (
-  <div className="bg-[#1a1a1a] border border-accent/30 rounded-2xl p-8 mb-12 flex flex-col md:flex-row items-center gap-6">
-    <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-      <Wrench size={32} className="text-accent" />
+  <div className="bg-[#1a1a1a] border border-accent/30 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-10 sm:mb-12 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
+      <Wrench size={28} className="text-accent" />
     </div>
-    <div className="flex-1 text-center md:text-left">
-      <h3 className="text-xl font-extrabold text-white mb-1">Flat Tyre Emergency?</h3>
-      <p className="text-gray-400 text-sm">Got a flat right now? Our mobile mechanics come to you — on the road, at home, or at work. Puncture repair and professional tyre fitment wherever it suits you.</p>
+    <div className="flex-1">
+      <h3 className="text-lg sm:text-xl font-extrabold text-white mb-1">Flat Tyre Emergency?</h3>
+      <p className="text-gray-400 text-sm">Got a flat right now? Our mobile mechanics come to you — on the road, at home, or at work.</p>
     </div>
     <Link to="/book"
-      className="bg-accent text-white px-8 py-3 rounded-xl font-bold hover:bg-accent/90 transition-colors whitespace-nowrap flex-shrink-0">
+      className="w-full sm:w-auto bg-accent text-white px-8 py-3.5 rounded-xl font-bold hover:bg-accent/90 active:scale-95 transition-all whitespace-nowrap flex-shrink-0 text-center">
       Book Now
     </Link>
   </div>
@@ -129,13 +131,13 @@ const FlatTyreCTA = () => (
 
 const BrandLogoGrid = () => (
   <div className="mb-12">
-    <h2 className="text-2xl font-extrabold text-white mb-2">Brands We Supply &amp; Fit</h2>
-    <p className="text-gray-500 text-sm mb-6">We source and install tyres from all major brands at your location.</p>
-    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+    <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">Brands We Supply &amp; Fit</h2>
+    <p className="text-gray-500 text-sm mb-5">We source and install tyres from all major brands at your location.</p>
+    <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 sm:gap-3">
       {TYRE_BRANDS.map(brand => (
         <div key={brand}
-          className="bg-[#1a1a1a] border border-gray-800 hover:border-accent rounded-xl p-3 flex items-center justify-center text-center transition-all hover:-translate-y-0.5 cursor-pointer group">
-          <span className="text-gray-400 group-hover:text-white text-xs font-semibold leading-tight transition-colors">{brand}</span>
+          className="bg-[#1a1a1a] border border-gray-800 hover:border-accent rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex items-center justify-center text-center transition-all active:scale-95 hover:-translate-y-0.5 cursor-pointer group min-h-[44px]">
+          <span className="text-gray-400 group-hover:text-white text-[10px] sm:text-xs font-semibold leading-tight transition-colors">{brand}</span>
         </div>
       ))}
     </div>
