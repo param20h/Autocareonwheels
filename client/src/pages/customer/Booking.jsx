@@ -9,33 +9,12 @@ import useAuth from '../../store/useAuth';
 import userService from '../../services/user.service';
 
 const AUSTRALIA_CITIES = [
-  'Sydney',
-  'Melbourne',
-  'Brisbane',
-  'Perth',
-  'Adelaide',
-  'Gold Coast',
   'Canberra',
-  'Newcastle',
-  'Wollongong',
-  'Logan City',
-  'Geelong',
-  'Hobart',
-  'Townsville',
-  'Cairns',
-  'Darwin',
-  'Toowoomba',
-  'Ballarat',
-  'Bendigo',
-  'Albury',
-  'Launceston',
+  'Queanbeyan',
 ];
 
 const AUSTRALIA_STATES = [
   'New South Wales',
-  'Queensland',
-  'South Australia',
-  'Tasmania',
   'Australian Capital Territory (ACT)',
 ];
 
@@ -58,7 +37,7 @@ const Booking = () => {
     date: '',
     timeSlot: '',
   });
-  
+
   const [services, setServices] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [loadingServices, setLoadingServices] = useState(true);
@@ -77,15 +56,15 @@ const Booking = () => {
       } catch (error) {
         console.error('Failed to load services from API, using fallback', error);
       }
-      
+
       if (fetchedServices.length === 0) {
         fetchedServices = [
-          { id: '1', name: 'Logbook Service', description: 'The convenient way to maintain your new car warranty.', price: 249, addons: [{id: 101, name: 'Air Filter Upgrade', price: 39}] },
-          { id: '2', name: 'Yearly Service', description: 'Extend the life of your vehicle without the hassle of a garage.', price: 189, addons: [{id: 102, name: 'Wiper Blade Replacement', price: 39}] },
-          { id: '3', name: 'Car Battery', description: 'Every AutoCare van stocks the highest quality battery brands.', price: 199, addons: [{id: 103, name: 'Terminal Check', price: 19}] },
-          { id: '4', name: 'Brakes', description: 'Quality brake repairs to keep you safe on the road.', price: 220, addons: [{id: 104, name: 'Brake Fluid Flush', price: 89}] },
-          { id: '5', name: 'Flat Tyre Service', description: 'Puncture repair and professional tyre fitment!', price: 110, addons: [{id: 105, name: 'Emergency Spare Fitting', price: 25}] },
-          { id: '6', name: 'Ultimate Service', description: 'Give your car the birthday it deserves. Our most comprehensive service.', price: 349, addons: [{id: 106, name: 'Fuel System Flush', price: 89}] }
+          { id: '1', name: 'Logbook Service', description: 'The convenient way to maintain your new car warranty.', price: 249, addons: [{ id: 101, name: 'Air Filter Upgrade', price: 39 }] },
+          { id: '2', name: 'Yearly Service', description: 'Extend the life of your vehicle without the hassle of a garage.', price: 189, addons: [{ id: 102, name: 'Wiper Blade Replacement', price: 39 }] },
+          { id: '3', name: 'Car Battery', description: 'Every AutoCare van stocks the highest quality battery brands.', price: 199, addons: [{ id: 103, name: 'Terminal Check', price: 19 }] },
+          { id: '4', name: 'Brakes', description: 'Quality brake repairs to keep you safe on the road.', price: 220, addons: [{ id: 104, name: 'Brake Fluid Flush', price: 89 }] },
+          { id: '5', name: 'Flat Tyre Service', description: 'Puncture repair and professional tyre fitment!', price: 110, addons: [{ id: 105, name: 'Emergency Spare Fitting', price: 25 }] },
+          { id: '6', name: 'Ultimate Service', description: 'Give your car the birthday it deserves. Our most comprehensive service.', price: 349, addons: [{ id: 106, name: 'Fuel System Flush', price: 89 }] }
         ];
       }
       setServices(fetchedServices);
@@ -205,22 +184,21 @@ const Booking = () => {
       <Toast {...toast} onClose={() => setToast({ ...toast, show: false })} />
 
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 pt-28 pb-20">
-        
+
         {/* Progress Bar */}
         <div className="mb-10 flex justify-between relative">
           <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -translate-y-1/2 rounded-full z-0"></div>
           <div className="absolute top-1/2 left-0 h-1 bg-accent -translate-y-1/2 rounded-full z-0 transition-all duration-500" style={{ width: `${((step - 1) / (TOTAL_STEPS - 1)) * 100}%` }}></div>
-          
+
           {stepLabels.map((label, index) => {
             const stepNum = index + 1;
             const isActive = step === stepNum;
             const isCompleted = step > stepNum;
             return (
               <div key={label} className="relative z-10 flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-colors ${
-                  isActive ? 'bg-primary text-white border-2 border-primary ring-2 ring-primary' : 
-                  isCompleted ? 'bg-accent text-white' : 'bg-white text-gray-400 border border-gray-200'
-                }`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-colors ${isActive ? 'bg-primary text-white border-2 border-primary ring-2 ring-primary' :
+                    isCompleted ? 'bg-accent text-white' : 'bg-white text-gray-400 border border-gray-200'
+                  }`}>
                   {isCompleted ? <CheckCircle2 size={16} /> : stepNum}
                 </div>
                 <span className={`mt-2 text-xs font-semibold ${isActive || isCompleted ? 'text-primary' : 'text-gray-400'} hidden sm:block`}>
@@ -245,7 +223,7 @@ const Booking = () => {
                     <input
                       type="text"
                       value={formData.guestName}
-                      onChange={(e) => setFormData({...formData, guestName: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, guestName: e.target.value })}
                       className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
                       placeholder="John Doe"
                     />
@@ -255,7 +233,7 @@ const Booking = () => {
                     <input
                       type="email"
                       value={formData.guestEmail}
-                      onChange={(e) => setFormData({...formData, guestEmail: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, guestEmail: e.target.value })}
                       className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
                       placeholder="you@example.com"
                     />
@@ -265,7 +243,7 @@ const Booking = () => {
                     <input
                       type="tel"
                       value={formData.guestPhone}
-                      onChange={(e) => setFormData({...formData, guestPhone: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, guestPhone: e.target.value })}
                       className="w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
                       placeholder="+91 9876543210"
                     />
@@ -277,7 +255,7 @@ const Booking = () => {
                 <div className="relative">
                   <div className="absolute top-3 left-3 text-gray-400"><MapPin size={20} /></div>
                   <textarea rows="3" value={formData.address}
-                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     className="w-full border border-gray-300 rounded-input pl-10 pr-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none resize-none"
                     placeholder="123 Mechanics Blvd, Apt 4B..." />
                 </div>
@@ -396,7 +374,7 @@ const Booking = () => {
                       </div>
                     </div>
                     <input type="radio" name="service" className="hidden"
-                      onChange={() => setFormData({...formData, service, selectedAddons: []})}
+                      onChange={() => setFormData({ ...formData, service, selectedAddons: [] })}
                       checked={formData.service?.id === service.id} />
                   </label>
                 ))
@@ -419,14 +397,12 @@ const Booking = () => {
                     <button
                       key={addon.id}
                       onClick={() => toggleAddon(addon)}
-                      className={`w-full p-4 border rounded-card flex items-center justify-between transition-all text-left ${
-                        isSelected ? 'border-accent bg-red-50/20 shadow-sm' : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                      className={`w-full p-4 border rounded-card flex items-center justify-between transition-all text-left ${isSelected ? 'border-accent bg-red-50/20 shadow-sm' : 'border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                       <div className="flex items-center space-x-3">
-                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
-                          isSelected ? 'bg-accent border-accent text-white' : 'border-gray-300'
-                        }`}>
+                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-accent border-accent text-white' : 'border-gray-300'
+                          }`}>
                           {isSelected && <Check size={14} />}
                         </div>
                         <span className={`font-semibold ${isSelected ? 'text-primary' : 'text-gray-700'}`}>{addon.name}</span>
@@ -456,12 +432,12 @@ const Booking = () => {
           <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-extrabold text-primary mb-2">Pick a Date & Time</h2>
             <p className="text-gray-500 mb-8">When should our mechanics arrive?</p>
-            
+
             <div className="mb-6">
               <label className="block text-sm font-bold text-gray-700 mb-2">Select Date</label>
               <input type="date" value={formData.date}
                 min={new Date().toISOString().split('T')[0]}
-                onChange={(e) => setFormData({...formData, date: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 className="w-full border border-gray-300 rounded-input p-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" />
             </div>
 
@@ -470,10 +446,9 @@ const Booking = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {['09:00 AM - 10:00 AM', '10:00 AM - 11:00 AM', '11:00 AM - 12:00 PM', '12:00 PM - 01:00 PM', '01:00 PM - 02:00 PM', '02:00 PM - 03:00 PM', '03:00 PM - 04:00 PM', '04:00 PM - 05:00 PM', '05:00 PM - 06:00 PM'].map(slot => (
                   <button key={slot}
-                    onClick={() => setFormData({...formData, timeSlot: slot})}
-                    className={`p-3 rounded-input text-sm font-semibold border transition-colors flex items-center justify-center ${
-                      formData.timeSlot === slot ? 'bg-primary border-primary text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-accent'
-                    }`}>
+                    onClick={() => setFormData({ ...formData, timeSlot: slot })}
+                    className={`p-3 rounded-input text-sm font-semibold border transition-colors flex items-center justify-center ${formData.timeSlot === slot ? 'bg-primary border-primary text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-accent'
+                      }`}>
                     <Clock size={16} className="mr-2 opacity-70" /> {slot.split(' - ')[0]}
                   </button>
                 ))}
@@ -486,7 +461,7 @@ const Booking = () => {
         {step === 6 && (
           <div className="bg-white p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-extrabold text-primary mb-6 text-center">Order Summary</h2>
-            
+
             <div className="bg-background p-6 rounded-card space-y-4 mb-8">
               <div className="flex justify-between border-b border-gray-200 pb-4">
                 <span className="text-gray-500 font-medium">Location</span>
@@ -518,7 +493,7 @@ const Booking = () => {
 
               <div className="flex justify-between border-b border-gray-200 pb-4">
                 <span className="text-gray-500 font-medium">Schedule</span>
-                <span className="font-bold text-primary text-right">{formData.date}<br/>{formData.timeSlot}</span>
+                <span className="font-bold text-primary text-right">{formData.date}<br />{formData.timeSlot}</span>
               </div>
               <div className="pt-2 text-center">
                 <p className="text-sm text-gray-400">A detailed invoice will be provided by your mechanic after the service.</p>
@@ -535,8 +510,8 @@ const Booking = () => {
             className={`px-6 py-3 rounded-btn font-bold transition-colors ${step === 1 ? 'invisible' : 'bg-white border border-gray-200 text-gray-600 hover:bg-background disabled:opacity-50'}`}>
             Back
           </button>
-          
-          <button 
+
+          <button
             onClick={() => { if (step < TOTAL_STEPS) nextStep(); else handleBookingSubmit(); }}
             disabled={!canProceed() || submitting}
             className="px-8 py-3 rounded-btn font-bold bg-primary text-white hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center">

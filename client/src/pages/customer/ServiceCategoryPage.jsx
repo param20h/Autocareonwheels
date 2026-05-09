@@ -16,10 +16,10 @@ const ServiceCategoryPage = () => {
     'car services': [
       { name: 'Logbook Service', description: 'The convenient way to maintain your new car warranty.', price: 249 },
       { name: 'Yearly Service', description: 'Extend the life of your vehicle without the hassle of a garage.', price: 189 },
-      { name: '3 Year Service', description: 'Comprehensive 3-year maintenance milestone check.', price: 229 },
-      { name: '6 Year Service', description: 'Major 6-year maintenance milestone service.', price: 269 },
-      { name: 'Pink Slip', description: 'Roadworthiness inspection report required for registration.', price: 55 },
-      { name: 'Ultimate Service', description: 'Give your car the birthday it deserves. Our most comprehensive service.', price: 349 },
+      // { name: '3 Year Service', description: 'Comprehensive 3-year maintenance milestone check.', price: 229 },
+      // { name: '6 Year Service', description: 'Major 6-year maintenance milestone service.', price: 269 },
+      // { name: 'Pink Slip', description: 'Roadworthiness inspection report required for registration.', price: 55 },
+      // { name: 'Ultimate Service', description: 'Give your car the birthday it deserves. Our most comprehensive service.', price: 349 },
       { name: 'Pre-purchase Inspection', description: 'Drive away confident. Book a roadworthiness report by a qualified mechanic.', price: 149 }
     ],
     'repairs': [
@@ -36,10 +36,10 @@ const ServiceCategoryPage = () => {
       { name: 'CV Shaft', description: 'CV joint and drive shaft repairs for smoother driving.', price: 300 }
     ],
     'tyres': [
-      { name: 'Flat Tyre Service', description: 'Puncture repair and professional tyre fitment wherever it suits you!', price: 110 },
-      { name: 'Bridgestone tyres', description: 'Supply and fit of premium Bridgestone tyres.', price: 199 },
-      { name: 'Firestone tyres', description: 'Dependable and durable Firestone tyre installations.', price: 145 },
-      { name: 'Dayton tyres', description: 'Affordable Dayton tyres supplied and expertly fitted.', price: 125 }
+      // { name: 'Flat Tyre Service', description: 'Puncture repair and professional tyre fitment wherever it suits you!', price: 110 },
+      // { name: 'Bridgestone tyres', description: 'Supply and fit of premium Bridgestone tyres.', price: 199 },
+      // { name: 'Firestone tyres', description: 'Dependable and durable Firestone tyre installations.', price: 145 },
+      // { name: 'Dayton tyres', description: 'Affordable Dayton tyres supplied and expertly fitted.', price: 125 }
     ]
   };
 
@@ -70,7 +70,7 @@ const ServiceCategoryPage = () => {
     <div className="bg-background min-h-screen font-sans selection:bg-accent selection:text-white flex flex-col">
       <Navbar />
       <main className="flex-grow pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        
+
         {/* Back Button */}
         <div className="mb-6">
           <Link to="/" className="inline-flex items-center text-sm font-bold text-gray-400 hover:text-white transition-colors group">
