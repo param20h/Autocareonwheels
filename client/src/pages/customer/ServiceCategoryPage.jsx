@@ -16,9 +16,11 @@ const TYRE_BRANDS = [
   'Winrun', 'Yokohama',
 ];
 
-const TYRE_WIDTHS = ['155','165','175','185','195','205','215','225','235','245','255','265','275','285','295','305','315','325','335'];
-const TYRE_PROFILES = ['30','35','40','45','50','55','60','65','70','75','80'];
-const RIM_SIZES = ['13','14','15','16','17','18','19','20','21','22','24'];
+const TYRE_WIDTHS = ['155', '165', '175', '185', '195', '205', '215', '225', '235', '245', '255', '265', '275', '285', '295', '305', '315', '325', '335'];
+const TYRE_PROFILES = ['30', '35', '40', '45', '50', '55', '60', '65', '70', '75', '80'];
+const RIM_SIZES = ['13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '24'];
+
+const BUSINESS_PHONE = '0427563913';
 
 const TyreSizeSearch = () => {
   const navigate = useNavigate();
@@ -28,7 +30,8 @@ const TyreSizeSearch = () => {
 
   const handleSearch = () => {
     if (!width || !profile || !rim) return;
-    navigate('/book');
+    // Pre-select Flat Tyre Service (id=5) and jump to step 2 (vehicle/contact info)
+    navigate('/book?service=5&step=2');
   };
 
   return (
@@ -81,15 +84,18 @@ const TyreSizeSearch = () => {
       </div>
 
       <button onClick={handleSearch}
-        className={`w-full py-4 rounded-xl font-extrabold text-base sm:text-lg flex items-center justify-center gap-2 transition-all shadow-lg ${
-          width && profile && rim
+        className={`w-full py-4 rounded-xl font-extrabold text-base sm:text-lg flex items-center justify-center gap-2 transition-all shadow-lg ${width && profile && rim
             ? 'bg-white text-primary active:scale-95 hover:shadow-xl hover:-translate-y-0.5'
             : 'bg-white/20 text-white/50 cursor-not-allowed'
-        }`}>
+          }`}>
         <Search size={20} />
         {width && profile && rim ? `Get a Quote — ${width}/${profile} R${rim}` : 'Select all 3 dimensions above'}
       </button>
       <p className="text-white/50 text-xs text-center mt-3">Or call us directly for same-day fitment</p>
+      <a href={`tel:${BUSINESS_PHONE}`}
+        className="flex items-center justify-center gap-2 mt-3 bg-green-500 hover:bg-green-400 active:scale-95 text-white font-bold py-3 rounded-xl transition-all">
+        📞 Call Now — {BUSINESS_PHONE}
+      </a>
     </div>
   );
 };
@@ -122,24 +128,80 @@ const FlatTyreCTA = () => (
       <h3 className="text-lg sm:text-xl font-extrabold text-white mb-1">Flat Tyre Emergency?</h3>
       <p className="text-gray-400 text-sm">Got a flat right now? Our mobile mechanics come to you — on the road, at home, or at work.</p>
     </div>
-    <Link to="/book"
-      className="w-full sm:w-auto bg-accent text-white px-8 py-3.5 rounded-xl font-bold hover:bg-accent/90 active:scale-95 transition-all whitespace-nowrap flex-shrink-0 text-center">
-      Book Now
-    </Link>
+    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto flex-shrink-0">
+      <a href="tel:0427563913"
+        className="w-full sm:w-auto bg-green-600 hover:bg-green-500 active:scale-95 text-white px-6 py-3.5 rounded-xl font-bold transition-all text-center">
+        📞 Call Now
+      </a>
+      <Link to="/book?service=5&step=2"
+        className="w-full sm:w-auto bg-accent text-white px-6 py-3.5 rounded-xl font-bold hover:bg-accent/90 active:scale-95 transition-all text-center">
+        Book Online
+      </Link>
+    </div>
   </div>
 );
+
+// Map brand name → image filename in /brands/
+const BRAND_IMAGES = {
+  'Accelera': 'accelera.png',
+  'Achilles': 'achilles.png',
+  'Atturo': 'atturo.png',
+  'BF Goodrich': 'bf-goodrich.png',
+  'Bridgestone': 'bridgestone.png',
+  'Comforser': 'comforser.png',
+  'Continental': 'continental.png',
+  'Double Star': 'doublestar.png',
+  'Federal': 'federal.png',
+  'Firestone': 'firestone.png',
+  'General': 'general-tire.png',
+  'Goodyear': 'goodyear.png',
+  'Grenlander': 'grenlander.png',
+  'Haida': 'haida.png',
+  'Hankook': 'hankook.png',
+  'Headway': 'headway.png',
+  'Kumho': 'kumho.png',
+  'Lanvigator': 'lanvigator.png',
+  'Lionhart': 'lionhart.png',
+  'Maxxis': 'maxxis.png',
+  'Michelin': 'michelin.png',
+  'Mickey Thompson': 'mickey-thompson.png',
+  'Nankang': 'nankang.png',
+  'Nexen': 'nexen.png',
+  'Pirelli': 'pirelli.png',
+  'Roadclaw': 'roadclaw.png',
+  'Roadstone': 'roadstone.png',
+  'Sumitomo': 'sumitomo.png',
+  'Toyo': 'toyo.png',
+  'Windforce': 'windforce.png',
+  'Winrun': 'winrun.png',
+  'Yokohama': 'yokohama.png',
+};
 
 const BrandLogoGrid = () => (
   <div className="mb-12">
     <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">Brands We Supply &amp; Fit</h2>
-    <p className="text-gray-500 text-sm mb-5">We source and install tyres from all major brands at your location.</p>
-    <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 sm:gap-3">
-      {TYRE_BRANDS.map(brand => (
-        <div key={brand}
-          className="bg-[#1a1a1a] border border-gray-800 hover:border-accent rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex items-center justify-center text-center transition-all active:scale-95 hover:-translate-y-0.5 cursor-pointer group min-h-[44px]">
-          <span className="text-gray-400 group-hover:text-white text-[10px] sm:text-xs font-semibold leading-tight transition-colors">{brand}</span>
-        </div>
-      ))}
+    <p className="text-gray-500 text-sm mb-6">We source and install tyres from all major brands at your location.</p>
+    <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
+      {TYRE_BRANDS.map(brand => {
+        const imgFile = BRAND_IMAGES[brand];
+        return (
+          <div key={brand}
+            className="bg-white border border-gray-200 hover:border-accent rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center gap-1.5 transition-all hover:-translate-y-1 hover:shadow-lg cursor-pointer group min-h-[72px]">
+            {imgFile ? (
+              <img
+                src={`/brands/${imgFile}`}
+                alt={brand}
+                className="h-8 sm:h-10 w-auto object-contain max-w-full grayscale group-hover:grayscale-0 transition-all duration-300"
+                onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+              />
+            ) : null}
+            <span
+              className="text-gray-500 group-hover:text-primary text-[9px] sm:text-[10px] font-bold text-center leading-tight transition-colors"
+              style={imgFile ? { display: 'none' } : {}}
+            >{brand}</span>
+          </div>
+        );
+      })}
     </div>
   </div>
 );
@@ -256,7 +318,7 @@ const ServiceCategoryPage = () => {
                   loop
                   colors={['#c0392b', '#e74c3c', '#ff6b6b']}
                 >
-                  <Link to={service.id ? `/services/${service.id}` : '/book'}
+                  <Link to={service.id ? `/book?service=${service.id}` : '/book'}
                     className="p-8 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden block h-full flex flex-col">
                     <div className="bg-[#2A2A2A] w-14 h-14 rounded-full flex items-center justify-center shadow-sm mb-6 group-hover:bg-accent transition-colors border border-gray-700">
                       <Icon className="h-7 w-7 text-silver group-hover:text-white" />
@@ -267,7 +329,7 @@ const ServiceCategoryPage = () => {
                       {service.addons?.length > 0 && (
                         <p className="text-xs text-accent font-bold mb-2">{service.addons.length} add-ons available</p>
                       )}
-                      <div className="text-accent font-bold text-lg">Book a Quote</div>
+                      <div className="text-accent font-bold text-lg">Book a Quote →</div>
                     </div>
                   </Link>
                 </BorderGlow>

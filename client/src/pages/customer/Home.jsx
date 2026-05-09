@@ -104,7 +104,7 @@ const Home = () => {
         </section>
       </div>
 
-      {/* Services Grid — Dynamic from DB */}
+      {/* Services Grid */}
       <section id="services" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -112,13 +112,68 @@ const Home = () => {
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">We treat every vehicle as a masterpiece. Select from our core maintenance pillars given below.</p>
           </div>
 
+          {/* ===== FEATURED TYRES BANNER ===== */}
+          <div className="mb-8">
+            <BorderGlow
+              edgeSensitivity={25}
+              glowColor="0 80 60"
+              backgroundColor="#0f0f0f"
+              borderRadius={20}
+              glowRadius={60}
+              glowIntensity={2.5}
+              coneSpread={40}
+              animated
+              loop
+              colors={['#c0392b', '#e74c3c', '#ff6b6b']}
+            >
+              <Link to="/services/category/tyres"
+                className="group relative block overflow-hidden rounded-[20px] min-h-[220px] sm:min-h-[200px]">
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1a0a0a] via-[#1a1a1a] to-[#0f0f0f]" />
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-transparent to-transparent group-hover:from-accent/30 transition-all duration-500" />
+                {/* Tyre circle decoration */}
+                <div className="absolute right-6 top-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 rounded-full border-[6px] border-accent/30 group-hover:border-accent/60 transition-colors duration-500 flex items-center justify-center">
+                  <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full border-[4px] border-accent/20 group-hover:border-accent/50 transition-colors duration-500 flex items-center justify-center">
+                    <CheckCircle className="w-8 h-8 sm:w-12 sm:h-12 text-accent/60 group-hover:text-accent transition-colors duration-300" />
+                  </div>
+                </div>
+                {/* Content */}
+                <div className="relative z-10 p-8 sm:p-10 pr-36 sm:pr-52">
+                  <span className="inline-flex items-center gap-1.5 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
+                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                    Featured Service
+                  </span>
+                  <h3 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 tracking-tight">Tyre Supply &amp; Fitment</h3>
+                  <p className="text-gray-400 text-base sm:text-lg max-w-lg leading-relaxed mb-5">
+                    Flat, worn, or time for an upgrade? We bring 30+ premium brands <span className="text-accent font-bold">straight to your door</span> — supply and fit included.
+                  </p>
+                  <span className="inline-flex items-center gap-2 bg-accent text-white px-6 py-2.5 rounded-full font-bold text-sm group-hover:bg-red-700 transition-colors">
+                    Find Your Tyre Size →
+                  </span>
+                </div>
+              </Link>
+            </BorderGlow>
+          </div>
 
+          {/* ===== TYRE SLOGAN STRIP ===== */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 mb-10 py-4 px-6 bg-gray-50 rounded-2xl border border-gray-100 text-center">
+            {[
+              { emoji: '🔧', text: 'Puncture Repair' },
+              { emoji: '🚗', text: 'Mobile Fitting — We Come to You' },
+              { emoji: '🏆', text: '30+ Top Brands' },
+              { emoji: '⚡', text: 'Same-Day Available' },
+            ].map(({ emoji, text }) => (
+              <span key={text} className="text-sm font-semibold text-gray-500">
+                <span className="mr-1.5">{emoji}</span>{text}
+              </span>
+            ))}
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* ===== Car Services + Repairs ===== */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               { title: 'Car Services', link: '/services/category/car-services', desc: 'Logbook servicing, yearly maintenance, inspections, and comprehensive diagnostic checks.', icon: Settings },
               { title: 'Repairs', link: '/services/category/repairs', desc: 'Expert troubleshooting and repairs for brakes, batteries, alternators, and engine components.', icon: Wrench },
-              { title: 'Tyres', link: '/services/category/tyres', desc: 'Premium tyre supply, mobile fitting, puncture repairs, and wheel balancing at your door.', icon: CheckCircle }
             ].map((category, idx) => (
               <BorderGlow
                 key={idx}
@@ -133,13 +188,12 @@ const Home = () => {
                 loop
                 colors={['#c0392b', '#e74c3c', '#ff6b6b']}
               >
-                <Link to={category.link} className="p-10 group hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden block text-center min-h-[320px] flex flex-col justify-center items-center">
+                <Link to={category.link} className="p-10 group hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden block text-center min-h-[280px] flex flex-col justify-center items-center">
                   <div className="bg-[#2A2A2A] w-20 h-20 rounded-full flex items-center justify-center shadow-lg mb-6 group-hover:bg-accent transition-colors border border-gray-700 mx-auto">
                     <category.icon className="h-10 w-10 text-silver group-hover:text-white" />
                   </div>
                   <h3 className="text-3xl font-bold text-white mb-4 uppercase tracking-wide">{category.title}</h3>
                   <p className="text-silver text-base leading-relaxed">{category.desc}</p>
-                  
                   <div className="mt-8 text-accent font-bold text-sm uppercase tracking-wider group-hover:text-white transition-colors">
                     Explore Services →
                   </div>
@@ -200,12 +254,11 @@ const Home = () => {
             <h2 className="text-3xl md:text-5xl font-extrabold text-primary mb-4">Why book an AutoCare on Wheels mechanic?</h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">Discover why more Aussies are choosing us for professional car service and repairs.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center text-primary">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-primary max-w-5xl mx-auto">
             {[
               { icon: Truck, title: 'Convenient onsite service', desc: 'Qualified mechanics that do the work at your location.' },
               { icon: Clock, title: 'Same or next day appointments', desc: 'More vans on the road means we can get to your car faster!' },
-              { icon: Settings, title: 'Highest quality parts and brands', desc: 'We only use the best quality parts, oils and equipment.' },
-              { icon: ShieldCheck, title: '12 month / 20k km warranty', desc: 'We back all our work with a nationwide parts and labour warranty.' }
+              { icon: Settings, title: 'Highest quality parts and brands', desc: 'We only use the best quality parts, oils and equipment.' }
             ].map((feature, idx) => (
               <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="mb-6 flex justify-center text-accent"><feature.icon size={56} strokeWidth={1.5} /></div>
@@ -216,17 +269,17 @@ const Home = () => {
           </div>
 
           <div className="mt-20 pt-16 border-t border-gray-200">
-             <h3 className="text-center text-sm font-bold text-gray-400 uppercase tracking-widest mb-10">Popular makes we proudly service</h3>
-             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 opacity-75">
-               {['Holden', 'Honda', 'Hyundai', 'Ford', 'Kia', 'BMW', 'Mazda', 'Toyota', 'Nissan', 'Subaru', 'Suzuki'].map(make => (
-                 <span key={make} className="text-xl sm:text-2xl font-bold text-gray-400 hover:text-accent transition-colors cursor-pointer">{make}</span>
-               ))}
-             </div>
+            <h3 className="text-center text-sm font-bold text-gray-400 uppercase tracking-widest mb-10">Popular makes we proudly service</h3>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-8 opacity-75">
+              {['Holden', 'Honda', 'Hyundai', 'Ford', 'Kia', 'BMW', 'Mazda', 'Toyota', 'Nissan', 'Subaru', 'Suzuki'].map(make => (
+                <span key={make} className="text-xl sm:text-2xl font-bold text-gray-400 hover:text-accent transition-colors cursor-pointer">{make}</span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials
       <section id="testimonials" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -265,7 +318,7 @@ const Home = () => {
             autoPlayInterval={4000}
           />
         </div>
-      </section>
+      </section> */}
 
       {/* Contact Section */}
       <section id="contact" className="py-24 bg-background">
