@@ -13,15 +13,8 @@ const Home = () => {
   const serviceIcons = [Droplets, Settings, CheckCircle, Wrench, Shield, Clock];
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const { data } = await api.get('/services');
-        setServices(data.data);
-      } catch {
-        // Fallback to empty; homepage still renders fine
-      }
-    };
-    fetchServices();
+    document.title = 'AutoCare on Wheels | Mobile Mechanic Canberra & Queanbeyan';
+    api.get('/services').then(({ data }) => setServices(data.data || [])).catch(() => {});
   }, []);
 
   return (
@@ -31,8 +24,8 @@ const Home = () => {
       {/* Hero Section */}
       <div className="relative w-full overflow-hidden bg-background">
         <MechanicBackground />
-        <section className="relative z-10 pt-40 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row items-center">
-          <div className="lg:w-1/2 space-y-8">
+        <section className="relative z-10 pt-32 sm:pt-40 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10 lg:gap-0">
+          <div className="lg:w-1/2 space-y-6 sm:space-y-8 text-center lg:text-left">
             <div className="inline-flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-full font-semibold text-sm border border-gray-800 shadow-xl">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
@@ -40,7 +33,7 @@ const Home = () => {
               </span>
               <span>Premium Service Available</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-primary leading-[1.1] tracking-tight drop-shadow-sm">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-primary leading-[1.1] tracking-tight drop-shadow-sm">
               Precision Care <br /> For Your Car.
             </h1>
             <p className="text-lg md:text-xl text-primary max-w-lg leading-relaxed font-medium">
@@ -87,8 +80,8 @@ const Home = () => {
             <div className="relative">
               <img
                 src="/van.png"
-                alt="AutoCare on Wheels Van"
-                className="rounded-2xl object-cover h-[400px] md:h-[600px] w-full transform -rotate-2 hover:rotate-1 transition-transform duration-500 "
+                alt="AutoCare on Wheels — Mobile Mechanic Van serving Canberra"
+                className="rounded-2xl object-cover h-[280px] sm:h-[400px] md:h-[520px] w-full transform -rotate-2 hover:rotate-1 transition-transform duration-500"
               />
               <div className="absolute -bottom-1 -left-1 bg-primary p-6 rounded-2xl shadow-xl flex items-center space-x-4 border border-gray-800 -rotate-2 hover:rotate-2 transition-transform duration-500">
                 <div className="bg-accent/20 p-3 rounded-full">
@@ -322,103 +315,40 @@ const Home = () => {
 
       {/* Contact Section */}
       <section id="contact" className="py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-extrabold text-primary mb-6">Get in Touch</h2>
-              <p className="text-lg text-gray-500 leading-relaxed mb-8">Have questions about our services? Need a custom quote for your fleet? We're here to help.</p>
-              <div className="space-y-6 mb-10">
-                <div className="group flex items-center space-x-4 cursor-pointer">
-                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center group-hover:bg-accent group-hover:shadow-[0_4px_20px_rgb(192,57,43,0.4)] transition-all duration-300 group-hover:-translate-y-1">
-                    <MapPin className="text-accent group-hover:text-white transition-colors" size={22} />
-                  </div>
-                  <div className="group-hover:translate-x-1 transition-transform">
-                    <p className="font-bold text-primary text-sm">Visit Us</p>
-                    <p className="text-gray-500 text-sm group-hover:text-gray-800 transition-colors">123 AutoCare Lane, Mechanical District, Auto City</p>
-                  </div>
-                </div>
-                <div className="group flex items-center space-x-4 cursor-pointer">
-                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center group-hover:bg-accent group-hover:shadow-[0_4px_20px_rgb(192,57,43,0.4)] transition-all duration-300 group-hover:-translate-y-1">
-                    <Phone className="text-accent group-hover:text-white transition-colors" size={22} />
-                  </div>
-                  <div className="group-hover:translate-x-1 transition-transform">
-                    <p className="font-bold text-primary text-sm">Call Us</p>
-                    <p className="text-gray-500 text-sm group-hover:text-gray-800 transition-colors">0427563913</p>
-                  </div>
-                </div>
-                <div className="group flex items-center space-x-4 cursor-pointer">
-                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center group-hover:bg-accent group-hover:shadow-[0_4px_20px_rgb(192,57,43,0.4)] transition-all duration-300 group-hover:-translate-y-1">
-                    <Mail className="text-accent group-hover:text-white transition-colors" size={22} />
-                  </div>
-                  <div className="group-hover:translate-x-1 transition-transform">
-                    <p className="font-bold text-primary text-sm">Email Us</p>
-                    <p className="text-gray-500 text-sm group-hover:text-gray-800 transition-colors">info@autocareonwheels.com.au</p>
-                  </div>
-                </div>
-              </div>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-primary mb-4">Get in Touch</h2>
+          <p className="text-lg text-gray-500 leading-relaxed mb-12">Have questions about our services? Reach out directly — we're here to help.</p>
 
-              <div className="w-full h-64 rounded-2xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition-duration-300 relative group">
-                <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors pointer-events-none z-10"></div>
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15082.936085521448!2d72.82779893527236!3d19.075422699999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c97f346053b7%3A0xacf72f56793d190a!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, filter: 'grayscale(0.5) opacity(0.9)' }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
+          <div className="flex flex-col sm:flex-row justify-center gap-6 mb-12">
+            <a href="tel:0427563913" className="group flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-6 py-5 hover:shadow-lg hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center group-hover:bg-accent transition-colors flex-shrink-0">
+                <Phone className="text-accent group-hover:text-white transition-colors" size={22} />
               </div>
-            </div>
+              <div className="text-left">
+                <p className="font-bold text-primary text-sm">Call Us</p>
+                <p className="text-gray-500 text-sm">0427563913</p>
+              </div>
+            </a>
 
-            <BorderGlow
-              edgeSensitivity={50}
-              glowColor="180 10 50"
-              backgroundColor="#111111"
-              borderRadius={49}
-              glowRadius={78}
-              glowIntensity={2.2}
-              coneSpread={50}
-              animated
-              loop
-              colors={['#1f2937', '#374151', '#4b5563']}
-            >
-              <div className="p-8">
-                <form onSubmit={(e) => { e.preventDefault(); alert('Message sent! We will get back to you shortly.'); }} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Full name</label>
-                    <input type="text" required placeholder="John Doe" className="w-full bg-[#1c1c1c] text-sm text-gray-200 border border-[#2a2a2a] rounded-lg p-3 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition-all outline-none placeholder:text-gray-600" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Contact Number</label>
-                    <input type="tel" required placeholder="0427563913" className="w-full bg-[#1c1c1c] text-sm text-gray-200 border border-[#2a2a2a] rounded-lg p-3 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition-all outline-none placeholder:text-gray-600" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Car Model</label>
-                    <input type="text" required placeholder="BMW 3 Series" className="w-full bg-[#1c1c1c] text-sm text-gray-200 border border-[#2a2a2a] rounded-lg p-3 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition-all outline-none placeholder:text-gray-600" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Type of Service</label>
-                    <select required defaultValue="" className="w-full bg-[#1c1c1c] text-sm text-gray-200 border border-[#2a2a2a] rounded-lg p-3 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition-all outline-none appearance-none cursor-pointer">
-                      <option value="" disabled hidden>Select a service...</option>
-                      <option value="Premium Oil Change" className="bg-[#1c1c1c]">Premium Oil Change</option>
-                      <option value="Engine Diagnostics" className="bg-[#1c1c1c]">Engine Diagnostics</option>
-                      <option value="Master Car Wash" className="bg-[#1c1c1c]">Master Car Wash</option>
-                      <option value="Brake Pad Replacement" className="bg-[#1c1c1c]">Brake Pad Replacement</option>
-                      <option value="Annual General Service" className="bg-[#1c1c1c]">Annual General Service</option>
-                      <option value="Other" className="bg-[#1c1c1c]">Other / Custom Query</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
-                    <textarea rows="4" required placeholder="Type your message here" className="w-full bg-[#1c1c1c] text-sm text-gray-200 border border-[#2a2a2a] rounded-lg p-3 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 transition-all outline-none resize-none placeholder:text-gray-600" />
-                  </div>
-                  <button type="submit" className="bg-[#27272a] text-sm text-gray-200 px-6 py-2.5 rounded-md font-medium hover:bg-[#3f3f46] transition-colors border border-gray-700">
-                    Submit
-                  </button>
-                </form>
+            <a href="mailto:info@autocareonwheels.com.au" className="group flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-6 py-5 hover:shadow-lg hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center group-hover:bg-accent transition-colors flex-shrink-0">
+                <Mail className="text-accent group-hover:text-white transition-colors" size={22} />
               </div>
-            </BorderGlow>
+              <div className="text-left">
+                <p className="font-bold text-primary text-sm">Email Us</p>
+                <p className="text-gray-500 text-sm">info@autocareonwheels.com.au</p>
+              </div>
+            </a>
+          </div>
+
+          <div className="w-full h-72 rounded-2xl overflow-hidden shadow-md border border-gray-200">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15082.936085521448!2d72.82779893527236!3d19.075422699999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c97f346053b7%3A0xacf72f56793d190a!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+              width="100%" height="100%"
+              style={{ border: 0, filter: 'grayscale(0.3)' }}
+              allowFullScreen="" loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </section>
@@ -429,3 +359,4 @@ const Home = () => {
 };
 
 export default Home;
+

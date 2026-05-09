@@ -50,6 +50,7 @@ const Booking = () => {
   const TOTAL_STEPS = 6;
 
   useEffect(() => {
+    document.title = 'Book a Mobile Mechanic | AutoCare on Wheels — Canberra & Queanbeyan';
     const fetchServices = async () => {
       let list = [];
       try {

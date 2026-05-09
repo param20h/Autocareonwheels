@@ -264,6 +264,23 @@ const ServiceCategoryPage = () => {
 
   const displayName = categoryName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
+  // Dynamic SEO per category
+  useEffect(() => {
+    const titles = {
+      tyres: 'Tyre Supply & Fitting Canberra | AutoCare on Wheels — 30+ Brands',
+      'car services': 'Car Servicing Canberra | Logbook & Yearly Service | AutoCare on Wheels',
+      repairs: 'Mobile Car Repairs Canberra | Brakes, Battery, Alternator | AutoCare on Wheels',
+    };
+    const descs = {
+      tyres: 'Buy and fit tyres in Canberra from 30+ brands including Michelin, Bridgestone and Pirelli. We come to you — mobile tyre fitting service in ACT & Queanbeyan.',
+      'car services': 'Logbook services, yearly car servicing and pre-purchase inspections in Canberra. Qualified mobile mechanics who come to your home or workplace.',
+      repairs: 'Mobile car repairs in Canberra — brakes, batteries, alternators, air conditioning and more. Same-day appointments available. Call 0427563913.',
+    };
+    document.title = titles[formattedCategory] || `${displayName} | AutoCare on Wheels Canberra`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', descs[formattedCategory] || `Professional ${displayName.toLowerCase()} in Canberra and Queanbeyan by AutoCare on Wheels.`);
+  }, [formattedCategory, displayName]);
+
   return (
     <div className="bg-background min-h-screen font-sans selection:bg-accent selection:text-white flex flex-col">
       <Navbar />
