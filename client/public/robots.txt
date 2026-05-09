@@ -1,0 +1,15 @@
+# AutoCare on Wheels — robots.txt
+# https://www.autocareonwheels.com.au
+
+User-agent: *
+Allow: /
+
+# Block admin/auth pages from indexing
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://www.autocareonwheels.com.au/sitemap.xml
