@@ -75,13 +75,13 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="lg:w-1/2 mt-16 lg:mt-0 relative w-full">
+          <div className="lg:w-1/2 mt-10 lg:mt-0 relative w-full hidden sm:block">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-accent/20 to-primary/5 rounded-full blur-3xl -z-10"></div>
             <div className="relative">
               <img
                 src="/van.png"
                 alt="AutoCare on Wheels — Mobile Mechanic Van serving Canberra"
-                className="rounded-2xl object-cover h-[280px] sm:h-[400px] md:h-[520px] w-full transform -rotate-2 hover:rotate-1 transition-transform duration-500"
+                className="rounded-2xl object-cover h-[400px] md:h-[520px] w-full transform -rotate-2 hover:rotate-1 transition-transform duration-500"
               />
               <div className="absolute -bottom-1 -left-1 bg-primary p-6 rounded-2xl shadow-xl flex items-center space-x-4 border border-gray-800 -rotate-2 hover:rotate-2 transition-transform duration-500">
                 <div className="bg-accent/20 p-3 rounded-full">

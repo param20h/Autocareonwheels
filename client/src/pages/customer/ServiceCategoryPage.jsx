@@ -318,7 +318,9 @@ const ServiceCategoryPage = () => {
             No services currently listed under {displayName}. Check back soon!
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <>
+            <TrustBadges />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, idx) => {
               const Icon = serviceIcons[idx % serviceIcons.length];
               return (
@@ -353,6 +355,7 @@ const ServiceCategoryPage = () => {
               );
             })}
           </div>
+          </>
         )}
       </main>
       <Footer />

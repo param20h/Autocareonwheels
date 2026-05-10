@@ -220,7 +220,10 @@ const Booking = () => {
 
   const canProceed = () => {
     if (step === 1) return !!formData.service;
-    if (step === 2) return !!formData.vehicleNumber && !!formData.vehicleModel;
+    if (step === 2) {
+      if (isTyreService(formData.service)) return !!formData.tyreWidth && !!formData.tyreProfile && !!formData.tyreRim;
+      return !!formData.vehicleNumber && !!formData.vehicleModel;
+    }
     if (step === 3) {
       const hasMeta = !!formData.city && !!formData.state && /^\d{4}$/.test(formData.pincode);
       const hasAddr = !!formData.address;
@@ -316,87 +319,89 @@ const Booking = () => {
           </div>
         )}
 
-        {/* ===== STEP 2: VEHICLE ===== */}
+        {/* ===== STEP 2: VEHICLE / TYRE SIZE ===== */}
         {step === 2 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Your Vehicle</h2>
-            <p className="text-gray-500 mb-6">Tell us about the car we're servicing.</p>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Registration Number *</label>
-                <input type="text" value={formData.vehicleNumber}
-                  onChange={e => setFormData({ ...formData, vehicleNumber: e.target.value.toUpperCase() })}
-                  className={inputCls} placeholder="e.g. ABC123" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Make *</label>
-                  <input type="text" value={formData.vehicleMake}
-                    onChange={e => setFormData({ ...formData, vehicleMake: e.target.value })}
-                    className={inputCls} placeholder="Toyota" />
+            {isTyreService(formData.service) ? (
+              <>
+                <h2 className="text-3xl font-extrabold text-primary mb-2">🛞 Your Tyre Size</h2>
+                <p className="text-gray-500 mb-6">Select your tyre dimensions — find them on your tyre sidewall.</p>
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 text-sm text-gray-500">
+                  e.g. <span className="font-mono font-bold text-primary">205/55 R16</span> — the numbers printed on the side of your current tyre.
                 </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Model *</label>
-                  <input type="text" value={formData.vehicleModel}
-                    onChange={e => setFormData({ ...formData, vehicleModel: e.target.value })}
-                    className={inputCls} placeholder="Camry" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Year</label>
-                <input type="number" value={formData.vehicleYear}
-                  onChange={e => setFormData({ ...formData, vehicleYear: e.target.value })}
-                  className={inputCls} placeholder="2019" min="1980" max={new Date().getFullYear() + 1} />
-              </div>
-
-              {/* Tyre size — only shown for tyre services */}
-              {isTyreService(formData.service) && (
-                <div className="border-t border-gray-100 pt-5 mt-2">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-lg">🛞</span>
-                    <label className="block text-sm font-bold text-gray-700">Tyre Size</label>
-                    {formData.tyreWidth && formData.tyreProfile && formData.tyreRim && (
-                      <span className="ml-auto text-sm font-bold text-accent bg-red-50 px-3 py-1 rounded-full">
-                        {formData.tyreWidth}/{formData.tyreProfile} R{formData.tyreRim}
-                      </span>
-                    )}
+                {formData.tyreWidth && formData.tyreProfile && formData.tyreRim && (
+                  <div className="mb-5 text-center">
+                    <span className="text-2xl font-black text-accent font-mono">{formData.tyreWidth}/{formData.tyreProfile} R{formData.tyreRim}</span>
+                    <p className="text-xs text-gray-400 mt-1">Selected size</p>
                   </div>
-                  <p className="text-xs text-gray-400 mb-3">Find on your tyre sidewall — e.g. <span className="font-mono font-bold">205/55 R16</span></p>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">Width</label>
-                      <select value={formData.tyreWidth} onChange={e => setFormData({ ...formData, tyreWidth: e.target.value })}
-                        className={inputCls + ' bg-white'}>
-                        <option value="">Width</option>
-                        {['155','165','175','185','195','205','215','225','235','245','255','265','275','285','295','305'].map(w => (
-                          <option key={w} value={w}>{w}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">Profile</label>
-                      <select value={formData.tyreProfile} onChange={e => setFormData({ ...formData, tyreProfile: e.target.value })}
-                        className={inputCls + ' bg-white'}>
-                        <option value="">Profile</option>
-                        {['30','35','40','45','50','55','60','65','70','75','80'].map(p => (
-                          <option key={p} value={p}>{p}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">Rim (R)</label>
-                      <select value={formData.tyreRim} onChange={e => setFormData({ ...formData, tyreRim: e.target.value })}
-                        className={inputCls + ' bg-white'}>
-                        <option value="">Rim</option>
-                        {['13','14','15','16','17','18','19','20','21','22','24'].map(r => (
-                          <option key={r} value={r}>R{r}</option>
-                        ))}
-                      </select>
-                    </div>
+                )}
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Width *</label>
+                    <select value={formData.tyreWidth} onChange={e => setFormData({ ...formData, tyreWidth: e.target.value })}
+                      className={inputCls + ' bg-white'}>
+                      <option value="">Width</option>
+                      {['155','165','175','185','195','205','215','225','235','245','255','265','275','285','295','305'].map(w => (
+                        <option key={w} value={w}>{w}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Profile *</label>
+                    <select value={formData.tyreProfile} onChange={e => setFormData({ ...formData, tyreProfile: e.target.value })}
+                      className={inputCls + ' bg-white'}>
+                      <option value="">Profile</option>
+                      {['30','35','40','45','50','55','60','65','70','75','80'].map(p => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Rim (R) *</label>
+                    <select value={formData.tyreRim} onChange={e => setFormData({ ...formData, tyreRim: e.target.value })}
+                      className={inputCls + ' bg-white'}>
+                      <option value="">Rim</option>
+                      {['13','14','15','16','17','18','19','20','21','22','24'].map(r => (
+                        <option key={r} value={r}>R{r}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
-              )}
-            </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-3xl font-extrabold text-primary mb-2">Your Vehicle</h2>
+                <p className="text-gray-500 mb-6">Tell us about the car we're servicing.</p>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Registration Number *</label>
+                    <input type="text" value={formData.vehicleNumber}
+                      onChange={e => setFormData({ ...formData, vehicleNumber: e.target.value.toUpperCase() })}
+                      className={inputCls} placeholder="e.g. ABC123" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Make *</label>
+                      <input type="text" value={formData.vehicleMake}
+                        onChange={e => setFormData({ ...formData, vehicleMake: e.target.value })}
+                        className={inputCls} placeholder="Toyota" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Model *</label>
+                      <input type="text" value={formData.vehicleModel}
+                        onChange={e => setFormData({ ...formData, vehicleModel: e.target.value })}
+                        className={inputCls} placeholder="Camry" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Year</label>
+                    <input type="number" value={formData.vehicleYear}
+                      onChange={e => setFormData({ ...formData, vehicleYear: e.target.value })}
+                      className={inputCls} placeholder="2019" min="1980" max={new Date().getFullYear() + 1} />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
