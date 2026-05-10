@@ -14,7 +14,7 @@ const Home = () => {
 
   useEffect(() => {
     document.title = 'AutoCare on Wheels | Mobile Mechanic Canberra & Queanbeyan';
-    api.get('/services').then(({ data }) => setServices(data.data || [])).catch(() => {});
+    api.get('/services').then(({ data }) => setServices(data.data || [])).catch(() => { });
   }, []);
 
   return (
@@ -148,19 +148,7 @@ const Home = () => {
             </BorderGlow>
           </div>
 
-          {/* ===== TYRE SLOGAN STRIP ===== */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 mb-10 py-4 px-6 bg-gray-50 rounded-2xl border border-gray-100 text-center">
-            {[
-              { emoji: '🔧', text: 'Puncture Repair' },
-              { emoji: '🚗', text: 'Mobile Fitting — We Come to You' },
-              { emoji: '🏆', text: '30+ Top Brands' },
-              { emoji: '⚡', text: 'Same-Day Available' },
-            ].map(({ emoji, text }) => (
-              <span key={text} className="text-sm font-semibold text-gray-500">
-                <span className="mr-1.5">{emoji}</span>{text}
-              </span>
-            ))}
-          </div>
+
 
           {/* ===== Car Services + Repairs — same featured card style ===== */}
           <div className="flex flex-col gap-6">
