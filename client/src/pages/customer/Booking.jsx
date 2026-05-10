@@ -47,7 +47,7 @@ const Booking = () => {
   const [detectingLocation, setDetectingLocation] = useState(false);
   const [locationStatus, setLocationStatus] = useState(null); // 'success' | 'error' | null
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
-  const TOTAL_STEPS = 6;
+  const TOTAL_STEPS = 7;
 
   useEffect(() => {
     document.title = 'Book a Mobile Mechanic | AutoCare on Wheels — Canberra & Queanbeyan';
@@ -140,8 +140,6 @@ const Booking = () => {
     fetchServices();
   }, [isAuthenticated, searchParams]);
 
-  const nextStep = () => setStep(p => Math.min(p + 1, TOTAL_STEPS));
-  const prevStep = () => setStep(p => Math.max(p - 1, 1));
 
   // ---- GPS Location Detection ----
   const detectLocation = () => {
@@ -233,15 +231,36 @@ const Booking = () => {
     if (step === 3) {
       const hasMeta = !!formData.city && !!formData.state && /^\d{4}$/.test(formData.pincode);
       const hasAddr = !!formData.address;
-      if (isAuthenticated) return hasAddr && hasMeta;
-      return hasAddr && hasMeta && !!formData.guestName && !!formData.guestEmail && !!formData.guestPhone;
+      return hasAddr && hasMeta;
     }
-    if (step === 4) return true;
-    if (step === 5) return !!formData.date && !!formData.timeSlot;
+    if (step === 4) {
+      if (isAuthenticated) return true; // logged-in users skip this step
+      return !!formData.guestName && !!formData.guestEmail && !!formData.guestPhone;
+    }
+    if (step === 5) return true;
+    if (step === 6) return !!formData.date && !!formData.timeSlot;
     return true;
   };
 
-  const stepLabels = ['Service', 'Vehicle', 'Location', 'Add-ons', 'Schedule', 'Confirm'];
+  // Auto-skip Step 4 for authenticated users
+  const nextStep = () => {
+    const next = Math.min(step + 1, TOTAL_STEPS);
+    if (next === 4 && isAuthenticated) {
+      setStep(5); // skip guest details
+    } else {
+      setStep(next);
+    }
+  };
+  const prevStep = () => {
+    const prev = Math.max(step - 1, 1);
+    if (prev === 4 && isAuthenticated) {
+      setStep(3); // skip guest details going backwards too
+    } else {
+      setStep(prev);
+    }
+  };
+
+  const stepLabels = ['Service', 'Vehicle', 'Location', 'Your Details', 'Add-ons', 'Schedule', 'Confirm'];
   const inputCls = 'w-full border border-gray-300 rounded-input px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none';
 
   return (
@@ -439,22 +458,6 @@ const Booking = () => {
             </p>
 
             <div className="space-y-4">
-              {!isAuthenticated && (
-                <>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Your Name *</label>
-                    <input type="text" value={formData.guestName} onChange={e => setFormData({ ...formData, guestName: e.target.value })} className={inputCls} placeholder="John Doe" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Email *</label>
-                    <input type="email" value={formData.guestEmail} onChange={e => setFormData({ ...formData, guestEmail: e.target.value })} className={inputCls} placeholder="you@example.com" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Phone *</label>
-                    <input type="tel" value={formData.guestPhone} onChange={e => setFormData({ ...formData, guestPhone: e.target.value })} className={inputCls} placeholder="+61 400 000 000" />
-                  </div>
-                </>
-              )}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Address *</label>
                 <div className="relative">
@@ -492,8 +495,36 @@ const Booking = () => {
           </div>
         )}
 
-        {/* ===== STEP 4: ADD-ONS ===== */}
-        {step === 4 && (
+        {/* ===== STEP 4: YOUR DETAILS (guest only) ===== */}
+        {step === 4 && !isAuthenticated && (
+          <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h2 className="text-3xl font-extrabold text-primary mb-2">Your Details</h2>
+            <p className="text-gray-500 mb-6">So we can confirm your booking and get in touch.</p>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label>
+                <input type="text" value={formData.guestName}
+                  onChange={e => setFormData({ ...formData, guestName: e.target.value })}
+                  className={inputCls} placeholder="John Doe" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Email *</label>
+                <input type="email" value={formData.guestEmail}
+                  onChange={e => setFormData({ ...formData, guestEmail: e.target.value })}
+                  className={inputCls} placeholder="you@example.com" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Phone *</label>
+                <input type="tel" value={formData.guestPhone}
+                  onChange={e => setFormData({ ...formData, guestPhone: e.target.value })}
+                  className={inputCls} placeholder="0400 000 000" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ===== STEP 5: ADD-ONS ===== */}
+        {step === 5 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-extrabold text-primary mb-2">Add-ons</h2>
             <p className="text-gray-500 mb-6">Optional extras for your service.</p>
@@ -524,8 +555,8 @@ const Booking = () => {
           </div>
         )}
 
-        {/* ===== STEP 5: SCHEDULE ===== */}
-        {step === 5 && (
+        {/* ===== STEP 6: SCHEDULE ===== */}
+        {step === 6 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-extrabold text-primary mb-2">Pick a Date &amp; Time</h2>
             <p className="text-gray-500 mb-6">When should our mechanics arrive?</p>
@@ -548,8 +579,8 @@ const Booking = () => {
           </div>
         )}
 
-        {/* ===== STEP 6: CONFIRM ===== */}
-        {step === 6 && (
+        {/* ===== STEP 7: CONFIRMATION ===== */}
+        {step === 7 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-3xl font-extrabold text-primary mb-6 text-center">Order Summary</h2>
             <div className="bg-background p-5 rounded-card space-y-3 mb-6 text-sm">
