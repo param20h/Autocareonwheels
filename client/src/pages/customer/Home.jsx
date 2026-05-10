@@ -162,33 +162,73 @@ const Home = () => {
             ))}
           </div>
 
-          {/* ===== Car Services + Repairs ===== */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* ===== Car Services + Repairs — same featured card style ===== */}
+          <div className="flex flex-col gap-6">
             {[
-              { title: 'Car Services', link: '/services/category/car-services', desc: 'Logbook servicing, yearly maintenance, inspections, and comprehensive diagnostic checks.', icon: Settings },
-              { title: 'Repairs', link: '/services/category/repairs', desc: 'Expert troubleshooting and repairs for brakes, batteries, alternators, and engine components.', icon: Wrench },
-            ].map((category, idx) => (
+              {
+                title: 'Car Services',
+                link: '/services/category/car-services',
+                badge: 'Logbook & Yearly',
+                desc: 'Logbook servicing, yearly maintenance, pre-purchase inspections and diagnostic checks — all at your door.',
+                cta: 'Explore Car Services →',
+                icon: Settings,
+                accent: '#1a2a1a',
+                circle: 'border-green-500/30 group-hover:border-green-400/60',
+                inner: 'border-green-500/20 group-hover:border-green-400/50',
+                iconCls: 'text-green-400/60 group-hover:text-green-400',
+                badgeCls: 'bg-green-600',
+                gradient: 'from-green-900/30 via-transparent to-transparent group-hover:from-green-800/40',
+              },
+              {
+                title: 'Repairs',
+                link: '/services/category/repairs',
+                badge: 'Brakes · Battery · More',
+                desc: 'Expert troubleshooting and repairs for brakes, batteries, alternators, air conditioning and engine components.',
+                cta: 'Explore Repairs →',
+                icon: Wrench,
+                accent: '#1a1a2a',
+                circle: 'border-blue-500/30 group-hover:border-blue-400/60',
+                inner: 'border-blue-500/20 group-hover:border-blue-400/50',
+                iconCls: 'text-blue-400/60 group-hover:text-blue-400',
+                badgeCls: 'bg-blue-600',
+                gradient: 'from-blue-900/30 via-transparent to-transparent group-hover:from-blue-800/40',
+              },
+            ].map((cat) => (
               <BorderGlow
-                key={idx}
-                edgeSensitivity={33}
+                key={cat.title}
+                edgeSensitivity={40}
                 glowColor="0 80 60"
                 backgroundColor="#1a1a1a"
-                borderRadius={16}
-                glowRadius={48}
+                borderRadius={20}
+                glowRadius={60}
                 glowIntensity={2.0}
-                coneSpread={28}
+                coneSpread={40}
                 animated
                 loop
                 colors={['#c0392b', '#e74c3c', '#ff6b6b']}
               >
-                <Link to={category.link} className="p-10 group hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden block text-center min-h-[280px] flex flex-col justify-center items-center">
-                  <div className="bg-[#2A2A2A] w-20 h-20 rounded-full flex items-center justify-center shadow-lg mb-6 group-hover:bg-accent transition-colors border border-gray-700 mx-auto">
-                    <category.icon className="h-10 w-10 text-silver group-hover:text-white" />
+                <Link to={cat.link}
+                  className="group relative block overflow-hidden rounded-[20px] min-h-[180px] sm:min-h-[160px]">
+                  {/* Background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#1a0a0a] via-[#1a1a1a] to-[#0f0f0f]" />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient} transition-all duration-500`} />
+                  {/* Decorative circle */}
+                  <div className={`absolute right-6 top-1/2 -translate-y-1/2 w-28 h-28 sm:h-36 sm:w-36 rounded-full border-[6px] ${cat.circle} transition-colors duration-500 flex items-center justify-center`}>
+                    <div className={`w-16 h-16 sm:w-24 sm:h-24 rounded-full border-[4px] ${cat.inner} transition-colors duration-500 flex items-center justify-center`}>
+                      <cat.icon className={`w-7 h-7 sm:w-10 sm:h-10 ${cat.iconCls} transition-colors duration-300`} />
+                    </div>
                   </div>
-                  <h3 className="text-3xl font-bold text-white mb-4 uppercase tracking-wide">{category.title}</h3>
-                  <p className="text-silver text-base leading-relaxed">{category.desc}</p>
-                  <div className="mt-8 text-accent font-bold text-sm uppercase tracking-wider group-hover:text-white transition-colors">
-                    Explore Services →
+                  {/* Content */}
+                  <div className="relative z-10 p-7 sm:p-9 pr-36 sm:pr-48">
+                    <span className={`inline-flex items-center gap-1.5 ${cat.badgeCls} text-white text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide`}>
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                      {cat.badge}
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">{cat.title}</h3>
+                    <p className="text-gray-400 text-sm sm:text-base max-w-md leading-relaxed mb-4">{cat.desc}</p>
+                    <span className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-5 py-2 rounded-full font-bold text-sm transition-colors">
+                      {cat.cta}
+                    </span>
                   </div>
                 </Link>
               </BorderGlow>
