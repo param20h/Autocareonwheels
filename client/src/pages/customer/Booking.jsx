@@ -127,7 +127,13 @@ const Booking = () => {
       const preId = searchParams.get('service');
       if (preId) {
         const found = list.find(s => String(s.id) === String(preId));
-        if (found) setFormData(prev => ({ ...prev, service: found }));
+        if (found) {
+          // Also pre-fill tyre size from URL params (tw=width, tp=profile, tr=rim)
+          const tw = searchParams.get('tw') || '';
+          const tp = searchParams.get('tp') || '';
+          const tr = searchParams.get('tr') || '';
+          setFormData(prev => ({ ...prev, service: found, tyreWidth: tw, tyreProfile: tp, tyreRim: tr }));
+        }
       }
       setLoadingServices(false);
     };

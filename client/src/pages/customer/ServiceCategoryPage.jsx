@@ -30,8 +30,8 @@ const TyreSizeSearch = () => {
 
   const handleSearch = () => {
     if (!width || !profile || !rim) return;
-    // Pre-select Flat Tyre Service (id=5) and jump to step 2 (vehicle/contact info)
-    navigate('/book?service=5&step=2');
+    // Pass tyre size in URL so booking skips Step 2
+    navigate(`/book?service=5&step=3&tw=${width}&tp=${profile}&tr=${rim}`);
   };
 
   return (
