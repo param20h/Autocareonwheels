@@ -54,36 +54,28 @@ const TermsOfService = () => {
             <p>All payments are processed securely through our third-party payment partners. By using our Service, you agree to pay all charges incurred through your account at the prices in effect when the charges are incurred. AutoCare reserves the right to modify pricing at any time with prior notice.</p>
           </section>
 
-          <section>
-            <h2 className="text-xl font-bold text-primary mb-3">6. Service Warranty</h2>
-            <p>AutoCare provides a <strong>30-day warranty</strong> on all services performed through our platform. If you experience any issues directly related to the service performed, contact our support team within 30 days for a complimentary re-inspection or repair. This warranty does not cover:</p>
-            <ul className="list-disc pl-6 mt-3 space-y-1.5">
-              <li>Pre-existing conditions not addressed in the original service scope.</li>
-              <li>Damage caused by accidents, misuse, or third-party modifications.</li>
-              <li>Normal wear and tear of vehicle components.</li>
-            </ul>
-          </section>
+
 
           <section>
-            <h2 className="text-xl font-bold text-primary mb-3">7. Limitation of Liability</h2>
+            <h2 className="text-xl font-bold text-primary mb-3">6. Limitation of Liability</h2>
             <p>AutoCare shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount paid by you for the specific service giving rise to the claim.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-primary mb-3">8. Intellectual Property</h2>
+            <h2 className="text-xl font-bold text-primary mb-3">7. Intellectual Property</h2>
             <p>All content, logos, design elements, and trademarks displayed on the AutoCare platform are the property of AutoCare Professional Services. You may not reproduce, distribute, or create derivative works without our prior written consent.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-primary mb-3">9. Governing Law</h2>
+            <h2 className="text-xl font-bold text-primary mb-3">8. Governing Law</h2>
             <p>These Terms shall be governed by and construed in accordance with the laws of India. Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the courts in Auto City.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-primary mb-3">10. Contact</h2>
+            <h2 className="text-xl font-bold text-primary mb-3">9. Contact</h2>
             <p>For any questions regarding these Terms of Service, please reach out to us at:</p>
             <p className="mt-2 font-semibold text-primary">info@autocareonwheels.com.au · 0427563913</p>
-            <p className="text-sm text-gray-400 mt-1">123 AutoCare Lane, Mechanical District, Auto City – 560001</p>
+            <p className="text-sm text-gray-400 mt-1">Canberra, ACT, Australia, 2900</p>
           </section>
         </div>
       </main>
