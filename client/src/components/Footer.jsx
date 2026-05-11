@@ -7,18 +7,18 @@ const Footer = () => {
     <footer className="bg-[#0f172a] text-gray-300 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          
+
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
               <Wrench size={28} className="text-accent" />
-              <span className="font-black text-xl text-white tracking-tight">AutoCare</span>
+              <span className="font-black text-xl text-white tracking-tight">AutoCare on wheels</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">
               Premium at-home car maintenance and repair services. Trusted by thousands of vehicle owners across the city.
             </p>
             <div className="flex space-x-4 mt-6">
-              <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
+              <a href="htts://instagram.com/autocareonwheels" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
                 <Instagram size={18} />
               </a>
               <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
@@ -36,7 +36,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li><Link to="/" className="hover:text-accent transition-colors">Home</Link></li>
               <li><Link to="/book" className="hover:text-accent transition-colors">Book a Service</Link></li>
-              
+
               <li><a href="/#services" className="hover:text-accent transition-colors">Our Services</a></li>
               <li><a href="/#how-it-works" className="hover:text-accent transition-colors">How It Works</a></li>
             </ul>
@@ -64,7 +64,8 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <Phone size={18} className="text-accent flex-shrink-0" />
-                <span>0427563913</span>
+                <span>
+                  +61 427 563 913</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail size={18} className="text-accent flex-shrink-0" />
