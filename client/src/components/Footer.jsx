@@ -24,9 +24,7 @@ const Footer = () => {
               <a href="https://www.facebook.com/profile.php?id=61589617888050" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
                 <Facebook size={18} />
               </a>
-              <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
-                <Twitter size={18} />
-              </a>
+
             </div>
           </div>
 
