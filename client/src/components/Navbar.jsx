@@ -3,6 +3,7 @@ import { Wrench, Menu, X, LogOut, LayoutDashboard, UserCircle } from 'lucide-rea
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../store/useAuth';
 import FloatingCallButton from './FloatingCallButton';
+import FloatingWhatsappButton from './FloatingWhatsappButton';
 const Navbar = () => {
   const { isAuthenticated, user, logoutAction } = useAuth();
   const navigate = useNavigate();
@@ -89,6 +90,7 @@ const Navbar = () => {
         )}
       </nav>
       <FloatingCallButton />
+      <FloatingWhatsappButton />
     </>);
 };
 

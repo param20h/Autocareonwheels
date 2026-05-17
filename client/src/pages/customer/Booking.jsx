@@ -38,7 +38,7 @@ const Booking = () => {
     address: '', city: '', state: '', pincode: '',
     guestName: '', guestEmail: '', guestPhone: '',
     // Booking
-    service: null, selectedAddons: [], date: '', timeSlot: '',
+    service: null, selectedAddons: [], date: '', timeSlot: '', repairIssue: '',
   });
 
   const [services, setServices] = useState([]);
@@ -57,6 +57,7 @@ const Booking = () => {
         const { data } = await api.get('/services');
         list = data?.data || [];
       } catch { /* fallback below */ }
+      
       if (list.length === 0) {
         list = [
           {
@@ -67,16 +68,6 @@ const Booking = () => {
               { id: 102, name: 'Cabin Filter Replacement' },
               { id: 103, name: 'Fuel System Treatment' },
               { id: 104, name: 'Tyre Rotation (All 4)' },
-            ]
-          },
-          {
-            id: '2', name: 'Yearly Service',
-            description: 'Extend the life of your vehicle without the hassle of a garage.',
-            addons: [
-              { id: 201, name: 'Wiper Blade Replacement' },
-              { id: 202, name: 'Cabin Air Filter' },
-              { id: 203, name: 'Battery Health Check & Report' },
-              { id: 204, name: 'Tyre Pressure & Tread Check' },
             ]
           },
           {
@@ -107,20 +98,35 @@ const Booking = () => {
               { id: 503, name: 'Wheel Alignment Check' },
               { id: 504, name: 'Tyre Sealant Application' },
             ]
-          },
-          {
-            id: '6', name: 'Ultimate Service',
-            description: 'Give your car the birthday it deserves.',
-            addons: [
-              { id: 601, name: 'Fuel System Flush' },
-              { id: 602, name: 'Coolant Flush & Refill' },
-              { id: 603, name: 'Spark Plug Replacement' },
-              { id: 604, name: 'Cabin Filter Replacement' },
-              { id: 605, name: 'Throttle Body Clean' },
-            ]
-          },
+          }
         ];
       }
+
+      // Filter out unwanted services from both API and fallback
+      list = list.filter(s => !['Ultimate Service', 'Yearly Service', 'Yearly Car Service'].includes(s.name));
+
+      // Inject Basic Service if missing
+      if (!list.find(s => s.name === 'Basic Service')) {
+        list.push({
+          id: 'basic-service', name: 'Basic Service',
+          description: 'Essential maintenance to keep your car running smoothly.',
+          addons: [
+            { id: 701, name: 'Wiper Blade Replacement' },
+            { id: 702, name: 'Battery Health Check & Report' },
+            { id: 703, name: 'Tyre Pressure & Tread Check' },
+          ]
+        });
+      }
+
+      // Inject Roadside Assistance & Repair if missing
+      if (!list.find(s => s.name === 'Roadside Assistance & Repair')) {
+        list.push({
+          id: 'roadside-repair', name: 'Roadside Assistance & Repair',
+          description: 'Battery jump-start, emergency fuel, flat tyre change, diagnostics, and minor roadside repairs.',
+          addons: []
+        });
+      }
+
       setServices(list);
 
       // Pre-select service from URL param ?service=id
@@ -213,6 +219,7 @@ const Booking = () => {
         vehicle_number: formData.vehicleNumber,
         vehicle_model: [formData.vehicleMake, formData.vehicleModel, formData.vehicleYear].filter(Boolean).join(' '),
         tyre_size: tyreSizeStr,
+        notes: formData.repairIssue || undefined,
         addons: formData.selectedAddons.map(a => ({ id: a.id, price: 0 }))
       });
       setToast({ show: true, message: 'Booking confirmed! Redirecting...', type: 'success' });
@@ -223,7 +230,13 @@ const Booking = () => {
   };
 
   const canProceed = () => {
-    if (step === 1) return !!formData.service;
+    if (step === 1) {
+      if (!formData.service) return false;
+      if (formData.service.name === 'Roadside Assistance & Repair') {
+        return !!formData.repairIssue?.trim();
+      }
+      return true;
+    }
     if (step === 2) {
       if (isTyreService(formData.service)) return !!formData.tyreWidth && !!formData.tyreProfile && !!formData.tyreRim;
       return !!formData.vehicleNumber && !!formData.vehicleModel;
@@ -331,6 +344,20 @@ const Booking = () => {
                             <span className="font-bold">Have your tyre size ready</span> — e.g. <span className="font-mono font-bold">205/55 R16</span>. You can find it on your tyre sidewall or in your car's manual.{' '}
                             <Link to="/services/category/tyres" className="underline font-bold">Check our tyre brands →</Link>
                           </div>
+                        </div>
+                      )}
+                      {/* Repair Issue Textarea */}
+                      {selected && service.name === 'Roadside Assistance & Repair' && (
+                        <div className="mt-4">
+                          <label className="block text-sm font-bold text-accent mb-2">Please describe what needs repairing or your symptoms:</label>
+                          <textarea
+                            className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-accent outline-none transition-colors text-sm"
+                            rows="3"
+                            placeholder="e.g. My battery is completely flat, car won't start..."
+                            value={formData.repairIssue || ''}
+                            onChange={(e) => setFormData({ ...formData, repairIssue: e.target.value })}
+                            onClick={(e) => e.stopPropagation()}
+                          />
                         </div>
                       )}
                       <input type="radio" name="service" className="hidden"
