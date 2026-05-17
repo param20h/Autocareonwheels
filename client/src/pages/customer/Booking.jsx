@@ -622,7 +622,8 @@ const Booking = () => {
             <div className="bg-background p-5 rounded-card space-y-3 mb-6 text-sm">
               {[
                 { label: 'Service', value: formData.service?.name },
-                { label: 'Vehicle', value: [formData.vehicleMake, formData.vehicleModel, formData.vehicleYear].filter(Boolean).join(' ') + (formData.vehicleNumber ? ` (${formData.vehicleNumber})` : '') },
+                { label: 'Repair Issue', value: formData.service?.name === 'Roadside Assistance & Repair' ? formData.repairIssue : '' },
+                { label: 'Vehicle', value: [formData.vehicleMake, formData.vehicleModel, formData.vehicleYear, formData.vehicleMileage ? `${formData.vehicleMileage} km` : ''].filter(Boolean).join(' ') + (formData.vehicleNumber ? ` (${formData.vehicleNumber})` : '') },
                 { label: 'Location', value: [formData.address, formData.city, formData.state, formData.pincode].filter(Boolean).join(', ') },
                 { label: 'Schedule', value: formData.date && formData.timeSlot ? `${formData.date} at ${formData.timeSlot}` : '' },
               ].map(({ label, value }) => value ? (
