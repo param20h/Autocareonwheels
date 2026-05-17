@@ -325,14 +325,14 @@ const AdminDashboard = () => {
             {loading ? <div className="flex justify-center py-16"><Loader2 className="animate-spin text-accent" size={32} /></div> : (
               <div className="divide-y divide-gray-100">
                 {services.map(s => (
-                  <div key={s.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50/80 transition-colors">
-                    <div>
-                      <p className="font-bold text-primary">{s.name}</p>
-                      <p className="text-xs text-gray-500 max-w-md truncate">{s.description}</p>
+                  <div key={s.id} className="px-4 sm:px-6 py-4 flex items-center justify-between gap-3 hover:bg-gray-50/80 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-primary truncate">{s.name}</p>
+                      <p className="text-xs text-gray-500 truncate">{s.description}</p>
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <span className="text-lg font-black text-accent">${parseFloat(s.price).toLocaleString()}</span>
-                      <span className="text-xs text-gray-400">{s.duration_mins} min</span>
+                    <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+                      <span className="text-base sm:text-lg font-black text-accent">${parseFloat(s.price).toLocaleString()}</span>
+                      <span className="text-[10px] sm:text-xs text-gray-400">{s.duration_mins} min</span>
                       <button onClick={() => handleDelete('services', s.id)} className="text-red-400 hover:text-red-600 transition-colors"><Trash2 size={16} /></button>
                     </div>
                   </div>
@@ -357,16 +357,16 @@ const AdminDashboard = () => {
             ) : (
               <div className="divide-y divide-gray-100">
                 {mechanics.map(m => (
-                  <div key={m.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50/80 transition-colors">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center text-accent font-bold">{m.name.charAt(0)}</div>
-                      <div>
-                        <p className="font-bold text-primary">{m.name}</p>
-                        <p className="text-xs text-gray-500">{m.phone} · {m.email}</p>
+                  <div key={m.id} className="px-4 sm:px-6 py-4 flex items-center justify-between gap-3 hover:bg-gray-50/80 transition-colors">
+                    <div className="flex items-center space-x-3 flex-1 min-w-0">
+                      <div className="w-10 h-10 bg-accent/10 rounded-full flex-shrink-0 flex items-center justify-center text-accent font-bold">{m.name.charAt(0)}</div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-primary truncate">{m.name}</p>
+                        <p className="text-xs text-gray-500 truncate">{m.phone} · {m.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${m.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold ${m.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                         {m.is_available ? 'Available' : 'Busy'}
                       </span>
                       <button onClick={() => handleDelete('mechanics', m.id)} className="text-red-400 hover:text-red-600 transition-colors"><Trash2 size={16} /></button>
