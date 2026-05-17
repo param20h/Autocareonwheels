@@ -594,8 +594,8 @@ const Booking = () => {
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">Time Slot</label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'].map(slot => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM'].map(slot => (
                   <button key={slot} onClick={() => setFormData({ ...formData, timeSlot: slot })}
                     className={`p-3 rounded-input text-sm font-semibold border transition-colors flex items-center justify-center ${formData.timeSlot === slot ? 'bg-primary border-primary text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-accent'}`}>
                     <Clock size={14} className="mr-1.5 opacity-70" />{slot}
