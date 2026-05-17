@@ -30,6 +30,7 @@ const Booking = () => {
     vehicleMake: '',
     vehicleModel: '',
     vehicleYear: '',
+    vehicleMileage: '',
     // Tyre size (only for tyre services)
     tyreWidth: '',
     tyreProfile: '',
@@ -217,7 +218,7 @@ const Booking = () => {
         date: formData.date, time_slot: formData.timeSlot, total_price: 0,
         guest_name: formData.guestName, guest_email: formData.guestEmail, guest_phone: formData.guestPhone,
         vehicle_number: formData.vehicleNumber,
-        vehicle_model: [formData.vehicleMake, formData.vehicleModel, formData.vehicleYear].filter(Boolean).join(' '),
+        vehicle_model: [formData.vehicleMake, formData.vehicleModel, formData.vehicleYear, formData.vehicleMileage ? `(${formData.vehicleMileage} km)` : ''].filter(Boolean).join(' '),
         tyre_size: tyreSizeStr,
         notes: formData.repairIssue || undefined,
         addons: formData.selectedAddons.map(a => ({ id: a.id, price: 0 }))
@@ -445,11 +446,19 @@ const Booking = () => {
                         className={inputCls} placeholder="Camry" />
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Year</label>
-                    <input type="number" value={formData.vehicleYear}
-                      onChange={e => setFormData({ ...formData, vehicleYear: e.target.value })}
-                      className={inputCls} placeholder="2019" min="1980" max={new Date().getFullYear() + 1} />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Year</label>
+                      <input type="number" value={formData.vehicleYear}
+                        onChange={e => setFormData({ ...formData, vehicleYear: e.target.value })}
+                        className={inputCls} placeholder="2019" min="1980" max={new Date().getFullYear() + 1} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Odometer (km)</label>
+                      <input type="number" value={formData.vehicleMileage}
+                        onChange={e => setFormData({ ...formData, vehicleMileage: e.target.value })}
+                        className={inputCls} placeholder="e.g. 55000" min="0" />
+                    </div>
                   </div>
                 </div>
               </>
