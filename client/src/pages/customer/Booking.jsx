@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone } from 'lucide-react';
+import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone, BookCheck, Wrench, CircleDashed, ShieldCheck, Truck } from 'lucide-react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import api from '../../api/axios';
 import Navbar from '../../components/Navbar';
@@ -14,7 +14,18 @@ const BUSINESS_PHONE = '0427563913';
 const isTyreService = (service) => {
   if (!service) return false;
   const name = (service.name || '').toLowerCase();
-  return name.includes('tyre') || name.includes('tire') || name.includes('flat') || name.includes('wheel');
+  return name.includes('tyre') || name.includes('tire') || name.includes('flat') || name.includes('wheel') || name.includes('puncture');
+};
+
+const getServiceIcon = (service) => {
+  if (!service) return null;
+  const name = (service.name || '').toLowerCase();
+  if (name.includes('logbook')) return <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 shadow-sm"><BookCheck size={24} /></div>;
+  if (name.includes('basic')) return <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-200 flex-shrink-0 flex items-center justify-center text-slate-700 shadow-sm"><Wrench size={24} /></div>;
+  if (name.includes('tyre') || name.includes('flat') || name.includes('puncture')) return <div className="w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex-shrink-0 flex items-center justify-center text-zinc-100 shadow-sm"><CircleDashed size={24} /></div>;
+  if (name.includes('brake')) return <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex-shrink-0 flex items-center justify-center text-red-600 shadow-sm"><ShieldCheck size={24} /></div>;
+  if (name.includes('roadside') || name.includes('repair')) return <div className="w-12 h-12 rounded-full bg-orange-50 border border-orange-100 flex-shrink-0 flex items-center justify-center text-orange-500 shadow-sm"><Truck size={24} /></div>;
+  return <div className="w-12 h-12 rounded-full bg-gray-50 border border-gray-200 flex-shrink-0 flex items-center justify-center text-gray-500 shadow-sm"><Wrench size={24} /></div>;
 };
 
 const Booking = () => {
@@ -103,8 +114,15 @@ const Booking = () => {
         ];
       }
 
-      // Filter out unwanted services from both API and fallback
-      list = list.filter(s => !['Ultimate Service', 'Yearly Service', 'Yearly Car Service'].includes(s.name));
+      // Map legacy names to requested names
+      list = list.map(s => {
+        if (s.name === 'Flat Tyre Service') return { ...s, name: 'Tyre Fitment and Puncture' };
+        return s;
+      });
+
+      // Keep only exactly these 5 services as requested
+      const allowedServices = ['Logbook Service', 'Basic Service', 'Tyre Fitment and Puncture', 'Brakes', 'Roadside Assistance & Repair'];
+      list = list.filter(s => allowedServices.includes(s.name));
 
       // Inject Basic Service if missing
       if (!list.find(s => s.name === 'Basic Service')) {
@@ -326,12 +344,15 @@ const Booking = () => {
                   return (
                     <label key={service.id} className={`block p-4 sm:p-5 border-2 rounded-card cursor-pointer transition-all ${selected ? 'border-accent bg-red-50/20 shadow-sm' : 'border-gray-200 hover:border-gray-300'}`}>
                       <div className="flex items-start justify-between pointer-events-none">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-bold text-primary text-lg">{service.name}</span>
-                            {isTyre && <span className="text-xs bg-accent/10 text-accent font-bold px-2 py-0.5 rounded-full">🛞 Tyre</span>}
+                        <div className="flex items-start gap-4 flex-1">
+                          {getServiceIcon(service)}
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-bold text-primary text-lg">{service.name}</span>
+                              {isTyre && <span className="text-xs bg-accent/10 text-accent font-bold px-2 py-0.5 rounded-full">🛞 Tyre</span>}
+                            </div>
+                            <p className="text-sm text-gray-500 mt-1">{service.description?.substring(0, 90)}</p>
                           </div>
-                          <p className="text-sm text-gray-500 mt-1">{service.description?.substring(0, 90)}</p>
                         </div>
                         <div className={`w-5 h-5 rounded-full border flex-shrink-0 mt-1 ml-4 flex items-center justify-center ${selected ? 'border-accent bg-accent text-white' : 'border-gray-300'}`}>
                           {selected && <div className="w-2 h-2 bg-white rounded-full" />}
