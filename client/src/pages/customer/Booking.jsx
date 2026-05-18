@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone, BookCheck, Wrench, CircleDashed, ShieldCheck, Truck } from 'lucide-react';
+import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone, BookCheck, Wrench, CircleDashed, ShieldCheck, Truck, Car, User, Layers, CalendarClock, ClipboardCheck } from 'lucide-react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import api from '../../api/axios';
 import Navbar from '../../components/Navbar';
@@ -331,7 +331,7 @@ const Booking = () => {
         {/* ===== STEP 1: SERVICE ===== */}
         {step === 1 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Select a Service</h2>
+            <h2 className="flex items-center gap-3 text-3xl font-extrabold text-primary mb-2"><Wrench className="text-accent" size={32} /> Select a Service</h2>
             <p className="text-gray-500 mb-6">Choose what you need done — we'll handle the rest.</p>
 
             {loadingServices ? (
@@ -398,7 +398,7 @@ const Booking = () => {
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {isTyreService(formData.service) ? (
               <>
-                <h2 className="text-3xl font-extrabold text-primary mb-2">🛞 Your Tyre Size</h2>
+                <h2 className="flex items-center gap-3 text-3xl font-extrabold text-primary mb-2"><CircleDashed className="text-accent" size={32} /> Your Tyre Size</h2>
                 <p className="text-gray-500 mb-6">Select your tyre dimensions — find them on your tyre sidewall.</p>
                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 text-sm text-gray-500">
                   e.g. <span className="font-mono font-bold text-primary">205/55 R16</span> — the numbers printed on the side of your current tyre.
@@ -444,7 +444,7 @@ const Booking = () => {
               </>
             ) : (
               <>
-                <h2 className="text-3xl font-extrabold text-primary mb-2">Your Vehicle</h2>
+                <h2 className="flex items-center gap-3 text-3xl font-extrabold text-primary mb-2"><Car className="text-accent" size={32} /> Your Vehicle</h2>
                 <p className="text-gray-500 mb-6">Tell us about the car we're servicing.</p>
                 <div className="space-y-4">
                   <div>
@@ -490,7 +490,7 @@ const Booking = () => {
         {/* ===== STEP 3: LOCATION ===== */}
         {step === 3 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Service Location</h2>
+            <h2 className="flex items-center gap-3 text-3xl font-extrabold text-primary mb-2"><MapPin className="text-accent" size={32} /> Service Location</h2>
             <p className="text-gray-500 mb-4">Where should our mechanic arrive?</p>
 
             {/* GPS Detect Button */}
@@ -555,7 +555,7 @@ const Booking = () => {
         {/* ===== STEP 4: YOUR DETAILS (guest only) ===== */}
         {step === 4 && !isAuthenticated && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Your Details</h2>
+            <h2 className="flex items-center gap-3 text-3xl font-extrabold text-primary mb-2"><User className="text-accent" size={32} /> Your Details</h2>
             <p className="text-gray-500 mb-6">So we can confirm your booking and get in touch.</p>
             <div className="space-y-4">
               <div>
@@ -583,7 +583,7 @@ const Booking = () => {
         {/* ===== STEP 5: ADD-ONS ===== */}
         {step === 5 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Add-ons</h2>
+            <h2 className="flex items-center gap-3 text-3xl font-extrabold text-primary mb-2"><Layers className="text-accent" size={32} /> Add-ons</h2>
             <p className="text-gray-500 mb-6">Optional extras for your service.</p>
             {formData.service?.addons?.length > 0 ? (
               <div className="space-y-3">
@@ -615,7 +615,7 @@ const Booking = () => {
         {/* ===== STEP 6: SCHEDULE ===== */}
         {step === 6 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-2">Pick a Date &amp; Time</h2>
+            <h2 className="flex items-center gap-3 text-3xl font-extrabold text-primary mb-2"><CalendarClock className="text-accent" size={32} /> Pick a Date &amp; Time</h2>
             <p className="text-gray-500 mb-6">When should our mechanics arrive?</p>
             <div className="mb-6">
               <label className="block text-sm font-bold text-gray-700 mb-2">Date</label>
@@ -639,7 +639,7 @@ const Booking = () => {
         {/* ===== STEP 7: CONFIRMATION ===== */}
         {step === 7 && (
           <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-3xl font-extrabold text-primary mb-6 text-center">Order Summary</h2>
+            <h2 className="flex items-center justify-center gap-3 text-3xl font-extrabold text-primary mb-6 text-center"><ClipboardCheck className="text-accent" size={32} /> Order Summary</h2>
             <div className="bg-background p-5 rounded-card space-y-3 mb-6 text-sm">
               {[
                 { label: 'Service', value: formData.service?.name },
