@@ -382,14 +382,18 @@ const Booking = () => {
                           </div>
                         </div>
                       )}
-                      {/* Repair Issue Textarea */}
-                      {selected && service.name === 'Roadside Assistance & Repair' && (
+                      {/* Repair Issue / Notes Textarea */}
+                      {selected && (
                         <div className="mt-4">
-                          <label className="block text-sm font-bold text-accent mb-2">Please describe what needs repairing or your symptoms:</label>
+                          <label className="block text-sm font-bold text-accent mb-2">
+                            {service.name === 'Roadside Assistance & Repair' 
+                              ? 'Please describe what needs repairing or your symptoms:' 
+                              : 'Any specific details, issues, or symptoms we should know about? (Optional)'}
+                          </label>
                           <textarea
                             className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-accent outline-none transition-colors text-sm"
                             rows="3"
-                            placeholder="e.g. My battery is completely flat, car won't start..."
+                            placeholder={service.name === 'Roadside Assistance & Repair' ? "e.g. My battery is completely flat, car won't start..." : "e.g. Brakes are squeaking, or just a routine check..."}
                             value={formData.repairIssue || ''}
                             onChange={(e) => setFormData({ ...formData, repairIssue: e.target.value })}
                             onClick={(e) => e.stopPropagation()}
