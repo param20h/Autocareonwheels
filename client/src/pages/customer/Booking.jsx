@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone, BookCheck, Wrench, CircleDashed, ShieldCheck, Truck, Car, User, Layers, CalendarClock, ClipboardCheck, Activity } from 'lucide-react';
+import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone, BookCheck, Wrench, CircleDashed, ShieldCheck, Truck, Car, User, Layers, CalendarClock, ClipboardCheck, Activity, Wind } from 'lucide-react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import api from '../../api/axios';
 import Navbar from '../../components/Navbar';
@@ -26,6 +26,7 @@ const getServiceIcon = (service) => {
   if (name.includes('brake')) return <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex-shrink-0 flex items-center justify-center text-red-600 shadow-sm"><ShieldCheck size={24} /></div>;
   if (name.includes('roadside') || name.includes('repair')) return <div className="w-12 h-12 rounded-full bg-orange-50 border border-orange-100 flex-shrink-0 flex items-center justify-center text-orange-500 shadow-sm"><Truck size={24} /></div>;
   if (name.includes('steering') || name.includes('suspension')) return <div className="w-12 h-12 rounded-full bg-teal-50 border border-teal-100 flex-shrink-0 flex items-center justify-center text-teal-600 shadow-sm"><Activity size={24} /></div>;
+  if (name.includes('air conditioning') || name.includes('ac')) return <div className="w-12 h-12 rounded-full bg-cyan-50 border border-cyan-100 flex-shrink-0 flex items-center justify-center text-cyan-600 shadow-sm"><Wind size={24} /></div>;
   return <div className="w-12 h-12 rounded-full bg-gray-50 border border-gray-200 flex-shrink-0 flex items-center justify-center text-gray-500 shadow-sm"><Wrench size={24} /></div>;
 };
 
@@ -122,8 +123,8 @@ const Booking = () => {
       });
 
       // Keep only exactly these 5 services as requested
-      // Keep only exactly these 6 services as requested
-      const allowedServices = ['Logbook Service', 'Basic Service', 'Tyre Fitment and Puncture', 'Brakes', 'Roadside Assistance & Repair', 'Steering and Suspension'];
+      // Keep only exactly these 7 services as requested
+      const allowedServices = ['Logbook Service', 'Basic Service', 'Tyre Fitment and Puncture', 'Brakes', 'Roadside Assistance & Repair', 'Steering and Suspension', 'Car Air Conditioning Repairs'];
       list = list.filter(s => allowedServices.includes(s.name));
 
       // Inject Basic Service if missing
@@ -156,6 +157,18 @@ const Booking = () => {
           addons: [
             { id: 801, name: 'Power Steering Fluid Flush' },
             { id: 802, name: 'Shock Absorber Inspection' }
+          ]
+        });
+      }
+
+      // Inject Car Air Conditioning Repairs if missing
+      if (!list.find(s => s.name === 'Car Air Conditioning Repairs')) {
+        list.push({
+          id: 'ac-repair', name: 'Car Air Conditioning Repairs',
+          description: 'Comprehensive AC diagnostics, regas, and repairs to keep you cool on the road.',
+          addons: [
+            { id: 901, name: 'Cabin Filter Replacement' },
+            { id: 902, name: 'AC Antibacterial Treatment' }
           ]
         });
       }
