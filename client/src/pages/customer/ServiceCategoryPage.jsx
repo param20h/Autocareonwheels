@@ -179,7 +179,7 @@ const BRAND_IMAGES = {
 
 const BrandLogoGrid = () => (
   <div className="mb-12">
-    <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">Brands We Supply &amp; Fit</h2>
+    <h2 className="text-xl sm:text-2xl font-extrabold text-black mb-2">Brands We Supply &amp; Fit</h2>
     <p className="text-gray-500 text-sm mb-6">We source and install tyres from all major brands at your location.</p>
     <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
       {TYRE_BRANDS.map(brand => {
