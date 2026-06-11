@@ -22,11 +22,11 @@ const getServiceIcon = (service) => {
   const name = (service.name || '').toLowerCase();
   if (name.includes('logbook')) return <img src="/logos/logbook.svg" alt="Logbook" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
   if (name.includes('basic')) return <img src="/logos/basiic.svg" alt="Basic" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
-  if (name.includes('tyre') || name.includes('flat') || name.includes('puncture')) return <div className="w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex-shrink-0 flex items-center justify-center text-zinc-100 shadow-sm"><CircleDashed size={24} /></div>;
+  if (name.includes('tyre') || name.includes('flat') || name.includes('puncture')) return <img src="/logos/tyre.svg" alt="Tyre" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
   if (name.includes('brake')) return <img src="/logos/brakes.svg" alt="Brakes" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
-  if (name.includes('roadside') || name.includes('repair')) return <div className="w-12 h-12 rounded-full bg-orange-50 border border-orange-100 flex-shrink-0 flex items-center justify-center text-orange-500 shadow-sm"><Truck size={24} /></div>;
+  if (name.includes('roadside')) return <img src="/logos/roadside.svg" alt="Roadside" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
   if (name.includes('steering') || name.includes('suspension')) return <img src="/logos/steringandsuspension.svg" alt="Steering & Suspension" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
-  if (name.includes('air conditioning') || name.includes('ac')) return <img src="/logos/aircon.svg" alt="Air Conditioning" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
+  if (name.includes('air conditioning') || name.includes('ac')) return <img src="/logos/AC.svg" alt="Air Conditioning" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
   return <div className="w-12 h-12 rounded-full bg-gray-50 border border-gray-200 flex-shrink-0 flex items-center justify-center text-gray-500 shadow-sm"><Wrench size={24} /></div>;
 };
 
