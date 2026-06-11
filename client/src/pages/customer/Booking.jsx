@@ -20,13 +20,13 @@ const isTyreService = (service) => {
 const getServiceIcon = (service) => {
   if (!service) return null;
   const name = (service.name || '').toLowerCase();
-  if (name.includes('logbook')) return <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 shadow-sm"><BookCheck size={24} /></div>;
-  if (name.includes('basic')) return <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-200 flex-shrink-0 flex items-center justify-center text-slate-700 shadow-sm"><Wrench size={24} /></div>;
+  if (name.includes('logbook')) return <img src="/logos/logbook.svg" alt="Logbook" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
+  if (name.includes('basic')) return <img src="/logos/basiic.svg" alt="Basic" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
   if (name.includes('tyre') || name.includes('flat') || name.includes('puncture')) return <div className="w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex-shrink-0 flex items-center justify-center text-zinc-100 shadow-sm"><CircleDashed size={24} /></div>;
-  if (name.includes('brake')) return <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex-shrink-0 flex items-center justify-center text-red-600 shadow-sm"><ShieldCheck size={24} /></div>;
+  if (name.includes('brake')) return <img src="/logos/brakes.svg" alt="Brakes" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
   if (name.includes('roadside') || name.includes('repair')) return <div className="w-12 h-12 rounded-full bg-orange-50 border border-orange-100 flex-shrink-0 flex items-center justify-center text-orange-500 shadow-sm"><Truck size={24} /></div>;
-  if (name.includes('steering') || name.includes('suspension')) return <div className="w-12 h-12 rounded-full bg-teal-50 border border-teal-100 flex-shrink-0 flex items-center justify-center text-teal-600 shadow-sm"><Activity size={24} /></div>;
-  if (name.includes('air conditioning') || name.includes('ac')) return <div className="w-12 h-12 rounded-full bg-cyan-50 border border-cyan-100 flex-shrink-0 flex items-center justify-center text-cyan-600 shadow-sm"><Wind size={24} /></div>;
+  if (name.includes('steering') || name.includes('suspension')) return <img src="/logos/steringandsuspension.svg" alt="Steering & Suspension" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
+  if (name.includes('air conditioning') || name.includes('ac')) return <img src="/logos/aircon.svg" alt="Air Conditioning" className="w-12 h-12 flex-shrink-0 object-contain drop-shadow-sm" />;
   return <div className="w-12 h-12 rounded-full bg-gray-50 border border-gray-200 flex-shrink-0 flex items-center justify-center text-gray-500 shadow-sm"><Wrench size={24} /></div>;
 };
 
