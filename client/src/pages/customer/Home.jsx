@@ -371,7 +371,7 @@ const Home = () => {
 
           <div className="w-full h-72 rounded-2xl overflow-hidden shadow-md border border-gray-200">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15082.936085521448!2d72.82779893527236!3d19.075422699999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c97f346053b7%3A0xacf72f56793d190a!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+              src="https://maps.google.com/maps?q=Canberra,+ACT,+Australia&t=&z=11&ie=UTF8&iwloc=&output=embed"
               width="100%" height="100%"
               style={{ border: 0, filter: 'grayscale(0.3)' }}
               allowFullScreen="" loading="lazy"

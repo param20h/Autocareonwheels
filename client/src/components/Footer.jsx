@@ -24,7 +24,9 @@ const Footer = () => {
               <a href="https://www.facebook.com/profile.php?id=61589617888050" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
                 <Facebook size={18} />
               </a>
-
+              <a href="mailto:info@autocareonwheels.com.au" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
+                <Mail size={18} />
+              </a>
             </div>
           </div>
 
@@ -59,11 +61,11 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-accent mt-0.5 flex-shrink-0" />
                 <div>
-                  <span>Canberra, ACT, Australia, 2900</span>
+                  <span>Canberra, ACT, Australia</span>
                   <div className="mt-1 flex space-x-2 text-xs">
-                    <a href="https://maps.google.com/?q=Canberra,+ACT,+Australia,+2900" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Google Maps</a>
+                    <a href="https://maps.google.com/?q=Canberra,+Australia" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Google Maps</a>
                     <span className="text-gray-600">|</span>
-                    <a href="http://maps.apple.com/?q=Canberra,+ACT,+Australia,+2900" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Apple Maps</a>
+                    <a href="http://maps.apple.com/?q=Canberra,+Australia" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Apple Maps</a>
                   </div>
                 </div>
               </li>

@@ -122,9 +122,16 @@ const Booking = () => {
         return s;
       });
 
-      // Keep only exactly these 5 services as requested
-      // Keep only exactly these 7 services as requested
-      const allowedServices = ['Logbook Service', 'Basic Service', 'Tyre Fitment and Puncture', 'Brakes', 'Roadside Assistance & Repair', 'Steering and Suspension', 'Car Air Conditioning Repairs'];
+      // Keep only exactly these 7 services as requested, in this specific order
+      const allowedServices = [
+        'Tyre Fitment and Puncture',
+        'Logbook Service',
+        'Basic Service',
+        'Brakes',
+        'Roadside Assistance & Repair',
+        'Steering and Suspension',
+        'Car Air Conditioning Repairs'
+      ];
       list = list.filter(s => allowedServices.includes(s.name));
 
       // Inject Basic Service if missing
@@ -172,6 +179,9 @@ const Booking = () => {
           ]
         });
       }
+
+      // Sort the final list to exactly match the allowedServices order
+      list.sort((a, b) => allowedServices.indexOf(a.name) - allowedServices.indexOf(b.name));
 
       setServices(list);
 

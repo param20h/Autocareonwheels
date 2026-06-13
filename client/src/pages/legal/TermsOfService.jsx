@@ -75,7 +75,7 @@ const TermsOfService = () => {
             <h2 className="text-xl font-bold text-primary mb-3">9. Contact</h2>
             <p>For any questions regarding these Terms of Service, please reach out to us at:</p>
             <p className="mt-2 font-semibold text-primary">info@autocareonwheels.com.au · 0427563913</p>
-            <p className="text-sm text-gray-400 mt-1">Canberra, ACT, Australia, 2900</p>
+            <p className="text-sm text-gray-400 mt-1">Canberra, Australia</p>
           </section>
         </div>
       </main>
