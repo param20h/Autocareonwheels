@@ -75,7 +75,7 @@ const Navbar = () => {
             <div className="flex justify-between items-center h-20">
               {/* Logo & Status Badge */}
               <div className="flex items-center space-x-4">
-                <Link to="/" className="flex items-center">
+                <Link to="/" className="flex items-center mr-14">
                   <img src="/logo.png" alt="AutoCare on Wheels Logo" className="h-24 w-auto object-contain scale-[1.4] transform origin-left transition-transform hover:scale-[1.45]" />
                 </Link>
                 <div className="hidden md:flex items-center">
