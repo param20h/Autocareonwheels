@@ -131,15 +131,28 @@ const Booking = () => {
         ];
       }
 
-      // Map legacy/database names to requested names
+      // Map legacy/database names to requested clean names (using fuzzy matches)
       list = list.map(s => {
-        if (s.name === 'Flat Tyre Service' || s.name === 'Tyre Services') {
+        const lower = (s.name || '').toLowerCase();
+        if (lower.includes('tyre') || lower.includes('tire') || lower.includes('puncture')) {
           return { ...s, name: 'Tyre Fitment and Puncture' };
         }
-        if (s.name === 'Brakes Service') {
+        if (lower.includes('logbook')) {
+          return { ...s, name: 'Logbook Service' };
+        }
+        if (lower === 'basic service' || lower === 'basic') {
+          return { ...s, name: 'Basic Service' };
+        }
+        if (lower.includes('roadside')) {
+          return { ...s, name: 'Roadside Assistance & Repair' };
+        }
+        if (lower === 'brakes service' || lower === 'brakes') {
           return { ...s, name: 'Brakes' };
         }
-        if (s.name === 'Basic Car AC Service') {
+        if (lower.includes('steering') && lower.includes('suspension')) {
+          return { ...s, name: 'Steering and Suspension' };
+        }
+        if (lower.includes('air conditioning') || lower.includes('ac') || lower.includes('car ac')) {
           return { ...s, name: 'Car Air Conditioning Repairs' };
         }
         return s;
@@ -164,7 +177,7 @@ const Booking = () => {
         if (indexA !== -1 && indexB !== -1) return indexA - indexB;
         if (indexA !== -1) return -1;
         if (indexB !== -1) return 1;
-        return 0;
+        return a.name.localeCompare(b.name);
       });
 
       setServices(list);
