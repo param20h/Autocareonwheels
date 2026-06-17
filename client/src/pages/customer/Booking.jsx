@@ -131,9 +131,17 @@ const Booking = () => {
         ];
       }
 
-      // Map legacy names to requested names
+      // Map legacy/database names to requested names
       list = list.map(s => {
-        if (s.name === 'Flat Tyre Service') return { ...s, name: 'Tyre Fitment and Puncture' };
+        if (s.name === 'Flat Tyre Service' || s.name === 'Tyre Services') {
+          return { ...s, name: 'Tyre Fitment and Puncture' };
+        }
+        if (s.name === 'Brakes Service') {
+          return { ...s, name: 'Brakes' };
+        }
+        if (s.name === 'Basic Car AC Service') {
+          return { ...s, name: 'Car Air Conditioning Repairs' };
+        }
         return s;
       });
 
@@ -148,6 +156,20 @@ const Booking = () => {
         'Car Air Conditioning Repairs'
       ];
       list = list.filter(s => allowedServices.includes(s.name));
+
+      // Inject Logbook Service if missing
+      if (!list.find(s => s.name === 'Logbook Service')) {
+        list.push({
+          id: 'logbook-service', name: 'Logbook Service',
+          description: 'The convenient way to maintain your new car warranty.',
+          addons: [
+            { id: 101, name: 'Air Filter Replacement' },
+            { id: 102, name: 'Cabin Filter Replacement' },
+            { id: 103, name: 'Fuel System Treatment' },
+            { id: 104, name: 'Tyre Rotation (All 4)' },
+          ]
+        });
+      }
 
       // Inject Basic Service if missing
       if (!list.find(s => s.name === 'Basic Service')) {
