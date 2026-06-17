@@ -744,7 +744,11 @@ const Booking = () => {
             <p className="text-gray-500 mb-6">When should our mechanics arrive?</p>
             <div className="mb-6">
               <label className="block text-sm font-bold text-gray-700 mb-2">Date</label>
-              <input type="date" value={formData.date} min={new Date().toISOString().split('T')[0]}
+              <input type="date" value={formData.date} min={(() => {
+                const now = new Date();
+                const local = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+                return local.toISOString().split('T')[0];
+              })()}
                 onChange={e => handleDateChange(e.target.value)} className={inputCls} />
             </div>
             <div>

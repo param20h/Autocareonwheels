@@ -15,11 +15,17 @@ const AnnouncementBanner = ({ announcements = [] }) => {
     // Normalize date for range check
     now.setHours(0, 0, 0, 0);
 
+    const parseLocalDate = (dateStr) => {
+      if (!dateStr) return new Date();
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    };
+
     // Filter active banners
     const activeBanners = announcements.filter(banner => {
       if (!banner.isActive) return false;
-      const start = new Date(banner.startDate);
-      const end = new Date(banner.endDate);
+      const start = parseLocalDate(banner.startDate);
+      const end = parseLocalDate(banner.endDate);
       start.setHours(0, 0, 0, 0);
       end.setHours(23, 59, 59, 999);
       return now >= start && now <= end;

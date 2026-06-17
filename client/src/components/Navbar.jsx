@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Wrench, Menu, X, LogOut, LayoutDashboard, UserCircle } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../store/useAuth';
 import api from '../api/axios';
 import FloatingCallButton from './FloatingCallButton';
@@ -10,6 +10,7 @@ import AnnouncementBanner from './AnnouncementBanner';
 const Navbar = () => {
   const { isAuthenticated, user, logoutAction } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [settings, setSettings] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
@@ -28,9 +29,10 @@ const Navbar = () => {
             return;
           }
 
-          // Check holidays
+          // Check holidays with local timezone safety
           const now = new Date();
-          const todayStr = now.toISOString().split('T')[0];
+          const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+          const todayStr = localDate.toISOString().split('T')[0];
           const todayHoliday = currentSettings.holidays?.find(h => h.date === todayStr);
 
           if (todayHoliday) {
@@ -53,7 +55,7 @@ const Navbar = () => {
       }
     };
     fetchNavbarSettings();
-  }, []);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logoutAction();
