@@ -150,8 +150,8 @@ const Booking = () => {
         'Tyre Fitment and Puncture',
         'Logbook Service',
         'Basic Service',
-        'Brakes',
         'Roadside Assistance & Repair',
+        'Brakes',
         'Steering and Suspension',
         'Car Air Conditioning Repairs'
       ];
