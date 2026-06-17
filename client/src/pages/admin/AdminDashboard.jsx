@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles, Home, Download, FilePlus2, Package, MinusCircle } from 'lucide-react';
+import { LogOut, Calendar, CheckCircle, Clock, Settings, CarFront, Wrench, Users, Plus, Trash2, X, Save, Loader2, Sparkles, Home, Download, FilePlus2, Package, Sliders, MinusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useAuth from '../../store/useAuth';
 import api from '../../api/axios';
 import bookingService from '../../services/booking.service';
 import Toast from '../../components/Toast';
+import SettingsTab from './Settings';
 
 const AdminDashboard = () => {
   const { user, logoutAction } = useAuth();
@@ -154,9 +155,10 @@ const AdminDashboard = () => {
   const tabs = [
     { key: 'bookings', label: 'Bookings', icon: Calendar },
     { key: 'services', label: 'Services', icon: Wrench },
-    { key: 'mechanics', label: 'Mechanics', icon: Settings },
+    { key: 'mechanics', label: 'Mechanics', icon: Users },
     { key: 'customers', label: 'Customers', icon: Users },
     { key: 'inventory', label: 'Inventory', icon: Package },
+    { key: 'settings', label: 'System Settings', icon: Sliders },
   ];
 
   return (
@@ -472,6 +474,11 @@ const AdminDashboard = () => {
               </div>
             )}
           </div>
+        )}
+
+        {/* Settings Tab */}
+        {activeTab === 'settings' && (
+          <SettingsTab />
         )}
       </main>
 

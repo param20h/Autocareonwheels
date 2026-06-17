@@ -61,7 +61,22 @@ const Booking = () => {
   const [detectingLocation, setDetectingLocation] = useState(false);
   const [locationStatus, setLocationStatus] = useState(null); // 'success' | 'error' | null
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [settings, setSettings] = useState(null);
   const TOTAL_STEPS = 7;
+
+  useEffect(() => {
+    const fetchBookingSettings = async () => {
+      try {
+        const { data } = await api.get('/settings/public');
+        if (data.success && data.data) {
+          setSettings(data.data);
+        }
+      } catch (err) {
+        console.error('Booking settings fetch error:', err);
+      }
+    };
+    fetchBookingSettings();
+  }, []);
 
   useEffect(() => {
     document.title = 'Book a Mobile Mechanic | AutoCare on Wheels — Canberra & Queanbeyan';
@@ -285,7 +300,65 @@ const Booking = () => {
     } finally { setSubmitting(false); }
   };
 
+  const validateSelectedDate = (selectedDateStr) => {
+    if (!settings) return null;
+    
+    // 1. Check master business status
+    if (settings.businessStatus === 'CLOSED') {
+      return 'Bookings are unavailable on this date due to a holiday/business closure.';
+    }
+
+    // 2. Check holidays
+    const holiday = settings.holidays?.find(h => h.date === selectedDateStr);
+    if (holiday) {
+      if (holiday.type === 'FULL_DAY') {
+        return 'Bookings are unavailable on this date due to a holiday/business closure.';
+      }
+    }
+
+    return null;
+  };
+
+  const isSlotDisabled = (dateStr, slot) => {
+    if (!settings) return false;
+    if (settings.businessStatus === 'CLOSED') return true;
+    if (!dateStr) return false;
+
+    const holiday = settings.holidays?.find(h => h.date === dateStr);
+    if (!holiday) return false;
+
+    if (holiday.type === 'FULL_DAY') return true;
+
+    if (holiday.type === 'CUSTOM_HOURS') {
+      const [time, modifier] = slot.split(' ');
+      let [hours, minutes] = time.split(':');
+      if (modifier === 'PM' && hours !== '12') {
+        hours = String(parseInt(hours, 10) + 12);
+      }
+      if (modifier === 'AM' && hours === '12') {
+        hours = '00';
+      }
+      const slot24h = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+      
+      return slot24h >= holiday.startHour && slot24h <= holiday.endHour;
+    }
+
+    return false;
+  };
+
+  const handleDateChange = (selectedDate) => {
+    const errorMsg = validateSelectedDate(selectedDate);
+    if (errorMsg) {
+      setToast({ show: true, message: errorMsg, type: 'error' });
+      setFormData(prev => ({ ...prev, date: '', timeSlot: '' }));
+    } else {
+      setFormData(prev => ({ ...prev, date: selectedDate, timeSlot: '' }));
+    }
+  };
+
   const canProceed = () => {
+    if (settings?.businessStatus === 'CLOSED') return false;
+    
     if (step === 1) {
       if (!formData.service) return false;
       if (formData.service.name === 'Roadside Assistance & Repair') {
@@ -345,6 +418,17 @@ const Booking = () => {
           <span>Call Now — {BUSINESS_PHONE}</span>
           <span className="text-green-200 text-xs font-normal hidden sm:inline">Speak to a mechanic directly</span>
         </a>
+
+        {/* Business Closed Warning */}
+        {settings?.businessStatus === 'CLOSED' && (
+          <div className="bg-red-50 border-2 border-red-200 rounded-card p-5 text-red-800 text-sm mb-6 flex items-start gap-3 shadow-md animate-in fade-in duration-300">
+            <AlertCircle size={20} className="text-red-500 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-extrabold block mb-1">Bookings Temporarily Unavailable</span>
+              <span>We are currently closed for bookings due to a holiday or business closure. Please check back later.</span>
+            </div>
+          </div>
+        )}
 
         {/* Progress */}
         <div className="mb-10 flex justify-between relative">
@@ -661,17 +745,30 @@ const Booking = () => {
             <div className="mb-6">
               <label className="block text-sm font-bold text-gray-700 mb-2">Date</label>
               <input type="date" value={formData.date} min={new Date().toISOString().split('T')[0]}
-                onChange={e => setFormData({ ...formData, date: e.target.value })} className={inputCls} />
+                onChange={e => handleDateChange(e.target.value)} className={inputCls} />
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">Time Slot</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM'].map(slot => (
-                  <button key={slot} onClick={() => setFormData({ ...formData, timeSlot: slot })}
-                    className={`p-3 rounded-input text-sm font-semibold border transition-colors flex items-center justify-center ${formData.timeSlot === slot ? 'bg-primary border-primary text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-accent'}`}>
-                    <Clock size={14} className="mr-1.5 opacity-70" />{slot}
-                  </button>
-                ))}
+                {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM'].map(slot => {
+                  const disabled = isSlotDisabled(formData.date, slot);
+                  return (
+                    <button 
+                      key={slot} 
+                      onClick={() => !disabled && setFormData({ ...formData, timeSlot: slot })}
+                      disabled={disabled}
+                      className={`p-3 rounded-input text-sm font-semibold border transition-all flex items-center justify-center ${
+                        formData.timeSlot === slot 
+                          ? 'bg-primary border-primary text-white' 
+                          : disabled
+                            ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-50'
+                            : 'bg-white border-gray-200 text-gray-600 hover:border-accent'
+                      }`}
+                    >
+                      <Clock size={14} className="mr-1.5 opacity-70" />{slot}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
