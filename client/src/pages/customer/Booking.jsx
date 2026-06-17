@@ -145,8 +145,9 @@ const Booking = () => {
         return s;
       });
 
-      // Keep only exactly these 7 services as requested, in this specific order
-      const allowedServices = [
+      // Maintain a preferred sorting order (Tyre, Logbook, Basic, Roadside, Brakes, Steering/Suspension, AC)
+      // Any custom services added by the admin will automatically append to the end of the list
+      const preferredOrder = [
         'Tyre Fitment and Puncture',
         'Logbook Service',
         'Basic Service',
@@ -155,70 +156,16 @@ const Booking = () => {
         'Steering and Suspension',
         'Car Air Conditioning Repairs'
       ];
-      list = list.filter(s => allowedServices.includes(s.name));
 
-      // Inject Logbook Service if missing
-      if (!list.find(s => s.name === 'Logbook Service')) {
-        list.push({
-          id: 'logbook-service', name: 'Logbook Service',
-          description: 'The convenient way to maintain your new car warranty.',
-          addons: [
-            { id: 101, name: 'Air Filter Replacement' },
-            { id: 102, name: 'Cabin Filter Replacement' },
-            { id: 103, name: 'Fuel System Treatment' },
-            { id: 104, name: 'Tyre Rotation (All 4)' },
-          ]
-        });
-      }
-
-      // Inject Basic Service if missing
-      if (!list.find(s => s.name === 'Basic Service')) {
-        list.push({
-          id: 'basic-service', name: 'Basic Service',
-          description: 'Essential maintenance to keep your car running smoothly.',
-          addons: [
-            { id: 701, name: 'Wiper Blade Replacement' },
-            { id: 702, name: 'Battery Health Check & Report' },
-            { id: 703, name: 'Tyre Pressure & Tread Check' },
-          ]
-        });
-      }
-
-      // Inject Roadside Assistance & Repair if missing
-      if (!list.find(s => s.name === 'Roadside Assistance & Repair')) {
-        list.push({
-          id: 'roadside-repair', name: 'Roadside Assistance & Repair',
-          description: 'Battery jump-start, emergency fuel, flat tyre change, diagnostics, and minor roadside repairs.',
-          addons: []
-        });
-      }
-
-      // Inject Steering and Suspension if missing
-      if (!list.find(s => s.name === 'Steering and Suspension')) {
-        list.push({
-          id: 'steering-suspension', name: 'Steering and Suspension',
-          description: 'Professional inspection and repairs for steering components and suspension systems.',
-          addons: [
-            { id: 801, name: 'Power Steering Fluid Flush' },
-            { id: 802, name: 'Shock Absorber Inspection' }
-          ]
-        });
-      }
-
-      // Inject Car Air Conditioning Repairs if missing
-      if (!list.find(s => s.name === 'Car Air Conditioning Repairs')) {
-        list.push({
-          id: 'ac-repair', name: 'Car Air Conditioning Repairs',
-          description: 'Comprehensive AC diagnostics, regas, and repairs to keep you cool on the road.',
-          addons: [
-            { id: 901, name: 'Cabin Filter Replacement' },
-            { id: 902, name: 'AC Antibacterial Treatment' }
-          ]
-        });
-      }
-
-      // Sort the final list to exactly match the allowedServices order
-      list.sort((a, b) => allowedServices.indexOf(a.name) - allowedServices.indexOf(b.name));
+      list.sort((a, b) => {
+        const indexA = preferredOrder.indexOf(a.name);
+        const indexB = preferredOrder.indexOf(b.name);
+        
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return 0;
+      });
 
       setServices(list);
 
