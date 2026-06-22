@@ -174,8 +174,7 @@ const AdminDashboard = () => {
             <Settings className="text-white" size={18} />
           </div>
           <div>
-            <span className="font-black text-xl tracking-tight">AutoCare Admin</span>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">Secure Operations</p>
+            <span className="font-black text-xl tracking-tight">Admin</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
