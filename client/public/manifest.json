@@ -1,0 +1,17 @@
+{
+  "short_name": "AutoCare",
+  "name": "AutoCare on Wheels",
+  "description": "Mobile Mechanic Services in Canberra & Queanbeyan",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#c0392b",
+  "display": "standalone",
+  "orientation": "portrait"
+}

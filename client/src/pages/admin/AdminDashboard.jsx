@@ -270,7 +270,14 @@ const AdminDashboard = () => {
                         <td className="p-4 pl-6 text-sm font-black text-gray-400">#{b.id.toString().padStart(4,'0')}</td>
                         <td className="p-4">
                           <p className="text-sm font-bold text-primary">{b.user?.name}</p>
-                          <p className="text-xs text-gray-500">{b.user?.phone || b.user?.email}</p>
+                          {b.user?.phone ? (
+                            <p className="text-xs text-accent font-semibold mt-0.5">
+                              <a href={`tel:${b.user.phone.replace(/[^+\d]/g, '')}`} className="hover:underline">{b.user.phone}</a>
+                            </p>
+                          ) : null}
+                          {b.user?.email && (
+                            <p className="text-xs text-gray-500">{b.user.email}</p>
+                          )}
                         </td>
                         <td className="p-4">
                           <p className="font-bold text-sm text-gray-700">{b.service?.name}</p>
@@ -364,7 +371,9 @@ const AdminDashboard = () => {
                       <div className="w-10 h-10 bg-accent/10 rounded-full flex-shrink-0 flex items-center justify-center text-accent font-bold">{m.name.charAt(0)}</div>
                       <div className="min-w-0">
                         <p className="font-bold text-primary truncate">{m.name}</p>
-                        <p className="text-xs text-gray-500 truncate">{m.phone} · {m.email}</p>
+                        <p className="text-xs text-gray-500 truncate">
+                          <a href={`tel:${m.phone.replace(/[^+\d]/g, '')}`} className="hover:underline text-accent font-semibold">{m.phone}</a> · {m.email}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
@@ -406,7 +415,15 @@ const AdminDashboard = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="p-4 text-sm text-gray-300">{c.phone || '—'}</td>
+                        <td className="p-4 text-sm font-semibold text-primary">
+                          {c.phone ? (
+                            <a href={`tel:${c.phone.replace(/[^+\d]/g, '')}`} className="hover:underline text-accent">
+                              {c.phone}
+                            </a>
+                          ) : (
+                            '—'
+                          )}
+                        </td>
                         <td className="p-4 text-sm text-gray-300">{new Date(c.created_at).toLocaleDateString()}</td>
                         <td className="p-4"><span className="bg-accent/10 text-accent font-bold text-xs px-2.5 py-1 rounded-full">{c._count?.bookings || 0}</span></td>
                       </tr>
