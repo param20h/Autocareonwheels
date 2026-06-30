@@ -61,11 +61,11 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-accent mt-0.5 flex-shrink-0" />
                 <div>
-                  <span>Canberra, ACT, Australia</span>
+                  <span>10 Muntz St, Chisholm ACT 2905</span>
                   <div className="mt-1 flex space-x-2 text-xs">
-                    <a href="https://maps.google.com/?q=Canberra,+Australia" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Google Maps</a>
+                    <a href="https://maps.app.goo.gl/w3SQ7VsSin5gGsND6" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Google Maps</a>
                     <span className="text-gray-600">|</span>
-                    <a href="http://maps.apple.com/?q=Canberra,+Australia" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Apple Maps</a>
+                    <a href="http://maps.apple.com/?q=10+Muntz+St,+Chisholm+ACT+2905" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline hover:text-white transition-colors">Apple Maps</a>
                   </div>
                 </div>
               </li>

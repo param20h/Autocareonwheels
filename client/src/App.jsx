@@ -13,6 +13,7 @@ import NotFound from './pages/NotFound';
 import PrivacyPolicy from './pages/legal/PrivacyPolicy';
 import TermsOfService from './pages/legal/TermsOfService';
 import useAuth from './store/useAuth';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 function App() {
   const checkAuth = useAuth(state => state.checkAuth);
@@ -51,6 +52,7 @@ function App() {
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <PWAInstallPrompt />
     </BrowserRouter>
   );
 }
