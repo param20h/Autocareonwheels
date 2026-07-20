@@ -56,7 +56,26 @@
 
   <!-- ===== FAVICON ===== -->
   <link rel="icon" type="image/png" href="/logo.png" />
-  <link rel="shortcut icon" href="/logo.png" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+  <!-- ===== GOOGLE ANALYTICS ===== -->
+  <script>
+    (function() {
+      const gaId = "%VITE_GA_ID%";
+      if (gaId && gaId.startsWith('G-')) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', gaId);
+      }
+    })();
+  </script>
 
   <!-- ===== PRECONNECT (performance) ===== -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -67,159 +86,163 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@graph": [
+    "@type": "LocalBusiness",
+    "@id": "https://www.autocareonwheels.com.au/#business",
+    "name": "AutoCare on Wheels",
+    "description": "Mobile mechanic servicing Canberra and Queanbeyan. We provide tyre supply and fitment, logbook services, brake repairs, battery replacements, and more — at your home or workplace.",
+    "url": "https://www.autocareonwheels.com.au",
+    "telephone": "+61427563913",
+    "email": "info@autocareonwheels.com.au",
+    "image": "https://www.autocareonwheels.com.au/logo.png",
+    "logo": "https://www.autocareonwheels.com.au/logo.png",
+    "priceRange": "$$",
+    "currenciesAccepted": "AUD",
+    "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+    "areaServed": [
+      { "@type": "City", "name": "Canberra", "sameAs": "https://en.wikipedia.org/wiki/Canberra" },
+      { "@type": "City", "name": "Queanbeyan", "sameAs": "https://en.wikipedia.org/wiki/Queanbeyan" }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "10 Muntz St",
+      "addressLocality": "Chisholm",
+      "addressRegion": "ACT",
+      "postalCode": "2905",
+      "addressCountry": "AU"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -35.4294,
+      "longitude": 149.1176
+    },
+    "openingHoursSpecification": [
       {
-        "@type": "LocalBusiness",
-        "@id": "https://www.autocareonwheels.com.au/#business",
-        "name": "AutoCare on Wheels",
-        "description": "Mobile mechanic servicing Canberra and Queanbeyan. We provide tyre supply and fitment, logbook services, brake repairs, battery replacements, and more — at your home or workplace.",
-        "url": "https://www.autocareonwheels.com.au",
-        "telephone": "+61427563913",
-        "email": "info@autocareonwheels.com.au",
-        "image": "https://www.autocareonwheels.com.au/logo.png",
-        "logo": "https://www.autocareonwheels.com.au/logo.png",
-        "priceRange": "$$",
-        "currenciesAccepted": "AUD",
-        "paymentAccepted": "Cash, Credit Card, Bank Transfer",
-        "areaServed": [
-          { "@type": "City", "name": "Canberra", "sameAs": "https://en.wikipedia.org/wiki/Canberra" },
-          { "@type": "City", "name": "Queanbeyan", "sameAs": "https://en.wikipedia.org/wiki/Queanbeyan" }
-        ],
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "10 Muntz St",
-          "addressLocality": "Chisholm",
-          "addressRegion": "ACT",
-          "postalCode": "2905",
-          "addressCountry": "AU"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": -35.4294,
-          "longitude": 149.1176
-        },
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-            "opens": "08:00",
-            "closes": "18:00"
-          },
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Saturday",
-            "opens": "09:00",
-            "closes": "15:00"
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "09:00",
+        "closes": "15:00"
+      }
+    ],
+    "sameAs": [],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "AutoCare on Wheels Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Tyre Supply & Fitment",
+            "description": "Mobile tyre supply and fitment from 30+ top brands including Michelin, Bridgestone, Pirelli and more. We come to you."
           }
-        ],
-        "sameAs": [],
-        "hasOfferCatalog": {
-          "@type": "OfferCatalog",
-          "name": "AutoCare on Wheels Services",
-          "itemListElement": [
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Tyre Supply & Fitment",
-                "description": "Mobile tyre supply and fitment from 30+ top brands including Michelin, Bridgestone, Pirelli and more. We come to you."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Flat Tyre Repair",
-                "description": "Emergency puncture repair and tyre fitting at your location. Same-day available."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Logbook Service",
-                "description": "Maintain your new car warranty with a convenient logbook service at your home or office."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Brake Repair",
-                "description": "Professional brake pad replacement, rotor inspection and brake fluid flush."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Car Battery Replacement",
-                "description": "On-site car battery testing and replacement using top quality brands."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Yearly Car Service",
-                "description": "Comprehensive yearly service to extend the life of your vehicle."
-              }
-            }
-          ]
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Flat Tyre Repair",
+            "description": "Emergency puncture repair and tyre fitting at your location. Same-day available."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Logbook Service",
+            "description": "Maintain your new car warranty with a convenient logbook service at your home or office."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Brake Repair",
+            "description": "Professional brake pad replacement, rotor inspection and brake fluid flush."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Car Battery Replacement",
+            "description": "On-site car battery testing and replacement using top quality brands."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Yearly Car Service",
+            "description": "Comprehensive yearly service to extend the life of your vehicle."
+          }
+        }
+      ]
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://www.autocareonwheels.com.au/#website",
+    "url": "https://www.autocareonwheels.com.au",
+    "name": "AutoCare on Wheels",
+    "description": "Mobile mechanic Canberra — tyre fitting, logbook servicing, brakes & repairs at your door.",
+    "publisher": { "@id": "https://www.autocareonwheels.com.au/#business" },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://www.autocareonwheels.com.au/services/category/{search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does AutoCare on Wheels work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply book online or call us on 0427563913. Our qualified mobile mechanic will come to your home, office or roadside location in Canberra or Queanbeyan at your chosen time."
         }
       },
       {
-        "@type": "WebSite",
-        "@id": "https://www.autocareonwheels.com.au/#website",
-        "url": "https://www.autocareonwheels.com.au",
-        "name": "AutoCare on Wheels",
-        "description": "Mobile mechanic Canberra — tyre fitting, logbook servicing, brakes & repairs at your door.",
-        "publisher": { "@id": "https://www.autocareonwheels.com.au/#business" },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://www.autocareonwheels.com.au/services/category/{search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
+        "@type": "Question",
+        "name": "Do you supply and fit tyres in Canberra?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! We supply and fit tyres from 30+ top brands including Michelin, Bridgestone, Goodyear, Pirelli and more. We come to you — no need to visit a tyre shop."
         }
       },
       {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How does AutoCare on Wheels work?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Simply book online or call us on 0427563913. Our qualified mobile mechanic will come to your home, office or roadside location in Canberra or Queanbeyan at your chosen time."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Do you supply and fit tyres in Canberra?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes! We supply and fit tyres from 30+ top brands including Michelin, Bridgestone, Goodyear, Pirelli and more. We come to you — no need to visit a tyre shop."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can you repair a flat tyre on the roadside?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Absolutely. Our mobile mechanics can come to you on the road, at home, or at work for emergency flat tyre repairs and fitting. Same-day appointments available."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What areas do you service?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "We currently service Canberra (ACT) and Queanbeyan (NSW), including all suburbs."
-            }
-          }
-        ]
+        "@type": "Question",
+        "name": "Can you repair a flat tyre on the roadside?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Our mobile mechanics can come to you on the road, at home, or at work for emergency flat tyre repairs and fitting. Same-day appointments available."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What areas do you service?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We currently service Canberra (ACT) and Queanbeyan (NSW), including all suburbs."
+        }
       }
     ]
   }

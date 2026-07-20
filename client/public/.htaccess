@@ -8,3 +8,29 @@ RewriteRule ^ - [L]
 
 # SPA fallback for React Router routes
 RewriteRule ^ index.html [L]
+
+# Security Headers
+<IfModule mod_headers.c>
+  # Protect against clickjacking by denying frame embedding
+  Header set X-Frame-Options "DENY"
+
+  # Prevent MIME-type sniffing
+  Header set X-Content-Type-Options "nosniff"
+
+  # Enable HTTP Strict Transport Security (HSTS) for 1 year (31536000 seconds) including subdomains and preloading
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # Protect against XSS attacks
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Caching & MIME types configuration
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType image/svg+xml .svg
+  AddType image/x-icon .ico
+  AddType image/png .png
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest manifest.json
+</IfModule>

@@ -392,6 +392,9 @@ const Booking = () => {
       <Navbar />
       <Toast {...toast} onClose={() => setToast({ ...toast, show: false })} />
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 pt-28 pb-20">
+        <h1 className="text-3xl sm:text-4xl font-black text-primary mb-6 tracking-tight text-center sm:text-left">
+          Book a Mobile Service
+        </h1>
 
         {/* Call Now Banner */}
         <a href={`tel:${BUSINESS_PHONE}`}
