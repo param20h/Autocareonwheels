@@ -470,7 +470,7 @@ const Booking = () => {
                           <AlertCircle size={16} className="text-amber-500 flex-shrink-0 mt-0.5" />
                           <div className="text-xs text-amber-700">
                             <span className="font-bold">Have your tyre size ready</span> — e.g. <span className="font-mono font-bold">205/55 R16</span>. You can find it on your tyre sidewall or in your car's manual.{' '}
-                            <Link to="/services/category/tyres" className="underline font-bold">Check our tyre brands →</Link>
+                            <Link to="/services/tyres" className="underline font-bold">Check our tyre brands →</Link>
                           </div>
                         </div>
                       )}

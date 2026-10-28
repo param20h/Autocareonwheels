@@ -119,7 +119,7 @@ const Home = () => {
               loop
               colors={['#c0392b', '#e74c3c', '#ff6b6b']}
             >
-              <Link to="/services/category/tyres"
+              <Link to="/services/tyres"
                 className="group relative block overflow-hidden rounded-[20px] min-h-[220px] sm:min-h-[200px]">
                 {/* Background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#1a0a0a] via-[#1a1a1a] to-[#0f0f0f]" />
@@ -155,7 +155,7 @@ const Home = () => {
             {[
               {
                 title: 'Car Services',
-                link: '/services/category/car-services',
+                link: '/services/car-services',
                 badge: 'Logbook & Yearly',
                 desc: 'Logbook servicing, yearly maintenance, pre-purchase inspections and diagnostic checks — all at your door.',
                 cta: 'Explore Car Services →',
@@ -169,7 +169,7 @@ const Home = () => {
               },
               {
                 title: 'Repairs',
-                link: '/services/category/repairs',
+                link: '/services/repairs',
                 badge: 'Brakes · Battery · More',
                 desc: 'Expert troubleshooting and repairs for brakes, batteries, alternators, air conditioning and engine components.',
                 cta: 'Explore Repairs →',

@@ -97,11 +97,11 @@ const Navbar = () => {
 
               {/* Main Desktop Links */}
               <div className="hidden lg:flex items-center space-x-6 ml-auto">
-                <Link to="/services/category/car-services" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all uppercase tracking-wider">Car Services</Link>
-                <Link to="/services/category/repairs" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all uppercase tracking-wider">Repairs</Link>
-                <Link to="/services/category/tyres" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all uppercase tracking-wider">Tyres</Link>
+                <Link to="/services/car-services" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all uppercase tracking-wider">Car Services</Link>
+                <Link to="/services/repairs" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all uppercase tracking-wider">Repairs</Link>
+                <Link to="/services/tyres" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all uppercase tracking-wider">Tyres</Link>
 
-                <a href="/#contact" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all">Contact</a>
+                <Link to="/contact" className="text-sm font-bold text-gray-300 hover:text-white hover:-translate-y-0.5 transition-all uppercase tracking-wider">Contact</Link>
 
                 {isAuthenticated ? (
                   <span className="flex items-center space-x-4 border-l border-gray-700 pl-6">
@@ -145,11 +145,11 @@ const Navbar = () => {
           {mobileOpen && (
             <div className="lg:hidden bg-primary border-t border-gray-800 shadow-xl animate-in fade-in slide-in-from-top-2 duration-300">
               <div className="px-6 py-6 space-y-4">
-                <Link to="/services/category/car-services" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Car Services</Link>
-                <Link to="/services/category/repairs" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Repairs</Link>
-                <Link to="/services/category/tyres" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Tyres</Link>
+                <Link to="/services/car-services" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Car Services</Link>
+                <Link to="/services/repairs" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Repairs</Link>
+                <Link to="/services/tyres" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Tyres</Link>
 
-                <a href="/#contact" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Contact</a>
+                <Link to="/contact" onClick={() => setMobileOpen(false)} className="block text-silver font-semibold hover:text-white transition-colors">Contact Us</Link>
 
                 <hr className="border-gray-800" />
 

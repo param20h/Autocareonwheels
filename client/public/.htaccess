@@ -1,6 +1,12 @@
 Options -MultiViews
 RewriteEngine On
 
+# 301 Redirect old category URLs to clean service URLs
+RewriteRule ^services/category/(.*)$ /services/$1 [R=301,L]
+
+# 301 Redirect legacy contact-us to contact
+RewriteRule ^contact-us/?$ /contact [R=301,L]
+
 # Serve existing files/directories directly
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

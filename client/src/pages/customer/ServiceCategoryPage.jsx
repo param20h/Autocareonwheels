@@ -3,8 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BorderGlow from '../../components/BorderGlow';
-import { Wrench, Droplets, Settings, CheckCircle, Shield, Clock, ArrowLeft, Search, Star, Truck, Phone } from 'lucide-react';
+import { Wrench, Droplets, Settings, CheckCircle, Shield, Clock, ArrowLeft, Search, Star, Truck, Phone, ArrowRight } from 'lucide-react';
 import api from '../../api/axios';
+import { SERVICES_DATA, SERVICE_CATEGORIES } from '../../data/servicesData';
 
 const TYRE_BRANDS = [
   'Accelera', 'Achilles', 'Atturo', 'BF Goodrich', 'Bridgestone',
@@ -21,6 +22,7 @@ const TYRE_PROFILES = ['30', '35', '40', '45', '50', '55', '60', '65', '70', '75
 const RIM_SIZES = ['13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '24'];
 
 const BUSINESS_PHONE = '0427563913';
+const BUSINESS_PHONE_FORMATTED = '0427 563 913';
 
 const TyreSizeSearch = () => {
   const navigate = useNavigate();
@@ -30,7 +32,6 @@ const TyreSizeSearch = () => {
 
   const handleSearch = () => {
     if (!width || !profile || !rim) return;
-    // Pass tyre size in URL so booking skips Step 2
     navigate(`/book?service=5&step=3&tw=${width}&tp=${profile}&tr=${rim}`);
   };
 
@@ -55,7 +56,6 @@ const TyreSizeSearch = () => {
         </div>
       </div>
 
-      {/* Dropdowns — 1 col on tiny phones, 3 col from sm up */}
       <div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-3 mb-5">
         <div>
           <label className="block text-white/80 text-xs font-bold mb-1.5 uppercase tracking-wide">Width (mm)</label>
@@ -94,7 +94,7 @@ const TyreSizeSearch = () => {
       <p className="text-white/50 text-xs text-center mt-3">Or call us directly for same-day fitment</p>
       <a href={`tel:${BUSINESS_PHONE}`}
         className="flex items-center justify-center gap-2 mt-3 bg-green-500 hover:bg-green-400 active:scale-95 text-white font-bold py-3 rounded-xl transition-all">
-        📞 Call Now — {BUSINESS_PHONE}
+        📞 Call Now — {BUSINESS_PHONE_FORMATTED}
       </a>
     </div>
   );
@@ -129,7 +129,7 @@ const FlatTyreCTA = () => (
       <p className="text-gray-400 text-sm">Got a flat right now? Our mobile mechanics come to you — on the road, at home, or at work.</p>
     </div>
     <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto flex-shrink-0">
-      <a href="tel:0427563913"
+      <a href={`tel:${BUSINESS_PHONE}`}
         className="w-full sm:w-auto bg-green-600 hover:bg-green-500 active:scale-95 text-white px-6 py-3.5 rounded-xl font-bold transition-all text-center">
         📞 Call Now
       </a>
@@ -141,7 +141,6 @@ const FlatTyreCTA = () => (
   </div>
 );
 
-// Map brand name → image filename in /brands/
 const BRAND_IMAGES = {
   'Accelera': 'accelera.png',
   'Achilles': 'achilles.png',
@@ -179,8 +178,8 @@ const BRAND_IMAGES = {
 
 const BrandLogoGrid = () => (
   <div className="mb-12">
-    <h2 className="text-xl sm:text-2xl font-extrabold text-black mb-2">Brands We Supply &amp; Fit</h2>
-    <p className="text-gray-500 text-sm mb-6">We source and install tyres from all major brands at your location.</p>
+    <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">Brands We Supply &amp; Fit</h2>
+    <p className="text-gray-400 text-sm mb-6">We source and install tyres from all major brands at your location.</p>
     <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
       {TYRE_BRANDS.map(brand => {
         const imgFile = BRAND_IMAGES[brand];
@@ -192,11 +191,11 @@ const BrandLogoGrid = () => (
                 src={`/brands/${imgFile}`}
                 alt={brand}
                 className="h-8 sm:h-10 w-auto object-contain max-w-full grayscale group-hover:grayscale-0 transition-all duration-300"
-                onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+                onError={e => { e.target.style.display = 'none'; if (e.target.nextSibling) e.target.nextSibling.style.display = 'block'; }}
               />
             ) : null}
             <span
-              className="text-gray-500 group-hover:text-primary text-[9px] sm:text-[10px] font-bold text-center leading-tight transition-colors"
+              className="text-gray-700 group-hover:text-primary text-[9px] sm:text-[10px] font-bold text-center leading-tight transition-colors"
               style={imgFile ? { display: 'none' } : {}}
             >{brand}</span>
           </div>
@@ -206,37 +205,31 @@ const BrandLogoGrid = () => (
   </div>
 );
 
-const ServiceCategoryPage = () => {
-  const { categoryName } = useParams();
+const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
+  const params = useParams();
+  const rawCategory = propCategoryName || params.categoryName || '';
   const [dbServices, setDbServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const serviceIcons = [Droplets, Settings, CheckCircle, Wrench, Shield, Clock];
 
-  const hardcodedData = {
-    'car services': [
-      { name: 'Logbook Service', description: 'The convenient way to maintain your new car warranty.', price: 249 },
-      { name: 'Yearly Service', description: 'Extend the life of your vehicle without the hassle of a garage.', price: 189 },
-      { name: 'Pre-purchase Inspection', description: 'Drive away confident. Book a roadworthiness report by a qualified mechanic.', price: 149 }
-    ],
-    'repairs': [
-      { name: 'Car Battery', description: 'Every AutoCare van stocks the highest quality battery brands.', price: 199 },
-      { name: 'Brakes', description: 'Quality brake repairs to keep you safe on the road.', price: 220 },
-      { name: 'Alternator', description: 'Alternator testing and replacement services.', price: 350 },
-      { name: 'Starter Motor', description: 'Complete diagnostics and fitting for starter motors.', price: 280 },
-      { name: 'Timing System', description: 'Timing belt and water pump replacements.', price: 450 },
-      { name: 'Cooling System', description: 'Radiator testing, water pump repairs, and cooling flushes.', price: 180 },
-      { name: 'Car Air-Conditioning', description: 'Air-con re-gas and general climate control repairs.', price: 169 },
-      { name: 'Drive Belt', description: 'Inspection and replacement of drive and serpentine belts.', price: 120 },
-      { name: 'Clutch', description: 'Clutch replacements and diagnostic services.', price: 650 },
-      { name: 'Fuel System', description: 'Injection cleaning, fuel pumps, and system repairs.', price: 210 },
-      { name: 'CV Shaft', description: 'CV joint and drive shaft repairs for smoother driving.', price: 300 }
-    ],
-    'tyres': []
+  const formattedCategory = rawCategory.replace(/-/g, ' ').toLowerCase();
+  const isTyres = formattedCategory === 'tyres';
+  const categorySlug = formattedCategory === 'car services' ? 'car-services' : formattedCategory;
+
+  // Find category metadata
+  const categoryConfig = SERVICE_CATEGORIES.find(c => c.slug === categorySlug) || {
+    name: rawCategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+    title: `${rawCategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} | AutoCare on Wheels Canberra`,
+    description: `Professional ${formattedCategory} in Canberra by AutoCare on Wheels mobile mechanics.`,
+    heroDescription: `Explore our professional ${formattedCategory} delivered directly to your driveway or workplace.`
   };
 
-  const formattedCategory = categoryName.replace(/-/g, ' ').toLowerCase();
-  const isTyres = formattedCategory === 'tyres';
-  const services = dbServices.length > 0 ? dbServices : (hardcodedData[formattedCategory] || []);
+  // Get services from structured data matching this category
+  const staticServices = SERVICES_DATA.filter(s => s.category === categorySlug);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [rawCategory]);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -260,45 +253,53 @@ const ServiceCategoryPage = () => {
       }
     };
     fetchServices();
-  }, [categoryName, isTyres, formattedCategory]);
+  }, [rawCategory, isTyres, formattedCategory]);
 
-  const displayName = categoryName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-
-  // Dynamic SEO per category
+  // SEO Updates
   useEffect(() => {
-    const titles = {
-      tyres: 'Tyre Supply & Fitting Canberra | AutoCare on Wheels — 30+ Brands',
-      'car services': 'Car Servicing Canberra | Logbook & Yearly Service | AutoCare on Wheels',
-      repairs: 'Mobile Car Repairs Canberra | Brakes, Battery, Alternator | AutoCare on Wheels',
-    };
-    const descs = {
-      tyres: 'Buy and fit tyres in Canberra from 30+ brands including Michelin, Bridgestone and Pirelli. We come to you — mobile tyre fitting service in ACT & Queanbeyan.',
-      'car services': 'Logbook services, yearly car servicing and pre-purchase inspections in Canberra. Qualified mobile mechanics who come to your home or workplace.',
-      repairs: 'Mobile car repairs in Canberra — brakes, batteries, alternators, air conditioning and more. Same-day appointments available. Call 0427563913.',
-    };
-    document.title = titles[formattedCategory] || `${displayName} | AutoCare on Wheels Canberra`;
+    document.title = categoryConfig.title;
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', descs[formattedCategory] || `Professional ${displayName.toLowerCase()} in Canberra and Queanbeyan by AutoCare on Wheels.`);
-  }, [formattedCategory, displayName]);
+    if (metaDesc) {
+      metaDesc.setAttribute('content', categoryConfig.description);
+    }
+
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      canonical.setAttribute('href', `https://www.autocareonwheels.com.au/services/${categorySlug}`);
+    }
+  }, [categoryConfig, categorySlug]);
+
+  // Combine DB & static rich services
+  const displayServices = staticServices.length > 0 ? staticServices : dbServices;
 
   return (
     <div className="bg-background min-h-screen font-sans selection:bg-accent selection:text-white flex flex-col">
       <Navbar />
       <main className="flex-grow pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <Link to="/" className="inline-flex items-center text-sm font-bold text-gray-400 hover:text-white transition-colors group">
             <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <Link to="/services/car-services" className={`hover:text-white transition-colors ${categorySlug === 'car-services' ? 'text-accent font-bold' : ''}`}>Car Services</Link>
+            <span>&bull;</span>
+            <Link to="/services/repairs" className={`hover:text-white transition-colors ${categorySlug === 'repairs' ? 'text-accent font-bold' : ''}`}>Repairs</Link>
+            <span>&bull;</span>
+            <Link to="/services/tyres" className={`hover:text-white transition-colors ${categorySlug === 'tyres' ? 'text-accent font-bold' : ''}`}>Tyres</Link>
+          </div>
         </div>
 
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-primary mb-4 capitalize">{displayName}</h1>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            {isTyres
-              ? 'Supply and fit of premium tyres from 30+ top brands — delivered and installed at your location.'
-              : `Explore our professional ${displayName.toLowerCase()} delivered directly to you.`}
+        <div className="text-center mb-14">
+          <span className="inline-flex items-center gap-1.5 bg-accent/15 text-accent text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-3 border border-accent/20">
+            <Truck size={14} /> Mobile Service Across Canberra &amp; ACT
+          </span>
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 capitalize">
+            {categoryConfig.name}
+          </h1>
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            {categoryConfig.heroDescription}
           </p>
         </div>
 
@@ -309,52 +310,83 @@ const ServiceCategoryPage = () => {
             <FlatTyreCTA />
             <BrandLogoGrid />
           </>
-        ) : loading ? (
+        ) : loading && displayServices.length === 0 ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
           </div>
-        ) : services.length === 0 ? (
+        ) : displayServices.length === 0 ? (
           <div className="text-center py-20 text-gray-400 font-medium">
-            No services currently listed under {displayName}. Check back soon!
+            No services currently listed under {categoryConfig.name}. Check back soon!
           </div>
         ) : (
           <>
             <TrustBadges />
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, idx) => {
-              const Icon = serviceIcons[idx % serviceIcons.length];
-              return (
-                <BorderGlow
-                  key={service.id || idx}
-                  edgeSensitivity={33}
-                  glowColor="0 80 60"
-                  backgroundColor="#1a1a1a"
-                  borderRadius={16}
-                  glowRadius={48}
-                  glowIntensity={2.0}
-                  coneSpread={28}
-                  animated
-                  loop
-                  colors={['#c0392b', '#e74c3c', '#ff6b6b']}
-                >
-                  <Link to={service.id ? `/book?service=${service.id}` : '/book'}
-                    className="p-8 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden block h-full flex flex-col">
-                    <div className="bg-[#2A2A2A] w-14 h-14 rounded-full flex items-center justify-center shadow-sm mb-6 group-hover:bg-accent transition-colors border border-gray-700">
-                      <Icon className="h-7 w-7 text-silver group-hover:text-white" />
+              {displayServices.map((service, idx) => {
+                const Icon = serviceIcons[idx % serviceIcons.length];
+                const serviceSlug = service.slug || service.id;
+                const detailUrl = service.slug ? `/services/${service.slug}` : `/services/${service.id}`;
+                const bookingUrl = `/book?service=${service.dbId || service.id || ''}`;
+
+                return (
+                  <BorderGlow
+                    key={service.slug || service.id || idx}
+                    edgeSensitivity={33}
+                    glowColor="0 80 60"
+                    backgroundColor="#1a1a1a"
+                    borderRadius={16}
+                    glowRadius={48}
+                    glowIntensity={2.0}
+                    coneSpread={28}
+                    animated
+                    loop
+                    colors={['#c0392b', '#e74c3c', '#ff6b6b']}
+                  >
+                    <div className="p-8 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden h-full flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="bg-[#2A2A2A] w-14 h-14 rounded-full flex items-center justify-center shadow-sm group-hover:bg-accent transition-colors border border-gray-700">
+                            <Icon className="h-7 w-7 text-silver group-hover:text-white" />
+                          </div>
+                          <div className="text-right">
+                            <span className="text-[11px] text-gray-400 font-bold uppercase block">From</span>
+                            <span className="text-2xl font-black text-accent">${service.price}</span>
+                          </div>
+                        </div>
+
+                        <h3 className="text-2xl font-bold text-white mb-3">
+                          <Link to={detailUrl} className="hover:text-accent transition-colors">
+                            {service.shortTitle || service.name}
+                          </Link>
+                        </h3>
+
+                        <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3 text-sm">
+                          {service.metaDescription || service.description || (service.lead && service.lead[0])}
+                        </p>
+                      </div>
+
+                      <div className="mt-auto border-t border-gray-800/80 pt-4 flex items-center justify-between gap-3">
+                        <Link
+                          to={detailUrl}
+                          className="inline-flex items-center text-sm font-bold text-gray-300 hover:text-white group/link"
+                        >
+                          <span>Full Details</span>
+                          <ArrowRight size={14} className="ml-1 text-accent group-hover/link:translate-x-1 transition-transform" />
+                        </Link>
+
+                        <Link
+                          to={bookingUrl}
+                          className="bg-accent hover:bg-red-700 text-white text-xs font-extrabold px-4 py-2 rounded-lg transition-colors"
+                        >
+                          Book Now
+                        </Link>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-3">{service.name}</h3>
-                    <p className="text-silver mb-8 leading-relaxed flex-grow">{service.description}</p>
-                    <div className="mt-auto">
-                      {service.addons?.length > 0 && (
-                        <p className="text-xs text-accent font-bold mb-2">{service.addons.length} add-ons available</p>
-                      )}
-                      <div className="text-accent font-bold text-lg">Book a Quote →</div>
-                    </div>
-                  </Link>
-                </BorderGlow>
-              );
-            })}
-          </div>
+                  </BorderGlow>
+                );
+              })}
+            </div>
           </>
         )}
       </main>

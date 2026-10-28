@@ -30,6 +30,7 @@ const adminRoutes = require('./routes/admin.routes');
 const userRoutes = require('./routes/user.routes');
 const mechanicRoutes = require('./routes/mechanic.routes');
 const settingRoutes = require('./routes/setting.routes');
+const contactRoutes = require('./routes/contact.routes');
 
 // Routes will be mounted here
 app.use('/api/v1/auth', authRateLimiter, authRoutes);
@@ -39,6 +40,7 @@ app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/mechanics', mechanicRoutes);
 app.use('/api/v1/settings', settingRoutes);
+app.use('/api/v1/contact', contactRoutes);
 
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({ success: true, message: 'Server is running successfully!', data: {} });
