@@ -36,7 +36,7 @@ const ICON_MAP = {
 const ServicePage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const [openFaq, setOpenFaq] = useState(0); // open first FAQ by default
+  const [openFaq, setOpenFaq] = useState(0);
 
   const service = getServiceBySlug(slug);
 
@@ -99,8 +99,6 @@ const ServicePage = () => {
           ],
           'offers': {
             '@type': 'Offer',
-            'price': service.price,
-            'priceCurrency': 'AUD',
             'availability': 'https://schema.org/InStock',
             'url': `https://www.autocareonwheels.com.au/services/${service.slug}`
           }
@@ -157,8 +155,8 @@ const ServicePage = () => {
       <div className="min-h-screen bg-background flex flex-col font-sans">
         <Navbar />
         <main className="flex-1 max-w-4xl mx-auto w-full px-4 pt-36 pb-20 text-center">
-          <h1 className="text-3xl font-extrabold text-white mb-4">Service Page Not Found</h1>
-          <p className="text-gray-400 mb-8">The service you're looking for doesn't exist or has moved.</p>
+          <h1 className="text-3xl font-extrabold text-primary mb-4">Service Page Not Found</h1>
+          <p className="text-gray-600 mb-8">The service you're looking for doesn't exist or has moved.</p>
           <div className="flex justify-center gap-4">
             <Link to="/services/car-services" className="bg-accent text-white px-6 py-3 rounded-xl font-bold">
               View Car Services
@@ -185,16 +183,16 @@ const ServicePage = () => {
       <Navbar />
 
       <main className="flex-grow pt-28 sm:pt-32 pb-20">
-        {/* Breadcrumb Navigation */}
+        {/* Breadcrumb Navigation - readable dark text on light background */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-          <nav className="flex items-center text-xs font-semibold text-gray-400 space-x-2 overflow-x-auto whitespace-nowrap py-1">
-            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+          <nav className="flex items-center text-xs font-semibold text-gray-500 space-x-2 overflow-x-auto whitespace-nowrap py-1">
+            <Link to="/" className="text-gray-600 hover:text-primary transition-colors">Home</Link>
             <span>/</span>
-            <Link to={`/services/${service.category}`} className="hover:text-white transition-colors">
+            <Link to={`/services/${service.category}`} className="text-gray-600 hover:text-primary transition-colors">
               {service.categoryName}
             </Link>
             <span>/</span>
-            <span className="text-white">{service.shortTitle}</span>
+            <span className="text-primary font-bold">{service.shortTitle}</span>
           </nav>
         </div>
 
@@ -218,10 +216,11 @@ const ServicePage = () => {
                 {service.title}
               </h1>
 
+              {/* Service Highlights (No Prices) */}
               <div className="flex flex-wrap items-baseline gap-4 sm:gap-6 mb-8">
                 <div>
-                  <span className="text-gray-400 text-xs font-bold uppercase tracking-wider block">Starting from</span>
-                  <span className="text-3xl sm:text-4xl font-black text-accent">${service.price}</span>
+                  <span className="text-gray-400 text-xs font-bold uppercase tracking-wider block">Service Type</span>
+                  <span className="text-xl sm:text-2xl font-extrabold text-white">Mobile Onsite</span>
                 </div>
                 <div className="h-8 w-px bg-gray-800 hidden sm:block" />
                 <div>
@@ -232,6 +231,11 @@ const ServicePage = () => {
                 <div>
                   <span className="text-gray-400 text-xs font-bold uppercase tracking-wider block">Location</span>
                   <span className="text-xl sm:text-2xl font-extrabold text-green-400">At Your Door</span>
+                </div>
+                <div className="h-8 w-px bg-gray-800 hidden sm:block" />
+                <div>
+                  <span className="text-gray-400 text-xs font-bold uppercase tracking-wider block">Pricing</span>
+                  <span className="text-xl sm:text-2xl font-extrabold text-accent">Free Quote</span>
                 </div>
               </div>
 
@@ -310,7 +314,7 @@ const ServicePage = () => {
                   </div>
                   <div className="flex items-center gap-2.5">
                     <CheckCircle size={16} className="text-green-400 flex-shrink-0" />
-                    <span>12-Month / 20,000 km warranty</span>
+                    <span>Prompt mobile service at your location</span>
                   </div>
                 </div>
               </div>
@@ -339,7 +343,6 @@ const ServicePage = () => {
 
                       <div className="space-y-3.5 text-gray-300 leading-relaxed text-sm sm:text-base">
                         {sec.paragraphs && sec.paragraphs.map((p, pIdx) => {
-                          // Check if paragraph contains bullet pattern (e.g. "Label: Description")
                           const isBulletLike = p.includes(': ') && p.length < 240 && !p.startsWith('http');
                           if (isBulletLike) {
                             const [bulletTitle, ...bulletRest] = p.split(': ');
@@ -424,33 +427,33 @@ const ServicePage = () => {
                   </Link>
                   <a
                     href={`tel:${BUSINESS_PHONE}`}
-                    className="bg-black/30 hover:bg-black/40 text-white font-extrabold px-8 py-3.5 rounded-xl border border-white/30 transition-transform active:scale-95"
+                    className="bg-black/30 hover:bg-black/40 text-white font-extrabold px-8 py-3.5 rounded-xl border border-white/30 transition-transform active:scale-95 inline-flex items-center justify-center gap-2"
                   >
-                    📞 Call 0427 563 913
+                    <Phone size={18} />
+                    <span>Call {BUSINESS_PHONE_FORMATTED}</span>
                   </a>
                 </div>
               </div>
 
             </div>
 
-            {/* Right Column: Sticky Booking & Support Sidebar */}
+            {/* Right Column: Sticky Support Sidebar (No Prices) */}
             <div className="lg:col-span-4 space-y-6">
 
               {/* Sticky Card */}
               <div className="bg-[#181818] border border-gray-800 rounded-2xl p-6 sm:p-8 sticky top-28 shadow-xl space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-400 text-xs uppercase tracking-wider font-bold">Estimated Cost</span>
+                    <span className="text-gray-400 text-xs uppercase tracking-wider font-bold">Service Quote</span>
                     <span className="text-green-400 text-xs font-bold flex items-center gap-1">
                       <CheckCircle size={12} /> Mobile Service
                     </span>
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-white">${service.price}</span>
-                    <span className="text-gray-400 text-xs">starting estimate</span>
+                    <span className="text-2xl font-black text-white">Free Upfront Quote</span>
                   </div>
-                  <p className="text-gray-400 text-xs mt-1">
-                    *Final price varies depending on vehicle make, engine size and specific parts/oil required.
+                  <p className="text-gray-400 text-xs mt-1.5 leading-relaxed">
+                    Customised to your vehicle's make, model, and manufacturer specifications.
                   </p>
                 </div>
 
@@ -487,10 +490,6 @@ const ServicePage = () => {
                     <span className="text-gray-500 font-medium">Service Area:</span>
                     <span className="font-bold text-white">Canberra &amp; Queanbeyan</span>
                   </div>
-                  <div className="flex justify-between py-1 border-b border-gray-800/50">
-                    <span className="text-gray-500 font-medium">Warranty:</span>
-                    <span className="font-bold text-green-400">12 Mo / 20,000 km</span>
-                  </div>
                   <div className="flex justify-between py-1">
                     <span className="text-gray-500 font-medium">Parts &amp; Oil:</span>
                     <span className="font-bold text-white">OEM-Grade Approved</span>
@@ -513,7 +512,7 @@ const ServicePage = () => {
 
               </div>
 
-              {/* Related Services in Same Category */}
+              {/* Related Services in Same Category (No Prices) */}
               {relatedServices.length > 0 && (
                 <div className="bg-[#181818] border border-gray-800 rounded-2xl p-6">
                   <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4">
@@ -530,7 +529,9 @@ const ServicePage = () => {
                           <span className="font-bold text-white text-sm group-hover:text-accent transition-colors">
                             {rel.shortTitle}
                           </span>
-                          <span className="text-xs font-bold text-accent">${rel.price}</span>
+                          <span className="text-xs font-bold text-gray-400 group-hover:text-accent flex items-center gap-1">
+                            Details <ArrowRight size={12} />
+                          </span>
                         </div>
                         <p className="text-gray-400 text-xs mt-1 line-clamp-1">
                           {rel.metaDescription || rel.title}

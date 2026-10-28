@@ -94,7 +94,8 @@ const TyreSizeSearch = () => {
       <p className="text-white/50 text-xs text-center mt-3">Or call us directly for same-day fitment</p>
       <a href={`tel:${BUSINESS_PHONE}`}
         className="flex items-center justify-center gap-2 mt-3 bg-green-500 hover:bg-green-400 active:scale-95 text-white font-bold py-3 rounded-xl transition-all">
-        📞 Call Now — {BUSINESS_PHONE_FORMATTED}
+        <Phone size={18} />
+        <span>Call Now — {BUSINESS_PHONE_FORMATTED}</span>
       </a>
     </div>
   );
@@ -130,8 +131,9 @@ const FlatTyreCTA = () => (
     </div>
     <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto flex-shrink-0">
       <a href={`tel:${BUSINESS_PHONE}`}
-        className="w-full sm:w-auto bg-green-600 hover:bg-green-500 active:scale-95 text-white px-6 py-3.5 rounded-xl font-bold transition-all text-center">
-        📞 Call Now
+        className="w-full sm:w-auto bg-green-600 hover:bg-green-500 active:scale-95 text-white px-6 py-3.5 rounded-xl font-bold transition-all text-center inline-flex items-center justify-center gap-2">
+        <Phone size={18} />
+        <span>Call Now</span>
       </a>
       <Link to="/book?service=5&step=2"
         className="w-full sm:w-auto bg-accent text-white px-6 py-3.5 rounded-xl font-bold hover:bg-accent/90 active:scale-95 transition-all text-center">
@@ -178,8 +180,8 @@ const BRAND_IMAGES = {
 
 const BrandLogoGrid = () => (
   <div className="mb-12">
-    <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">Brands We Supply &amp; Fit</h2>
-    <p className="text-gray-400 text-sm mb-6">We source and install tyres from all major brands at your location.</p>
+    <h2 className="text-xl sm:text-2xl font-extrabold text-primary mb-2">Brands We Supply &amp; Fit</h2>
+    <p className="text-gray-600 text-sm mb-6">We source and install tyres from all major brands at your location.</p>
     <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
       {TYRE_BRANDS.map(brand => {
         const imgFile = BRAND_IMAGES[brand];
@@ -277,28 +279,30 @@ const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
       <Navbar />
       <main className="flex-grow pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
-        <div className="mb-6 flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center text-sm font-bold text-gray-400 hover:text-white transition-colors group">
+        {/* Top Navigation & Breadcrumbs */}
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <Link to="/" className="inline-flex items-center text-sm font-bold text-gray-600 hover:text-primary transition-colors group">
             <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
-          <div className="flex items-center gap-2 text-xs text-gray-400">
-            <Link to="/services/car-services" className={`hover:text-white transition-colors ${categorySlug === 'car-services' ? 'text-accent font-bold' : ''}`}>Car Services</Link>
+          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500">
+            <Link to="/services/car-services" className={`hover:text-primary transition-colors ${categorySlug === 'car-services' ? 'text-accent font-bold' : ''}`}>Car Services</Link>
             <span>&bull;</span>
-            <Link to="/services/repairs" className={`hover:text-white transition-colors ${categorySlug === 'repairs' ? 'text-accent font-bold' : ''}`}>Repairs</Link>
+            <Link to="/services/repairs" className={`hover:text-primary transition-colors ${categorySlug === 'repairs' ? 'text-accent font-bold' : ''}`}>Repairs</Link>
             <span>&bull;</span>
-            <Link to="/services/tyres" className={`hover:text-white transition-colors ${categorySlug === 'tyres' ? 'text-accent font-bold' : ''}`}>Tyres</Link>
+            <Link to="/services/tyres" className={`hover:text-primary transition-colors ${categorySlug === 'tyres' ? 'text-accent font-bold' : ''}`}>Tyres</Link>
           </div>
         </div>
 
+        {/* Section Header with high contrast readable dark text on light background */}
         <div className="text-center mb-14">
-          <span className="inline-flex items-center gap-1.5 bg-accent/15 text-accent text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-3 border border-accent/20">
+          <span className="inline-flex items-center gap-1.5 bg-accent/10 text-accent text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-3 border border-accent/20">
             <Truck size={14} /> Mobile Service Across Canberra &amp; ACT
           </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 capitalize">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-primary mb-4 capitalize tracking-tight">
             {categoryConfig.name}
           </h1>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             {categoryConfig.heroDescription}
           </p>
         </div>
@@ -315,7 +319,7 @@ const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
           </div>
         ) : displayServices.length === 0 ? (
-          <div className="text-center py-20 text-gray-400 font-medium">
+          <div className="text-center py-20 text-gray-500 font-medium">
             No services currently listed under {categoryConfig.name}. Check back soon!
           </div>
         ) : (
@@ -325,7 +329,6 @@ const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {displayServices.map((service, idx) => {
                 const Icon = serviceIcons[idx % serviceIcons.length];
-                const serviceSlug = service.slug || service.id;
                 const detailUrl = service.slug ? `/services/${service.slug}` : `/services/${service.id}`;
                 const bookingUrl = `/book?service=${service.dbId || service.id || ''}`;
 
@@ -350,8 +353,9 @@ const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
                             <Icon className="h-7 w-7 text-silver group-hover:text-white" />
                           </div>
                           <div className="text-right">
-                            <span className="text-[11px] text-gray-400 font-bold uppercase block">From</span>
-                            <span className="text-2xl font-black text-accent">${service.price}</span>
+                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-green-400 bg-green-500/10 px-2.5 py-1 rounded-full border border-green-500/20">
+                              <CheckCircle size={12} /> Mobile Service
+                            </span>
                           </div>
                         </div>
 
@@ -371,15 +375,15 @@ const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
                           to={detailUrl}
                           className="inline-flex items-center text-sm font-bold text-gray-300 hover:text-white group/link"
                         >
-                          <span>Full Details</span>
+                          <span>Full Guide &amp; Details</span>
                           <ArrowRight size={14} className="ml-1 text-accent group-hover/link:translate-x-1 transition-transform" />
                         </Link>
 
                         <Link
                           to={bookingUrl}
-                          className="bg-accent hover:bg-red-700 text-white text-xs font-extrabold px-4 py-2 rounded-lg transition-colors"
+                          className="bg-accent hover:bg-red-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-lg transition-colors"
                         >
-                          Book Now
+                          Book Service
                         </Link>
                       </div>
                     </div>

@@ -70,8 +70,9 @@ const ServiceDetail = () => {
               <p className="text-gray-600 leading-relaxed max-w-xl">{service.description}</p>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-xs text-gray-400 font-bold uppercase">Starting from</p>
-              <p className="text-4xl font-black text-accent">${parseFloat(service.price).toLocaleString()}</p>
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+                <CheckCircle size={14} /> Mobile Service
+              </span>
             </div>
           </div>
         </div>
@@ -90,7 +91,7 @@ const ServiceDetail = () => {
                     </div>
                     <span className="font-semibold text-gray-700">{addon.name}</span>
                   </div>
-                  <span className="font-bold text-accent">+ ${parseFloat(addon.price).toLocaleString()}</span>
+                  <span className="font-bold text-accent text-xs uppercase tracking-wide">Available</span>
                 </div>
               ))}
             </div>
@@ -105,7 +106,6 @@ const ServiceDetail = () => {
               'Certified professional mechanic',
               'Genuine OEM parts & fluids',
               'Doorstep convenience',
-              '30-day service warranty',
               'Digital inspection report',
               'Post-service health check'
             ].map((item, i) => (
@@ -121,7 +121,7 @@ const ServiceDetail = () => {
         <div className="text-center">
           <button onClick={() => navigate('/book')}
             className="bg-primary text-white px-10 py-4 rounded-btn font-bold text-lg hover:bg-accent transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-            Book This Service — ${parseFloat(service.price).toLocaleString()}
+            Book This Service Online
           </button>
         </div>
       </main>

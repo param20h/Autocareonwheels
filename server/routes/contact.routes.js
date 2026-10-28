@@ -57,9 +57,13 @@ router.post('/', async (req, res) => {
       </div>
     `;
 
+    const targetAdminEmail = (process.env.ADMIN_EMAIL && !process.env.ADMIN_EMAIL.includes('@autocare.com'))
+      ? process.env.ADMIN_EMAIL
+      : (process.env.BUSINESS_EMAIL || 'info@autocareonwheels.com.au');
+
     try {
       await sendEmail({
-        to: process.env.ADMIN_EMAIL || 'info@autocareonwheels.com.au',
+        to: targetAdminEmail,
         subject: `New Enquiry from ${name} - ${service || 'General'}`,
         html: emailHtml,
         text: `New Enquiry:\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nVehicle: ${vehicle}\nService: ${service}\nSuburb: ${suburb}\nMessage:\n${message}`

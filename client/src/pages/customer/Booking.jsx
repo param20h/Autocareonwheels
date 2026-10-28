@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone, BookCheck, Wrench, CircleDashed, ShieldCheck, Truck, Car, User, Layers, CalendarClock, ClipboardCheck, Activity, Wind } from 'lucide-react';
+import { CheckCircle2, Clock, MapPin, Loader2, Plus, Check, AlertCircle, Phone, BookCheck, Wrench, CircleDashed, ShieldCheck, Truck, Car, User, Layers, CalendarClock, ClipboardCheck, Activity, Wind, Disc, FileText } from 'lucide-react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import api from '../../api/axios';
 import Navbar from '../../components/Navbar';
@@ -455,7 +455,7 @@ const Booking = () => {
                           <div>
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="font-bold text-primary text-lg">{service.name}</span>
-                              {isTyre && <span className="text-xs bg-accent/10 text-accent font-bold px-2 py-0.5 rounded-full">🛞 Tyre</span>}
+                              {isTyre && <span className="text-xs bg-accent/10 text-accent font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"><Disc size={12} /> Tyre</span>}
                             </div>
                             <p className="text-sm text-gray-500 mt-1">{service.description?.substring(0, 90)}</p>
                           </div>
@@ -784,7 +784,7 @@ const Booking = () => {
               {/* Tyre size — shown only for tyre services */}
               {isTyreService(formData.service) && formData.tyreWidth && formData.tyreProfile && formData.tyreRim && (
                 <div className="flex justify-between border-b border-gray-100 pb-3">
-                  <span className="text-gray-500 font-medium">🛞 Tyre Size</span>
+                  <span className="text-gray-500 font-medium inline-flex items-center gap-1.5"><Disc size={14} className="text-accent" /> Tyre Size</span>
                   <span className="font-bold text-accent text-right font-mono">
                     {formData.tyreWidth}/{formData.tyreProfile} R{formData.tyreRim}
                   </span>
@@ -798,7 +798,7 @@ const Booking = () => {
                 </div>
               )}
               <div className="pt-2 flex items-start gap-2 bg-amber-50 rounded-xl p-3 mt-2">
-                <span className="text-amber-500 text-base">📋</span>
+                <FileText size={16} className="text-amber-500 flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-amber-700">Your invoice will be <strong>provided offline by your mechanic</strong> after the service is completed. No invoice will be emailed to you.</p>
               </div>
             </div>

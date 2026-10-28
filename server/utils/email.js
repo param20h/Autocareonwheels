@@ -24,10 +24,16 @@ const sendEmail = async ({ to, subject, html, text, attachments }) => {
 		throw new Error('SMTP is not configured');
 	}
 
+	// Never deliver to dummy placeholder domain autocare.com (causes nullMX bounce)
+	let recipient = to;
+	if (!recipient || recipient === 'admin@autocare.com' || (typeof recipient === 'string' && recipient.toLowerCase().endsWith('@autocare.com'))) {
+		recipient = process.env.BUSINESS_EMAIL || 'info@autocareonwheels.com.au';
+	}
+
 	const from = process.env.SMTP_FROM || process.env.SMTP_USER;
 	return transporter.sendMail({
 		from,
-		to,
+		to: recipient,
 		bcc: 'autocareonwheels.act@gmail.com',
 		subject,
 		html,

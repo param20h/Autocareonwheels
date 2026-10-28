@@ -132,10 +132,10 @@ const Contact = () => {
             <span className="inline-flex items-center gap-1.5 bg-accent/10 text-accent text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 border border-accent/20">
               <Truck size={14} /> Mobile Mechanic Across ACT &amp; Queanbeyan
             </span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-primary tracking-tight mb-4">
               Get in Touch with AutoCare
             </h1>
-            <p className="text-lg text-gray-400 leading-relaxed">
+            <p className="text-lg text-gray-600 leading-relaxed">
               Have questions, need an urgent quote, or ready to book your mobile mechanic? Call us directly, send an enquiry, or book online — we come straight to your location.
             </p>
           </div>

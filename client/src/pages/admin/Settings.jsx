@@ -204,12 +204,13 @@ const SettingsTab = () => {
           </div>
           
           <div className="flex items-center gap-4 bg-white/90 border border-gray-100 p-4 rounded-card shadow-inner">
-            <span className={`text-base font-black px-4 py-2 rounded-full tracking-wider transition-colors ${
+            <span className={`text-base font-black px-4 py-2 rounded-full tracking-wider transition-colors inline-flex items-center gap-2 ${
               businessStatus === 'OPEN' 
                 ? 'bg-green-100 text-green-800 border border-green-200' 
                 : 'bg-red-100 text-red-800 border border-red-200'
             }`}>
-              {businessStatus === 'OPEN' ? '🟢 ONLINE & OPEN' : '🔴 CLOSED / HOLIDAY'}
+              <span className={`w-2.5 h-2.5 rounded-full ${businessStatus === 'OPEN' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+              <span>{businessStatus === 'OPEN' ? 'ONLINE & OPEN' : 'CLOSED / HOLIDAY'}</span>
             </span>
             <button
               onClick={handleToggleBusinessStatus}
