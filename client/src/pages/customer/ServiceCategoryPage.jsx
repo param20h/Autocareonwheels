@@ -6,6 +6,7 @@ import BorderGlow from '../../components/BorderGlow';
 import { Wrench, Droplets, Settings, CheckCircle, Shield, Clock, ArrowLeft, Search, Star, Truck, Phone, ArrowRight } from 'lucide-react';
 import api from '../../api/axios';
 import { SERVICES_DATA, SERVICE_CATEGORIES } from '../../data/servicesData';
+import useSEO from '../../hooks/useSEO';
 
 const TYRE_BRANDS = [
   'Accelera', 'Achilles', 'Atturo', 'BF Goodrich', 'Bridgestone',
@@ -258,18 +259,11 @@ const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
   }, [rawCategory, isTyres, formattedCategory]);
 
   // SEO Updates
-  useEffect(() => {
-    document.title = categoryConfig.title;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', categoryConfig.description);
-    }
-
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (canonical) {
-      canonical.setAttribute('href', `https://www.autocareonwheels.com.au/services/${categorySlug}`);
-    }
-  }, [categoryConfig, categorySlug]);
+  useSEO({
+    title: categoryConfig.title,
+    description: categoryConfig.description,
+    canonical: `https://www.autocareonwheels.com.au/services/${categorySlug}`
+  });
 
   // Combine DB & static rich services
   const displayServices = staticServices.length > 0 ? staticServices : dbServices;

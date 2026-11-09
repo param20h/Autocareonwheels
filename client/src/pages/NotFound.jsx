@@ -1,8 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, SearchX } from 'lucide-react';
+import useSEO from '../hooks/useSEO';
 
 const NotFound = () => {
+  useSEO({
+    title: '404 - Page Not Found | AutoCare on Wheels',
+    description: 'The requested page could not be found.',
+    noindex: true
+  });
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center font-sans px-4">
       <div className="text-center">

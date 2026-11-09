@@ -20,6 +20,7 @@ import {
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { getServiceBySlug, SERVICES_DATA } from '../../data/servicesData';
+import useSEO from '../../hooks/useSEO';
 
 const BUSINESS_PHONE = '0427563913';
 const BUSINESS_PHONE_FORMATTED = '0427 563 913';
@@ -44,21 +45,14 @@ const ServicePage = () => {
     window.scrollTo(0, 0);
   }, [slug]);
 
+  useSEO({
+    title: service?.metaTitle,
+    description: service?.metaDescription,
+    canonical: service ? `https://www.autocareonwheels.com.au/services/${service.slug}` : undefined
+  });
+
   useEffect(() => {
     if (!service) return;
-
-    // Update document title & meta description
-    document.title = service.metaTitle;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', service.metaDescription);
-    }
-
-    // Canonical link
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (canonical) {
-      canonical.setAttribute('href', `https://www.autocareonwheels.com.au/services/${service.slug}`);
-    }
 
     // Dynamic JSON-LD (Service + FAQPage + Breadcrumbs)
     const scriptId = 'service-jsonld';

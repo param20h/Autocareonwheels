@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import Toast from '../../components/Toast';
 import useAuth from '../../store/useAuth';
+import useSEO from '../../hooks/useSEO';
 
 const AUSTRALIA_CITIES = ['Canberra', 'Queanbeyan'];
 const AUSTRALIA_STATES = ['New South Wales', 'Australian Capital Territory (ACT)'];
@@ -78,8 +79,13 @@ const Booking = () => {
     fetchBookingSettings();
   }, []);
 
+  useSEO({
+    title: 'Book a Mobile Mechanic | AutoCare on Wheels — Canberra & Queanbeyan',
+    description: 'Book a mobile mechanic in Canberra or Queanbeyan online with AutoCare on Wheels. Choose tyre fitting, logbook servicing, or repairs at your location.',
+    canonical: 'https://www.autocareonwheels.com.au/book'
+  });
+
   useEffect(() => {
-    document.title = 'Book a Mobile Mechanic | AutoCare on Wheels — Canberra & Queanbeyan';
     const fetchServices = async () => {
       let list = [];
       try {

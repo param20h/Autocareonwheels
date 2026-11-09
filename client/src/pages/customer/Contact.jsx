@@ -5,6 +5,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import api from '../../api/axios';
 import { SERVICES_DATA } from '../../data/servicesData';
+import useSEO from '../../hooks/useSEO';
 
 const BUSINESS_PHONE = '0427563913';
 const BUSINESS_PHONE_FORMATTED = '0427 563 913';
@@ -25,16 +26,13 @@ const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    document.title = 'Contact Us | AutoCare on Wheels — Mobile Mechanic Canberra';
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        'content',
-        'Contact AutoCare on Wheels for reliable mobile car servicing, mechanical repairs, and tyre fitting across Canberra and Queanbeyan. Call 0427 563 913 or send an enquiry.'
-      );
-    }
+  useSEO({
+    title: 'Contact Us | AutoCare on Wheels — Mobile Mechanic Canberra',
+    description: 'Contact AutoCare on Wheels for reliable mobile car servicing, mechanical repairs, and tyre fitting across Canberra and Queanbeyan. Call 0427 563 913 or send an enquiry.',
+    canonical: 'https://www.autocareonwheels.com.au/contact'
+  });
 
+  useEffect(() => {
     // Dynamic JSON-LD Schema
     const scriptId = 'contact-jsonld';
     let script = document.getElementById(scriptId);

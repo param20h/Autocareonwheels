@@ -1,8 +1,15 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import useSEO from '../../hooks/useSEO';
 
 const PrivacyPolicy = () => {
+  useSEO({
+    title: 'Privacy Policy | AutoCare on Wheels',
+    description: 'Privacy Policy for AutoCare on Wheels. Learn how we handle your personal and vehicle data.',
+    canonical: 'https://www.autocareonwheels.com.au/privacy'
+  });
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <Navbar />

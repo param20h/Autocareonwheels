@@ -7,13 +7,19 @@ import BorderGlow from '../../components/BorderGlow';
 import MechanicBackground from '../../components/MechanicBackground';
 import TestimonialsCard from '../../components/ui/testimonials-card';
 import api from '../../api/axios';
+import useSEO from '../../hooks/useSEO';
 
 const Home = () => {
   const [services, setServices] = useState([]);
   const serviceIcons = [Droplets, Settings, CheckCircle, Wrench, Shield, Clock];
 
+  useSEO({
+    title: 'AutoCare on Wheels | Mobile Mechanic Canberra & Queanbeyan — Tyres, Servicing, Repairs',
+    description: "Canberra's #1 mobile mechanic. We come to you for tyre fitting, logbook servicing, brakes, batteries & repairs. Same-day appointments. Call 0427563913.",
+    canonical: 'https://www.autocareonwheels.com.au/'
+  });
+
   useEffect(() => {
-    document.title = 'AutoCare on Wheels | Mobile Mechanic Canberra & Queanbeyan';
     api.get('/services').then(({ data }) => setServices(data.data || [])).catch(() => { });
   }, []);
 

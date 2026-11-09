@@ -1,8 +1,15 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import useSEO from '../../hooks/useSEO';
 
 const TermsOfService = () => {
+  useSEO({
+    title: 'Terms of Service | AutoCare on Wheels',
+    description: 'Terms of Service and conditions for AutoCare on Wheels mobile mechanic and tyre services.',
+    canonical: 'https://www.autocareonwheels.com.au/terms'
+  });
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <Navbar />
