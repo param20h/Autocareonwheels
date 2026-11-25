@@ -11,5 +11,10 @@ Disallow: /login
 Disallow: /register
 Disallow: /api/
 
+# Block dynamic booking parameters from crawling to save crawl budget
+Disallow: /book?*
+Disallow: /book/?*
+
 # Sitemap location
 Sitemap: https://www.autocareonwheels.com.au/sitemap.xml
+

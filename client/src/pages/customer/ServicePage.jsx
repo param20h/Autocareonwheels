@@ -237,6 +237,7 @@ const ServicePage = () => {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                 <Link
                   to={bookingUrl}
+                  rel="nofollow"
                   className="bg-accent hover:bg-red-700 text-white font-extrabold text-base px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-98 text-center flex items-center justify-center gap-2 group"
                 >
                   <span>Book Online Now</span>
@@ -415,6 +416,7 @@ const ServicePage = () => {
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <Link
                     to={bookingUrl}
+                    rel="nofollow"
                     className="bg-white text-primary hover:bg-gray-100 font-extrabold px-8 py-3.5 rounded-xl shadow-lg transition-transform active:scale-95"
                   >
                     Book Online Today
@@ -454,6 +456,7 @@ const ServicePage = () => {
                 <div className="border-t border-gray-800 pt-4 space-y-3">
                   <Link
                     to={bookingUrl}
+                    rel="nofollow"
                     className="w-full bg-accent hover:bg-red-700 text-white font-extrabold py-3.5 rounded-xl text-center block transition-all shadow-md active:scale-98"
                   >
                     Book This Service

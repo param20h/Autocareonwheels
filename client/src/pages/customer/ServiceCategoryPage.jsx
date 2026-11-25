@@ -137,6 +137,7 @@ const FlatTyreCTA = () => (
         <span>Call Now</span>
       </a>
       <Link to="/book?service=5&step=2"
+        rel="nofollow"
         className="w-full sm:w-auto bg-accent text-white px-6 py-3.5 rounded-xl font-bold hover:bg-accent/90 active:scale-95 transition-all text-center">
         Book Online
       </Link>
@@ -375,6 +376,7 @@ const ServiceCategoryPage = ({ categoryName: propCategoryName }) => {
 
                         <Link
                           to={bookingUrl}
+                          rel="nofollow"
                           className="bg-accent hover:bg-red-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-lg transition-colors"
                         >
                           Book Service

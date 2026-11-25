@@ -1,18 +1,44 @@
-Options -MultiViews
+# Disable MultiViews and directory browsing
+Options -MultiViews -Indexes
+
+# Disable automatic trailing slash 301 redirects by Apache mod_dir
+DirectorySlash Off
+
 RewriteEngine On
 
+# -------------------------------------------------------------
+# 1. 301 Redirects for Legacy / Old URLs
+# -------------------------------------------------------------
 # 301 Redirect old category URLs to clean service URLs
 RewriteRule ^services/category/(.*)$ /services/$1 [R=301,L]
 
 # 301 Redirect legacy contact-us to contact
 RewriteRule ^contact-us/?$ /contact [R=301,L]
 
-# Serve existing files/directories directly
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
+# -------------------------------------------------------------
+# 2. Enforce Non-Trailing Slash Canonical Standard
+# (Redirect /book/ -> /book, /privacy/ -> /privacy, etc.)
+# -------------------------------------------------------------
+RewriteCond %{REQUEST_METHOD} =GET
+RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+# -------------------------------------------------------------
+# 3. Serve Existing Static Files directly (css, js, images, etc.)
+# -------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
-# SPA fallback for React Router routes
+# -------------------------------------------------------------
+# 4. Prerendered Static Directory Handling
+# If request matches a directory that has index.html, serve that index.html internally
+# -------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*)$ $1/index.html [L]
+
+# -------------------------------------------------------------
+# 5. SPA Fallback for React Router Routes
+# -------------------------------------------------------------
 RewriteRule ^ index.html [L]
 
 # Security Headers
